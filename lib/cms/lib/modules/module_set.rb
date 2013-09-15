@@ -11,7 +11,7 @@ class Cms::Lib::Modules::ModuleSet
   
   def self.load_modules
     return @@modules if @@modules
-    Dir::entries('config/modules').each do |mod|
+    Dir::entries('config/modules').sort.each do |mod|
       next if mod =~ /^\.+$/
       file = "#{Rails.root}/config/modules/#{mod}/module.rb"
       load(file) if FileTest.exist?(file)

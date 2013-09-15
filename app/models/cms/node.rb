@@ -22,7 +22,7 @@ class Cms::Node < ActiveRecord::Base
     :order => :name, :dependent => :destroy
   
   validates_presence_of :parent_id, :state, :model, :name, :title
-  validates_uniqueness_of :name, :scope => :parent_id,
+  validates_uniqueness_of :name, :scope => [:site_id, :parent_id],
     :if => %Q(!replace_page?)
   validates_format_of :name, :with=> /^[0-9A-Za-z@\.\-_\+\s]+$/, :message=> :not_a_filename,
     :if => %Q(parent_id != 0)
@@ -212,6 +212,11 @@ class Cms::Node < ActiveRecord::Base
     end if params.size != 0
 
     return self
+  end
+  
+  # group chenge
+  def information
+    "[ディレクトリ・ページ]\n#{public_uri}"
   end
   
 protected

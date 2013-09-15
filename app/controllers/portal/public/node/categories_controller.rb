@@ -29,6 +29,7 @@ class Portal::Public::Node::CategoriesController < Cms::Controller::Public::Base
     @page  = params[:page]
     
     entry = Portal::FeedEntry.new.public
+    entry.content_id = @content.id
     entry.agent_filter(request.mobile)
     entry.and "#{Cms::FeedEntry.table_name}.content_id", @content.id
     entry.category_is @item

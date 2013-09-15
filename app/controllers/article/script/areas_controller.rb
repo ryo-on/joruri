@@ -13,21 +13,33 @@ class Article::Script::AreasController < Cms::Controller::Script::Publication
       publish_page(item, :uri => "#{uri}index.atom", :path => "#{path}index.atom", :dependent => :atom)
       
       item.public_children.each do |c|
-        uri  = "#{@node.public_uri}#{c.name}/"
-        path = "#{@node.public_path}#{c.name}/"
-        publish_page(item, :uri => uri, :path => path, :dependent => "#{c.name}")
-        publish_more(item, :uri => uri, :path => path, :file => 'more', :dependent => "#{c.name}/more")
-        publish_page(item, :uri => "#{uri}index.rss", :path => "#{path}index.rss", :dependent => "#{c.name}/rss")
-        publish_page(item, :uri => "#{uri}index.atom", :path => "#{path}index.atom", :dependent => "#{c.name}/atom")
+        publish_children(item, c, attrs)
         
-        attrs.each do |attr|
-          uri  = "#{@node.public_uri}#{c.name}/#{attr.name}/"
-          path = "#{@node.public_path}#{c.name}/#{attr.name}/"
-          publish_more(item, :uri => uri, :path => path, :dependent => "#{c.name}/#{attr.name}")
+        c.public_children.each do |c2|
+          publish_children(item, c2, attrs)
+          
+          c2.public_children.each do |c3|
+            publish_children(item, c3, attrs)
+          end
         end
       end
     end
     
     render :text => (@errors.size == 0 ? "OK" : @errors.join("\n"))
+  end
+  
+  def publish_children(item, child, attrs)
+    uri  = "#{@node.public_uri}#{child.name}/"
+    path = "#{@node.public_path}#{child.name}/"
+    publish_page(item, :uri => uri, :path => path, :dependent => "#{child.name}")
+    publish_more(item, :uri => uri, :path => path, :file => 'more', :dependent => "#{child.name}/more")
+    publish_page(item, :uri => "#{uri}index.rss", :path => "#{path}index.rss", :dependent => "#{child.name}/rss")
+    publish_page(item, :uri => "#{uri}index.atom", :path => "#{path}index.atom", :dependent => "#{child.name}/atom")
+    
+    attrs.each do |attr|
+      uri  = "#{@node.public_uri}#{child.name}/#{attr.name}/"
+      path = "#{@node.public_path}#{child.name}/#{attr.name}/"
+      publish_more(item, :uri => uri, :path => path, :dependent => "#{child.name}/#{attr.name}")
+    end
   end
 end

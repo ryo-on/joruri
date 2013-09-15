@@ -22,8 +22,8 @@ class Article::Public::Node::TagDocsController < Cms::Controller::Public::Base
       doc.and :content_id, Page.current_node.content.id
       doc.and 'language_id', 1
       doc.and 0, 1 if @tag.to_s == ''
-      # qw = doc.connection.quote_string(@tag).gsub(/([_%])/, '\\\\\1')
-      # doc.and "sql", "EXISTS (SELECT * FROM article_tags WHERE article_docs.unid = article_tags.unid AND word LIKE '#{qw}%') "
+      qw = doc.connection.quote_string(@tag).gsub(/([_%])/, '\\\\\1')
+      doc.and "sql", "EXISTS (SELECT * FROM article_tags WHERE article_docs.unid = article_tags.unid AND word LIKE '#{qw}%') "
       doc.page params[:page], (request.mobile? ? 20 : 50)
       @docs = doc.find(:all, :order => 'published_at DESC')
     end

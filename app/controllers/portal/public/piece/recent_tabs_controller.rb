@@ -29,6 +29,7 @@ class Portal::Public::Piece::RecentTabsController < Sys::Controller::Public::Bas
 
       entries = []
       entry = Portal::FeedEntry.new.public
+      entry.content_id = @content.id
       entry.agent_filter(request.mobile)
       entry.and "#{Cms::FeedEntry.table_name}.content_id", @content.id
       entry.page 1, limit

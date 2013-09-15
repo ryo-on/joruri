@@ -69,6 +69,17 @@ ActionController::Routing::Routes.draw do |map|
       :controller  => "admin/inline/files",
       :path_prefix => "/_admin/#{mod}/:parent",
       :member => {:download => :get}
+      
+    ns.resources :group_change_temporaries,
+      :controller  => "admin/group_change_temporaries",
+      :path_prefix => "/_admin/#{mod}/:parent/:current",
+      :collection => [:synchronize]
+    ns.resources :group_changes,
+      :controller  => "admin/group_changes",
+      :path_prefix => "/_admin/#{mod}"
+    ns.resources :group_change_settings,
+      :controller  => "admin/group_change_settings",
+      :path_prefix => "/_admin/#{mod}"
   end
     
   map.connect "_admin/#{mod}/:parent/inline_files/files/:name.:format",

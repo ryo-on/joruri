@@ -2,14 +2,18 @@
 
 def make_candidates(args1, args2)
   choices = []
-  loop    = 0
-  down    = lambda do |p, i|
+  exists  = {}
+  
+  down = lambda do |p, i|
+    next if exists[p.id]
+    exists[p.id] = true
+    
     choices << [('　　' * i) + p.name, p.unid]
     Cms::Concept.find(:all, eval("{#{args2}}")).each do |c|
       down.call(c, i + 1)
-      break if (loop += 1) > 500
     end
   end
+  
   Cms::Concept.find(:all, eval("{#{args1}}")).each {|item| down.call(item, 0) }
   return choices
 end

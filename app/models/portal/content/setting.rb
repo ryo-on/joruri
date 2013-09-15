@@ -1,6 +1,8 @@
 # encoding: utf-8
 class Portal::Content::Setting < Cms::ContentSetting
   set_config :doc_content_id, :name => "記事コンテンツ"
+  set_config :doc_list_suffix, :name => "記事一覧表示（日付以降）",
+    :options => [["所属名","unit"],["サイト名","site"]]
   
   def config_options
     case name

@@ -12,6 +12,7 @@ class Portal::Public::Piece::FeedEntriesController < Sys::Controller::Public::Ba
     limit = 10
     @content = Portal::Content::FeedEntry.find(Page.current_piece.content_id)
     entry = Portal::FeedEntry.new.public
+    entry.content_id = @content.id
     entry.agent_filter(request.mobile)
     entry.and "#{Cms::FeedEntry.table_name}.content_id", @content.id
 

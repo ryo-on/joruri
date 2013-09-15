@@ -1,7 +1,74 @@
+1.2.1
+  CREATE TABLE sys_group_changes (
+    id int(11) NOT NULL AUTO_INCREMENT,
+    created_at datetime DEFAULT NULL,
+    updated_at datetime DEFAULT NULL,
+    code varchar(255) DEFAULT NULL,
+    name varchar(255) DEFAULT NULL,
+    name_en varchar(255) DEFAULT NULL,
+    email varchar(255) DEFAULT NULL,
+    level_no int(11) DEFAULT NULL,
+    parent_code varchar(255) DEFAULT NULL,
+    parent_name varchar(255) DEFAULT NULL,
+    change_division varchar(255) DEFAULT NULL,
+    layout_id int(11) DEFAULT NULL,
+    ldap int(11) NOT NULL,
+    start_date datetime DEFAULT NULL,
+    old_division varchar(255) DEFAULT NULL,
+    old_id int(11) DEFAULT NULL,
+    old_code varchar(255) DEFAULT NULL,
+    old_name varchar(255) DEFAULT NULL,
+    old_name_en varchar(255) DEFAULT NULL,
+    old_email varchar(255) DEFAULT NULL,
+    old_layout_id int(11) DEFAULT NULL,
+    PRIMARY KEY (id)
+  );
+  CREATE TABLE sys_group_change_settings (
+    id int(11) NOT NULL AUTO_INCREMENT,
+    created_at datetime DEFAULT NULL,
+    updated_at datetime DEFAULT NULL,
+    name varchar(255) DEFAULT NULL,
+    value text,
+    sort_no int(11) DEFAULT NULL,
+    PRIMARY KEY (id)
+  );
+  CREATE TABLE sys_group_change_logs (
+    id int(11) NOT NULL AUTO_INCREMENT,
+    parent_id int(11) NOT NULL,
+    state varchar(15) DEFAULT NULL,
+    created_at datetime DEFAULT NULL,
+    updated_at datetime DEFAULT NULL,
+    level_no int(11) NOT NULL,
+    sort_no int(11) DEFAULT NULL,
+    execute_state varchar(15) DEFAULT NULL,
+    executed_at datetime DEFAULT NULL,
+    title text,
+    body longtext,
+    PRIMARY KEY (id)
+  );
+  CREATE TABLE sys_group_change_groups (
+    id int(11) NOT NULL AUTO_INCREMENT,
+    group_change_id int(11) DEFAULT NULL,
+    group_id int(11) DEFAULT NULL,
+    parent_id int(11) DEFAULT NULL,
+    old_group_id int(11) DEFAULT NULL,
+    PRIMARY KEY (id)
+  );
+  CREATE TABLE sys_group_change_items (
+    id int(11) NOT NULL AUTO_INCREMENT,
+    item_id int(11) DEFAULT NULL,
+    item_unid int(11) DEFAULT NULL,
+    parent_item_id int(11) DEFAULT NULL,
+    model varchar(255) DEFAULT NULL,
+    owner_model varchar(255) DEFAULT NULL,
+    PRIMARY KEY (id),
+    KEY item_id (item_id,model)
+  );
+
 1.2.0
-  ALTER TABLE `cms_layouts` ADD `smart_phone_head` TEXT NULL;
-  ALTER TABLE `cms_layouts` ADD `smart_phone_body` LONGTEXT NULL;
-  ALTER TABLE `cms_layouts` ADD `smart_phone_stylesheet` LONGTEXT NULL; 
+  ALTER TABLE cms_layouts ADD smart_phone_head TEXT NULL;
+  ALTER TABLE cms_layouts ADD smart_phone_body LONGTEXT NULL;
+  ALTER TABLE cms_layouts ADD smart_phone_stylesheet LONGTEXT NULL; 
 
 1.1.9
   CREATE TABLE bbs_items (

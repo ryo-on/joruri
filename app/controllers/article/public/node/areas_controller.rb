@@ -71,7 +71,8 @@ class Article::Public::Node::AreasController < Cms::Controller::Public::Base
   end
 
   def show_detail
-    @items = Article::Attribute.new.public.find(:all, :order => :sort_no)
+    cond = { :content_id => @content.id }
+    @items = Article::Attribute.new.public.find(:all, :conditions => cond, :order => :sort_no)
 
     @item_docs = Proc.new do |attr|
       doc = Article::Doc.new.public

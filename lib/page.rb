@@ -45,7 +45,17 @@ class Page
   end
 
   def self.body_class
-    nil
+    return nil unless @@uri
+    cls = @@uri.gsub(/^\/_.*?\/[0-9]+\//, '/')
+    cls += 'index.html' if /\/$/ =~ cls
+    cls = ::File.dirname(cls)
+    cls = cls.slice(1, cls.size)
+    cls = cls.gsub(/\..*$/, '')
+    cls = cls.gsub(/\.[0-9a-zA-Z]+$/, '')
+    cls = cls.gsub(/[^0-9a-zA-Z_\.\/]/, '_')
+    cls = cls.gsub(/(\.|\/)/, '-').gsub(/\-$/, '')
+    return %Q(class="rootdir") if cls.blank?
+    return %Q(class="dir-#{cls.camelize(:lower)}")
   end
   
   def self.title

@@ -18,6 +18,7 @@ class Article::Area < ActiveRecord::Base
     :order => :name, :dependent => :destroy
   
   validates_presence_of :state, :name, :title
+  validates_uniqueness_of :name, :scope => [:content_id]
   
   def self.root_items(conditions = {})
     conditions = conditions.merge({:parent_id => 0, :level_no => 1})

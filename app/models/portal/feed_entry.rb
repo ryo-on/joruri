@@ -1,6 +1,7 @@
 # encoding: utf-8
 class Portal::FeedEntry < Cms::FeedEntry
   belongs_to :content,        :foreign_key => :content_id,        :class_name => 'Portal::Content::FeedEntry'
+  belongs_to :portal_content, :foreign_key => :portal_content_id,        :class_name => 'Portal::Content::Base'
 
   def source_title
     return @source_title if @source_title
@@ -14,7 +15,34 @@ class Portal::FeedEntry < Cms::FeedEntry
   def link_target
     feed ? "_blank" : nil
   end
-
+  
+  def date_and_site(options = {})
+    values = []
+    
+    if options[:date] != false
+      values << %Q(<span class="date">#{entry_updated.strftime('%Y年%-m月%-d日')}</span>) if entry_updated
+    end
+    
+    if !source_title.blank?
+      values << %Q(<span class="site">#{ERB::Util.html_escape(source_title)}</span>)
+    elsif portal_content
+      suffix = portal_content.setting_value(:doc_list_suffix)
+      if suffix == "site"
+        values << %Q(<span class="site">#{ERB::Util.html_escape(portal_content.site.name)}</span>) if portal_content.site
+      elsif suffix == "unit"
+        doc  = Article::Doc.find(:first, :conditions => {:id => doc_id, :content_id => content.id})
+        if doc
+          values << %Q(<span class="unit">#{ERB::Util.html_escape(doc.creator.group.name)}</span>) if doc.creator && doc.creator.group
+        end
+      end
+    end
+    
+    return "" if values.size == 0
+    
+    separator = %Q(<span class="separator">　</span>)
+    %Q(<span class="attributes">（#{values.join(separator)}）</span>)
+  end
+  
   def public_uri
     if name
       return nil unless node = content.doc_node
@@ -31,13 +59,15 @@ class Portal::FeedEntry < Cms::FeedEntry
     _tmp_table_alias = 'TMP'
     _tmp_order = ""
     _sql_params = []
-
+    
+    content_id = self.content_id || 'NULL'
+    
     #feeds
     _feed_tbl = self.class.table_name
-    feeds_sql = "SELECT #{_feed_tbl}.content_id, NULL as name, #{_feed_tbl}.feed_id, #{_feed_tbl}.entry_updated, " +
-               "#{_feed_tbl}.title, #{_feed_tbl}.event_date, NULL as attribute_ids, #{_feed_tbl}.summary, " +
-               "#{_feed_tbl}.link_alternate " +
-               "FROM #{_feed_tbl} #{cb_extention[:joins][0]}"
+    feeds_sql = "SELECT #{content_id} AS portal_content_id, #{_feed_tbl}.content_id, NULL AS doc_id, NULL as name " +
+               ", #{_feed_tbl}.feed_id, #{_feed_tbl}.entry_updated, #{_feed_tbl}.title, #{_feed_tbl}.event_date, NULL as attribute_ids" +
+               ", #{_feed_tbl}.summary, #{_feed_tbl}.link_alternate " +
+               " FROM #{_feed_tbl} #{cb_extention[:joins][0]}"
 
     feed_where = cb_condition_where
     feeds_sql += " WHERE #{feed_where[0]}"
@@ -45,8 +75,9 @@ class Portal::FeedEntry < Cms::FeedEntry
 
     #docs
     _doc_tbl = Article::Doc.table_name
-    docs_sql = "SELECT content_id, name, NULL as feed_id, published_at AS entry_updated, title, event_date, attribute_ids, body AS summary, NULL AS link_alternate " +
-               "FROM #{_doc_tbl}"
+    docs_sql = "SELECT #{content_id} AS portal_content_id, content_id, id AS doc_id, name, NULL AS feed_id, published_at AS entry_updated, title" +
+               ", event_date, attribute_ids, body AS summary, NULL AS link_alternate" +
+               " FROM #{_doc_tbl}"
 
     case list_type
       when :docs

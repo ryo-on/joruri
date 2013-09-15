@@ -55,6 +55,7 @@
   padding-right: 8px;
 }
 .contentArticleDoc .back {
+  clear: both;
   text-align: center;
 }
 .contentArticleDoc .back a {

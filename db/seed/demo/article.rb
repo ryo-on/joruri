@@ -48,8 +48,9 @@ create_cms_piece :content_id => doc.id, :model => 'Article::Attribute', :name =>
 create_cms_piece :content_id => doc.id, :model => 'Article::Area'     , :name => 'area-list'     , :title => '地域一覧'          , :view_title => '各地域のページ'
 create_cms_piece :content_id => doc.id, :model => 'Article::Calendar' , :name => 'calendar'      , :title => 'イベントカレンダー', :view_title => 'イベントカレンダー'
 
-create_cms_piece :content_id => doc.id, :model => 'Article::RecentTab', :name => 'doc-tab'       , :title => '新着タブ'          , :concept_id => 2
 create_cms_piece :content_id => doc.id, :model => 'Cms::Free'         , :name => 'area-map'      , :title => '地域マップ'        , :concept_id => c_area.id
+create_cms_piece :content_id => doc.id, :model => 'Article::RecentTab', :name => 'doc-tab'       , :title => '新着タブ'                , :concept_id => 2
+create_cms_piece :content_id => doc.id, :model => 'Article::RecentTab', :name => 'smart-doc-tab' , :title => 'スマートフォン：新着タブ', :concept_id => 2
 
 create_cms_piece :content_id => doc.id, :model => 'Cms::Free'         , :name => 'global-navi-bosai'             ,:title => 'グローバルナビ　防災'            , :concept_id => c_cate.id
 create_cms_piece :content_id => doc.id, :model => 'Cms::Free'         , :name => 'global-navi-fukushi'           ,:title => 'グローバルナビ　健康・福祉'      , :concept_id => c_cate.id

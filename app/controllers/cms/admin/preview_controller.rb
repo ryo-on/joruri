@@ -40,7 +40,11 @@ protected
     base_uri = "#{Core.full_uri}_preview/#{format('%08d', Page.site.id)}#{mobile}"
     
     response.body = response.body.gsub(/<a[^>]+?href="\/[^"]*?"[^>]*?>/i) do |m|
-      m.gsub(/^(<a[^>]+?href=")(\/[^"]*?)("[^>]*?>)/i, '\\1' + base_uri + '\\2\\3')
+      if m =~ /href="\/_(files|layouts)\//
+        m
+      else
+        m.gsub(/^(<a[^>]+?href=")(\/[^"]*?)("[^>]*?>)/i, '\\1' + base_uri + '\\2\\3')
+      end
     end
     
     ## preview mark

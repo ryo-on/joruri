@@ -131,16 +131,32 @@ Sys::UsersRole.create :user_id => u3.id, :role_id => r.id
 Sys::UsersRole.create :user_id => u4.id, :role_id => r.id
 
 ## ---------------------------------------------------------
+## cms/data_texts
+
+def create_cms_data_text(params)
+  params[:site_id]          ||= 1
+  params[:concept_id]       ||= 1
+  params[:state]            ||= 'public'
+  params[:body]             ||= file("texts/#{params[:name]}/body")
+  Cms::DataText.create(params)
+end
+
+create_cms_data_text :concept_id => c_top.id  , :name => 'topic-midashi'  , :title => 'トピック：見出し'
+create_cms_data_text :concept_id => c_top.id  , :name => 'topic-text'     , :title => 'トピック：テキスト'
+
+## ---------------------------------------------------------
 ## cms/layouts
 
 def create_cms_layout(params)
-  params[:site_id]     ||= 1
-  params[:concept_id]  ||= 1
-  params[:state]       ||= 'public'
-  params[:head]        ||= file("layouts/#{params[:name]}/head")
-  params[:body]        ||= file("layouts/#{params[:name]}/body")
-  params[:mobile_head] ||= file("layouts/#{params[:name]}/m_head")
-  params[:mobile_body] ||= file("layouts/#{params[:name]}/m_body")
+  params[:site_id]          ||= 1
+  params[:concept_id]       ||= 1
+  params[:state]            ||= 'public'
+  params[:head]             ||= file("layouts/#{params[:name]}/head")
+  params[:body]             ||= file("layouts/#{params[:name]}/body")
+  params[:mobile_head]      ||= file("layouts/#{params[:name]}/m_head")
+  params[:mobile_body]      ||= file("layouts/#{params[:name]}/m_body")
+  params[:smart_phone_head] ||= file("layouts/#{params[:name]}/s_head")
+  params[:smart_phone_body] ||= file("layouts/#{params[:name]}/s_body")
   Cms::Layout.create(params)
 end
 
@@ -166,63 +182,71 @@ def create_cms_piece(params)
   Cms::Piece.create(params)
 end
 
-[ [ c_site.id , 'Cms::Free'      , 'ad-lower'             , '広告（下部）' ],
-  [ c_site.id , 'Cms::Free'      , 'ad-upper'             , '広告（右上部）' ],
-  [ c_site.id , 'Cms::Free'      , 'address'              , '住所' ],
-  [ c_site.id , 'Cms::PageTitle' , 'page-title'           , 'ページタイトル' ],
-  [ c_site.id , 'Cms::BreadCrumb', 'bread-crumbs'         , 'パンくず' ],
-  [ c_site.id , 'Cms::Free'      , 'global-navi'          , 'グローバルナビ' ],
-  [ c_site.id , 'Cms::Free'      , 'footer-navi'          , 'フッターナビ' ],
-  [ c_site.id , 'Cms::Free'      , 'common-banner'        , 'サイトバナー' ],
-  [ c_site.id , 'Cms::Free'      , 'common-header'        , 'ふりがな・よみあげヘッダー' ],
-  [ c_site.id , 'Cms::Free'      , 'recent-docs-title'    , '新着情報タイトル' ],
-  [ c_site.id , 'Cms::Free'      , 'attract-information'  , '注目情報' ],
-  [ c_site.id , 'Cms::Free'      , 'relation-link'        , '関連リンク' ],
-  [ c_top.id  , 'Cms::Free'      , 'about'                , 'ジョールリ市の紹介' ],
-  [ c_top.id  , 'Cms::Free'      , 'bn-event'             , '年間行事' ],
-  [ c_top.id  , 'Cms::Free'      , 'bn-bbs'               , '掲示板' ],
-  [ c_top.id  , 'Cms::Free'      , 'application'          , '申請書ダウンロード' ],
-  [ c_top.id  , 'Cms::Free'      , 'area-information'     , '地域情報' ],
-  [ c_top.id  , 'Cms::Free'      , 'basic-information'    , '基本情報' ],
-  [ c_top.id  , 'Cms::Free'      , 'common-banner-top'    , 'サイトバナー（トップ）' ],
-  [ c_top.id  , 'Cms::Free'      , 'mayor'                , '市長室' ],
-  [ c_top.id  , 'Cms::Free'      , 'qr-code'              , 'QRコード' ],
-  [ c_top.id  , 'Cms::Free'      , 'photo'                , 'トップ写真' ],
-  [ c_top.id  , 'Cms::Free'      , 'useful-information'   , 'お役立ち情報' ],
-  [ c_top.id  , 'Cms::Free'      , 'topic'                , 'トピック' ],
-  [ c_top.id  , 'Cms::Free'      , 'lifeevent'            , 'ライフイベント' ],
-  [ c_top.id  , 'Cms::Free'      , 'category'             , 'カテゴリ' ],
-  [ c_top.id  , 'Cms::Free'      , 'inquiry'              , 'お問い合わせバナー' ],
-  [ c_top.id  , 'Cms::Free'      , 'population'           , '人口' ],
-  [ c_mayor.id, 'Cms::Free'      , 'mayor-side'           , '市長室サイドメニュー' ],
-  [ c_mayor.id, 'Cms::Free'      , 'mayor'                , '市長室' ],
-  [ c_mayor.id, 'Cms::Free'      , 'mayor-title'          , '市長室タイトル' ],
-  [ c_life.id , 'Cms::Free'      , 'lifeevent-title'      , 'ライフイベントタイトル' ],
-  [ c_life.id , 'Cms::Free'      , 'lifeevent-side'       , 'ライフイベントサイドメニュー' ],
-  [ c_site.id , 'Cms::Free'      , 'mobile-common-header' , 'モバイル：ヘッダー画像' ],
-  [ c_site.id , 'Cms::Free'      , 'mobile-copyright'     , 'モバイル：コピーライト' ],
-  [ c_top.id  , 'Cms::Free'      , 'mobile-address'       , 'モバイル：住所' ],
-  [ c_top.id  , 'Cms::Free'      , 'mobile-category-list' , 'モバイル：トップ分野一覧' ],
-  [ c_top.id  , 'Cms::Free'      , 'mobile-footer-navi'   , 'モバイル：フッターナビ' ],
-  [ c_top.id  , 'Cms::Free'      , 'mobile-mayor'         , 'モバイル：ようこそ市長室へ' ],
-  [ c_top.id  , 'Cms::Free'      , 'mobile-menu-navi'     , 'モバイル：ナビ' ],
-  [ c_top.id  , 'Cms::Free'      , 'mobile-pickup'        , 'モバイル：ピックアップ' ],
-  [ c_top.id  , 'Cms::Free'      , 'mobile-recommend-site', 'モバイル：おすすめサイト' ],
-  [ c_top.id  , 'Cms::Free'      , 'mobile-search'        , 'モバイル：サイト内検索' ],
-  [ c_site.id , 'Cms::Free'      , 'mobile-back-navi'     , 'モバイル：バックナビ' ],
-  [ c_site.id , 'Cms::Free'      , 'mobile-mayor-navi'    , 'モバイル：市長室' ],
-  [ c_top.id  , 'Cms::Free'      , 'emergency'                 , '大規模災害表示ピース　緊急アナウンス ' ],
-  [ c_top.id  , 'Cms::Free'      , 'emergency-application'     , '大規模災害表示ピース　申請書ダウンロード ' ],
-  [ c_top.id  , 'Cms::Free'      , 'emergency-area-information', '大規模災害表示ピース　地域情報 ' ],
-  [ c_top.id  , 'Cms::Free'      , 'emergency-common-banner'   , '大規模災害表示ピース　サイトバナー ' ],
-  [ c_top.id  , 'Cms::Free'      , 'emergency-info'            , '大規模災害表示ピース　緊急情報 ' ],
-  [ c_top.id  , 'Cms::Free'      , 'emergency-inquiry'         , '大規模災害表示ピース　お問い合わせバナー ' ],
-  [ c_top.id  , 'Cms::Free'      , 'emergency-link-bousai'     , '大規模災害表示ピース　リンク集(防災関係機関) ' ],
-  [ c_top.id  , 'Cms::Free'      , 'emergency-link-kasen'      , '大規模災害表示ピース　リンク集(河川情報) ' ],
-  [ c_top.id  , 'Cms::Free'      , 'emergency-link-koutsuu'    , '大規模災害表示ピース　リンク集(交通情報) ' ],
-  [ c_top.id  , 'Cms::Free'      , 'emergency-link-lifeline'   , '大規模災害表示ピース　リンク集(ライフライン情報) ' ],
-  [ c_top.id  , 'Cms::Free'      , 'emergency-mailmagazine'    , '大規模災害表示ピース　メールマガジン ' ],
-  [ c_top.id  , 'Cms::Free'      , 'emergency-mode'            , '大規模災害表示ピース　モード表示' ],
+[ [ c_site.id , 'Cms::Free'         , 'ad-lower'             , '広告（下部）' ],
+  [ c_site.id , 'Cms::Free'         , 'ad-upper'             , '広告（右上部）' ],
+  [ c_site.id , 'Cms::Free'         , 'address'              , '住所' ],
+  [ c_site.id , 'Cms::PageTitle'    , 'page-title'           , 'ページタイトル' ],
+  [ c_site.id , 'Cms::BreadCrumb'   , 'bread-crumbs'         , 'パンくず' ],
+  [ c_site.id , 'Cms::Free'         , 'global-navi'          , 'グローバルナビ' ],
+  [ c_site.id , 'Cms::Free'         , 'footer-navi'          , 'フッターナビ' ],
+  [ c_site.id , 'Cms::Free'         , 'common-banner'        , 'サイトバナー' ],
+  [ c_site.id , 'Cms::Free'         , 'common-header'        , 'ふりがな・よみあげヘッダー' ],
+  [ c_site.id , 'Cms::Free'         , 'recent-docs-title'    , '新着情報タイトル' ],
+  [ c_site.id , 'Cms::Free'         , 'attract-information'  , '注目情報' ],
+  [ c_site.id , 'Cms::Free'         , 'relation-link'        , '関連リンク' ],
+  [ c_top.id  , 'Cms::Free'         , 'about'                , 'ジョールリ市の紹介' ],
+  [ c_top.id  , 'Cms::Free'         , 'bn-event'             , '年間行事' ],
+  [ c_top.id  , 'Cms::Free'         , 'bn-bbs'               , '掲示板' ],
+  [ c_top.id  , 'Cms::Free'         , 'application'          , '申請書ダウンロード' ],
+  [ c_top.id  , 'Cms::Free'         , 'area-information'     , '地域情報' ],
+  [ c_top.id  , 'Cms::Free'         , 'basic-information'    , '基本情報' ],
+  [ c_top.id  , 'Cms::Free'         , 'common-banner-top'    , 'サイトバナー（トップ）' ],
+  [ c_top.id  , 'Cms::Free'         , 'mayor'                , '市長室' ],
+  [ c_top.id  , 'Cms::Free'         , 'qr-code'              , 'QRコード' ],
+  [ c_top.id  , 'Cms::Free'         , 'photo'                , 'トップ写真' ],
+  [ c_top.id  , 'Cms::Free'         , 'useful-information'   , 'お役立ち情報' ],
+  [ c_top.id  , 'Cms::Free'         , 'topic'                , 'トピック' ],
+  [ c_top.id  , 'Cms::Free'         , 'lifeevent'            , 'ライフイベント' ],
+  [ c_top.id  , 'Cms::Free'         , 'category'             , 'カテゴリ' ],
+  [ c_top.id  , 'Cms::Free'         , 'inquiry'              , 'お問い合わせバナー' ],
+  [ c_top.id  , 'Cms::Free'         , 'population'           , '人口' ],
+  [ c_mayor.id, 'Cms::Free'         , 'mayor-side'           , '市長室サイドメニュー' ],
+  [ c_mayor.id, 'Cms::Free'         , 'mayor'                , '市長室' ],
+  [ c_mayor.id, 'Cms::Free'         , 'mayor-title'          , '市長室タイトル' ],
+  [ c_life.id , 'Cms::Free'         , 'lifeevent-title'      , 'ライフイベントタイトル' ],
+  [ c_life.id , 'Cms::Free'         , 'lifeevent-side'       , 'ライフイベントサイドメニュー' ],
+  [ c_site.id , 'Cms::Free'         , 'mobile-common-header' , 'モバイル：ヘッダー画像' ],
+  [ c_site.id , 'Cms::Free'         , 'mobile-copyright'     , 'モバイル：コピーライト' ],
+  [ c_top.id  , 'Cms::Free'         , 'mobile-address'       , 'モバイル：住所' ],
+  [ c_top.id  , 'Cms::Free'         , 'mobile-category-list' , 'モバイル：トップ分野一覧' ],
+  [ c_top.id  , 'Cms::Free'         , 'mobile-footer-navi'   , 'モバイル：フッターナビ' ],
+  [ c_top.id  , 'Cms::Free'         , 'mobile-mayor'         , 'モバイル：ようこそ市長室へ' ],
+  [ c_top.id  , 'Cms::Free'         , 'mobile-menu-navi'     , 'モバイル：ナビ' ],
+  [ c_top.id  , 'Cms::Free'         , 'mobile-pickup'        , 'モバイル：ピックアップ' ],
+  [ c_top.id  , 'Cms::Free'         , 'mobile-recommend-site', 'モバイル：おすすめサイト' ],
+  [ c_top.id  , 'Cms::Free'         , 'mobile-search'        , 'モバイル：サイト内検索' ],
+  [ c_site.id , 'Cms::Free'         , 'mobile-back-navi'     , 'モバイル：バックナビ' ],
+  [ c_site.id , 'Cms::Free'         , 'mobile-mayor-navi'    , 'モバイル：市長室' ],
+  [ c_top.id  , 'Cms::Free'         , 'emergency'                 , '大規模災害表示ピース　緊急アナウンス ' ],
+  [ c_top.id  , 'Cms::Free'         , 'emergency-application'     , '大規模災害表示ピース　申請書ダウンロード ' ],
+  [ c_top.id  , 'Cms::Free'         , 'emergency-area-information', '大規模災害表示ピース　地域情報 ' ],
+  [ c_top.id  , 'Cms::Free'         , 'emergency-common-banner'   , '大規模災害表示ピース　サイトバナー ' ],
+  [ c_top.id  , 'Cms::Free'         , 'emergency-info'            , '大規模災害表示ピース　緊急情報 ' ],
+  [ c_top.id  , 'Cms::Free'         , 'emergency-inquiry'         , '大規模災害表示ピース　お問い合わせバナー ' ],
+  [ c_top.id  , 'Cms::Free'         , 'emergency-link-bousai'     , '大規模災害表示ピース　リンク集(防災関係機関) ' ],
+  [ c_top.id  , 'Cms::Free'         , 'emergency-link-kasen'      , '大規模災害表示ピース　リンク集(河川情報) ' ],
+  [ c_top.id  , 'Cms::Free'         , 'emergency-link-koutsuu'    , '大規模災害表示ピース　リンク集(交通情報) ' ],
+  [ c_top.id  , 'Cms::Free'         , 'emergency-link-lifeline'   , '大規模災害表示ピース　リンク集(ライフライン情報) ' ],
+  [ c_top.id  , 'Cms::Free'         , 'emergency-mailmagazine'    , '大規模災害表示ピース　メールマガジン ' ],
+  [ c_top.id  , 'Cms::Free'         , 'emergency-mode'            , '大規模災害表示ピース　モード表示' ],
+  [ c_site.id , 'Cms::Free'         , 'smart-common-banner'       , 'スマートフォン：ヘッダー' ],
+  [ c_site.id , 'Cms::Free'         , 'smart-copyright'           , 'スマートフォン：コピーライト' ],
+  [ c_site.id , 'Cms::Free'         , 'smart-footer-navi'         , 'スマートフォン：フッターナビ' ],
+  [ c_top.id  , 'Cms::Free'         , 'smart-top-common-banner'   , 'スマートフォン：ヘッダー' ],
+  [ c_top.id  , 'Cms::Free'         , 'smart-lifeevent'           , 'スマートフォン：ライフイベント' ],
+  [ c_top.id  , 'Cms::Free'         , 'smart-refinement-menu'     , 'スマートフォン：絞込みメニュー' ],
+  [ c_top.id  , 'Cms::Free'         , 'smart-search'              , 'スマートフォン：検索' ],
+  [ c_top.id  , 'Cms::Free'         , 'smart-topic'               , 'スマートフォン：トピック' ],
 ].each do |c|
   create_cms_piece :concept_id => c[0], :model => c[1], :name => c[2], :title => c[3]
 end

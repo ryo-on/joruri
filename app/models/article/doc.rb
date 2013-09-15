@@ -435,4 +435,9 @@ class Article::Doc < ActiveRecord::Base
     v = content.setting_value(:inquiry_email_display)
     v.blank? ? super : v
   end
+  
+  # group chenge
+  def information
+    return "[記事]\n#{id} #{title}"
+  end
 end

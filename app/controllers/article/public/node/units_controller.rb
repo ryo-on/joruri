@@ -56,8 +56,8 @@ class Article::Public::Node::UnitsController < Cms::Controller::Public::Base
   end
   
   def show_department
-    attr = Article::Attribute.new.public
-    @items = attr.find(:all, :order => :sort_no)
+    cond = { :content_id => @content.id }
+    @items = Article::Attribute.new.public.find(:all, :conditions => cond, :order => :sort_no)
 
     @item_docs = Proc.new do |attr|
       doc = Article::Doc.new.public
@@ -72,8 +72,8 @@ class Article::Public::Node::UnitsController < Cms::Controller::Public::Base
   end
 
   def show_section
-    attr = Article::Attribute.new.public
-    @items = attr.find(:all, :order => :sort_no)
+    cond = { :content_id => @content.id }
+    @items = Article::Attribute.new.public.find(:all, :conditions => cond, :order => :sort_no)
 
     @item_docs = Proc.new do |attr|
       doc = Article::Doc.new.public

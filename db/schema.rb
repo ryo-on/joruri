@@ -1,6 +1,15 @@
-# encoding: utf-8
+# This file is auto-generated from the current state of the database. Instead of editing this file, 
+# please use the migrations feature of Active Record to incrementally modify your database, and
+# then regenerate this schema definition.
+#
+# Note that this schema.rb definition is the authoritative source for your database schema. If you need
+# to create the application database on another system, you should be using db:schema:load, not running
+# all the migrations from scratch. The latter is a flawed and unsustainable approach (the more migrations
+# you'll amass, the slower it'll run and the greater likelihood for issues).
+#
+# It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 0) do
+ActiveRecord::Schema.define(:version => 20110803122623) do
 
   create_table "article_areas", :force => true do |t|
     t.integer  "unid"
@@ -142,7 +151,7 @@ ActiveRecord::Schema.define(:version => 0) do
   end
 
   add_index "cms_content_settings", ["content_id"], :name => "content_id"
-  
+
   create_table "cms_contents", :force => true do |t|
     t.integer  "unid"
     t.integer  "site_id",                              :null => false
@@ -264,23 +273,24 @@ ActiveRecord::Schema.define(:version => 0) do
     t.integer  "unid"
     t.integer  "concept_id"
     t.integer  "template_id"
-    t.integer  "site_id",                                 :null => false
-    t.string   "state",             :limit => 15
+    t.integer  "site_id",                                      :null => false
+    t.string   "state",                  :limit => 15
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "recognized_at"
     t.datetime "published_at"
     t.string   "name"
     t.text     "title"
-    t.text     "head",              :limit => 2147483647
-    t.text     "body",              :limit => 2147483647
-    t.text     "stylesheet",        :limit => 2147483647
+    t.text     "head",                   :limit => 2147483647
+    t.text     "body",                   :limit => 2147483647
+    t.text     "stylesheet",             :limit => 2147483647
     t.text     "mobile_head"
-    t.text     "mobile_body",       :limit => 2147483647
-    t.text     "mobile_stylesheet", :limit => 2147483647
+    t.text     "mobile_body",            :limit => 2147483647
+    t.text     "mobile_stylesheet",      :limit => 2147483647
     t.text     "smart_phone_head"
     t.text     "smart_phone_body",       :limit => 2147483647
-    t.text     "smart_phone_stylesheet", :limit => 2147483647  end
+    t.text     "smart_phone_stylesheet", :limit => 2147483647
+  end
 
   create_table "cms_map_markers", :force => true do |t|
     t.integer  "map_id"
@@ -597,6 +607,67 @@ ActiveRecord::Schema.define(:version => 0) do
   end
 
   add_index "sys_files", ["parent_unid", "name"], :name => "parent_unid"
+
+  create_table "sys_group_change_groups", :force => true do |t|
+    t.integer "group_change_id"
+    t.integer "group_id"
+    t.integer "parent_id"
+    t.integer "old_group_id"
+  end
+
+  create_table "sys_group_change_items", :force => true do |t|
+    t.integer "item_id"
+    t.integer "item_unid"
+    t.integer "parent_item_id"
+    t.string  "model"
+    t.string  "owner_model"
+  end
+
+  add_index "sys_group_change_items", ["item_id", "model"], :name => "item_id"
+
+  create_table "sys_group_change_logs", :force => true do |t|
+    t.integer  "parent_id",                           :null => false
+    t.string   "state",         :limit => 15
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "level_no",                            :null => false
+    t.integer  "sort_no"
+    t.string   "execute_state", :limit => 15
+    t.datetime "executed_at"
+    t.text     "title"
+    t.text     "body",          :limit => 2147483647
+  end
+
+  create_table "sys_group_change_settings", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "name"
+    t.text     "value"
+    t.integer  "sort_no"
+  end
+
+  create_table "sys_group_changes", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "code"
+    t.string   "name"
+    t.string   "name_en"
+    t.string   "email"
+    t.integer  "level_no"
+    t.string   "parent_code"
+    t.string   "parent_name"
+    t.string   "change_division"
+    t.integer  "layout_id"
+    t.integer  "ldap",            :null => false
+    t.datetime "start_date"
+    t.string   "old_division"
+    t.integer  "old_id"
+    t.string   "old_code"
+    t.string   "old_name"
+    t.string   "old_name_en"
+    t.string   "old_email"
+    t.integer  "old_layout_id"
+  end
 
   create_table "sys_groups", :force => true do |t|
     t.integer  "unid"

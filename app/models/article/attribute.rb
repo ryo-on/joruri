@@ -14,6 +14,7 @@ class Article::Attribute < ActiveRecord::Base
   belongs_to :layout,  :foreign_key => :layout_id,  :class_name => "Cms::Layout"
   
   validates_presence_of :state, :name, :title
+  validates_uniqueness_of :name, :scope => [:content_id]
   
   def self.root_items(conditions = {})
     conditions = conditions.merge({})

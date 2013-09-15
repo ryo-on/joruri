@@ -145,7 +145,7 @@ class Cms::Stylesheet < Sys::Model::ValidationModel::Base
   ## Atcion methods
   
   def save
-    File.open(@full_path,'w') {|f| f.puts(self.body) }
+    File.open(@full_path,'w') {|f| f.write(self.body) }
     return true
   rescue => e
     errors.add_to_base(e.to_s)
@@ -190,7 +190,7 @@ class Cms::Stylesheet < Sys::Model::ValidationModel::Base
       return false
     end
     
-    File.open(src,'w') {|f| f.puts(file.read) }
+    File.open(src,'w') {|f| f.write(file.read) }
     return true
   rescue => e
     errors.add_to_base(e.to_s)
