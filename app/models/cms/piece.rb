@@ -4,7 +4,6 @@ class Cms::Piece < ActiveRecord::Base
   include ::Cms::Model::Base::Piece
   include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
-  include Sys::Model::Rel::Recognition
   include Sys::Model::Rel::Publication
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept

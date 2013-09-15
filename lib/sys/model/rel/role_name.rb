@@ -15,12 +15,13 @@ module Sys::Model::Rel::RoleName
   end
   
   def in_role_name_ids=(value)
+    @_in_role_name_ids_changed = true
     write_attribute(:in_role_name_ids, value.to_s)
   end
   
 private
   def save_user_roles
-    return true unless in_role_name_ids
+    return true unless @_in_role_name_ids_changed
     return false if @sent_save_user_roles
     @sent_save_user_roles = true
     

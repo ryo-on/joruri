@@ -6,6 +6,7 @@ Core.user_group.users.each do |u|
   next if u == Core.user && !Core.user.has_auth?(:manager)
   users << u
 end
+user_ids = users.collect{|u| u.id.to_s}
 
 max     = 5
 in_name = "#{f.object_name}_in_recognizer_ids"
@@ -15,14 +16,14 @@ e1_evt  = "moveSelectOptions(this.form, '#{e1_name}', '#{e2_name}', #{max});"
 e2_evt  = "moveSelectOptions(this.form, '#{e2_name}', '#{e1_name}');"
 
 e2_list = item.in_recognizer_ids.to_s.split(' ').uniq
+e2_list.each{|id| e2_list.delete(id) unless user_ids.index(id)}
+item.in_recognizer_ids = e2_list.join(' ')
 
-e1_opt = []
-users.each{|u| e1_opt << u unless e2_list.index(u.id.to_s) }
+e1_opt  = []
+e2_opt  = []
+users.each {|u| e2_list.index(u.id.to_s) ? e2_opt << u : e1_opt << u }
 e1_opt  = options_for_select(e1_opt.collect{|u| [u.name_with_id, u.id]})
-
-e2_opt = []
-users.each{|u| e2_opt << u if e2_list.index(u.id.to_s) }
-e2_opt = options_for_select(e2_opt.collect{|u| [u.name_with_id, u.id]})
+e2_opt  = options_for_select(e2_opt.collect{|u| [u.name_with_id, u.id]})
 
 style   = "width: 240px; height: 140px;"
 e1_tag  = select_tag(e1_name, e1_opt, :multiple => true, :onDblClick => e1_evt, :style => style)

@@ -17,6 +17,7 @@ module Sys::Model::Rel::Recognition
   end
   
   def in_recognizer_ids=(ids)
+    @_in_recognizer_ids_changed = true
     write_attribute(:in_recognizer_ids, ids.to_s)
   end
   
@@ -73,7 +74,7 @@ private
   end
   
   def save_recognition
-    return true unless in_recognizer_ids
+    return true unless @_in_recognizer_ids_changed
     return false unless unid
     return false if @sent_save_recognition
     @sent_save_recognition = true

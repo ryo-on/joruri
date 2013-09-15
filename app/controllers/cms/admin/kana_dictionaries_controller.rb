@@ -70,7 +70,7 @@ class Cms::Admin::KanaDictionariesController < Cms::Controller::Admin::Base
     @mode   = true
     @result = nil
     if params[:yomi_kana]
-      @mode = '読みカナ'
+      @mode = 'ふりがな'
       @result = Cms::Lib::Navi::Ruby.convert(params[:body])
     elsif params[:talk_kana]
       @mode = '音声テキスト'

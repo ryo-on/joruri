@@ -1,6 +1,7 @@
 <%
 
 role_names = Sys::RoleName.find(:all, :order => :name)
+role_ids   = role_names.collect{|c| c.id.to_s}
 
 max     = 5
 in_name = "#{f.object_name}_in_role_name_ids"
@@ -10,14 +11,14 @@ e1_evt  = "moveSelectOptions(this.form, '#{e1_name}', '#{e2_name}', #{max});"
 e2_evt  = "moveSelectOptions(this.form, '#{e2_name}', '#{e1_name}');"
 
 e2_list = item.in_role_name_ids.to_s.split(' ').uniq
+e2_list.each{|id| e2_list.delete(id) unless role_ids.index(id)}
+item.in_role_name_ids = e2_list.join(' ')
 
-e1_opt = []
-role_names.each{|c| e1_opt << c unless e2_list.index(c.id.to_s) }
+e1_opt  = []
+e2_opt  = []
+role_names.each{|c| e2_list.index(c.id.to_s) ? e2_opt << c : e1_opt << c }
 e1_opt  = options_for_select(e1_opt.collect{|c| [c.title, c.id]})
-
-e2_opt = []
-role_names.each{|c| e2_opt << c if e2_list.index(c.id.to_s) }
-e2_opt = options_for_select(e2_opt.collect{|c| [c.title, c.id]})
+e2_opt  = options_for_select(e2_opt.collect{|c| [c.title, c.id]})
 
 style   = "width: 240px; height: 140px;"
 e1_tag  = select_tag(e1_name, e1_opt, :multiple => true, :onDblClick => e1_evt, :style => style)
