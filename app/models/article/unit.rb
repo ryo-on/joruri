@@ -1,6 +1,6 @@
 # encoding: utf-8
 class Article::Unit < Sys::Group
-  include Sys::Model::Base::Page
+  include Cms::Model::Base::Page
   
   belongs_to :parent, :foreign_key => 'parent_id', :class_name => "#{self}"
   
@@ -21,6 +21,10 @@ class Article::Unit < Sys::Group
     item = self.new
     item.and :parent_id, 0
     item.find(:first, :order => :sort_no)
+  end
+  
+  def public_path(content)
+    "#{content.public_path}/units/#{name}/index.html"
   end
   
   def name

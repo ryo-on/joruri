@@ -27,7 +27,7 @@ class Cms::Concept < ActiveRecord::Base
   
   def validate
     if id != nil && id == parent_id
-      errors.add :parent_id, "を正しく入力してください。"
+      errors.add :parent_id, :invalid
     end
   end
   
@@ -76,5 +76,30 @@ class Cms::Concept < ActiveRecord::Base
       end
     end if id > 0
     path
+  end
+  
+  def make_candidates(args1, args2)
+    choices = []
+    loop    = 0
+    down    = lambda do |p, i|
+      choices << [('　　' * i) + p.name, p.id]
+      self.class.find(:all, eval("{#{args2}}")).each do |c|
+        down.call(c, i + 1)
+        break if (loop += 1) > 20
+      end
+    end
+    
+    self.class.find(:all, eval("{#{args1}}")).each {|item| down.call(item, 0) }
+    return choices
+  end
+  
+  def candidate_parents
+    args1  = %Q( :conditions => ["id != ? AND id = ? AND level_no = 1", id, Core.site.id], )
+    args1  = %Q( :conditions => ["id = ? AND level_no = 1", Core.site.id], ) unless id
+    args1 += %Q( :order => :name)
+    args2  = %Q( :conditions => ["id != ? AND parent_id = ?", id, p.id], )
+    args2  = %Q( :conditions => ["parent_id = ?", p.id], ) if new_record?
+    args2 += %Q( :order => :name)
+    make_candidates(args1, args2)
   end
 end

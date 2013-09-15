@@ -48,16 +48,27 @@ private
     http_error(500, nil)
   end
   
+  def error_log(message)
+    f = File.open(RAILS_ROOT + '/log/errors.log', 'a')
+    f.flock(File::LOCK_EX)
+    f.puts "#{Core.now} - #{message.to_s.gsub(/\n/, ' ')}"
+    f.flock(File::LOCK_UN)
+    f.close
+    return if RAILS_ENV !~ /development/
+  end
+  
   def http_error(status, message = nil)
     Page.error = status
     
     ## errors.log
-    f = File.open(RAILS_ROOT + '/log/errors.log', 'a')
-    f.flock(File::LOCK_EX)
-    f.puts "#{Core.now} #{status} #{request.env['REQUEST_URI']}" +
-      ', "' + message.to_s.gsub(/\n/, ' ').gsub(/"/, '""') + '"'
-    f.flock(File::LOCK_UN)
-    f.close
+    if Core.mode !~ /preview/
+      f = File.open(RAILS_ROOT + '/log/errors.log', 'a')
+      f.flock(File::LOCK_EX)
+      f.puts "#{Core.now} #{status} #{request.env['REQUEST_URI']}" +
+        ', "' + message.to_s.gsub(/\n/, ' ').gsub(/"/, '""') + '"'
+      f.flock(File::LOCK_UN)
+      f.close
+    end
     
     ## Render
     file = "#{Rails.public_path}/500.html"

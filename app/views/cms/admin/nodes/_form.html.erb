@@ -1,12 +1,4 @@
-<%
-
-route_selector = f.select_with_tree(
-  :route_id,
-  [Core.site.root_node],
-  :label => :title, :order => :name,
-  :include_blank => true)
-
-%><%= f.hidden_field :site_id  %>
+<%= f.hidden_field :site_id  %>
 <p class="form">基本情報</p>
 
 <table class="show">
@@ -22,8 +14,11 @@ route_selector = f.select_with_tree(
     <th><%= @item.locale(:model) %></th>
     <td><%= f.select :model, @models %></td>
   </tr><tr>
+    <th><%= @item.locale(:parent_id) %></th>
+    <td><%= f.select(:parent_id, @item.candidate_parents, :include_blank => true) %></td>
+  </tr><tr>
     <th><%= @item.locale(:route_id) %></th>
-    <td><%= route_selector %></td>
+    <td><%= f.select(:route_id, @item.candidate_routes, :include_blank => true) %></td>
   </tr><tr>
     <th><%= @item.locale(:title) %></th>
     <td><%= f.text_field :title, :class => 'title' %></td>

@@ -147,6 +147,9 @@ table.show td.mceEditor .lowerMenu a {
   text-align: center;
   text-decoration: none;
 }
+table.show td.mceEditor .lowerMenu object {
+  vertical-align: bottom;
+}
 table.show td textarea.body {
   width: 99%;
   height: 300px;

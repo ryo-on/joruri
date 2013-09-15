@@ -66,6 +66,10 @@ class Sys::User < ActiveRecord::Base
     "#{name}（#{id}）"
   end
 
+  def name_with_account
+    "#{name}（#{account}）"
+  end
+  
   def label(name)
     case name; when nil; end
   end

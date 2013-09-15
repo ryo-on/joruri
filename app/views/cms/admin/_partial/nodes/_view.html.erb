@@ -15,10 +15,17 @@
   </tr><tr>
     <th><%= @item.locale(:model) %></th>
     <td><%=h @item.model_name(:short) %></td>
+  </tr>
+  <% if @item.parent_id != 0 %>
+  <tr>
+    <th><%= @item.locale(:parent_id) %></th>
+    <td><%=h safe{@item.parent.title} %></td>
   </tr><tr>
     <th><%= @item.locale(:route_id) %></th>
     <td><%= @item.bread_crumbs.to_links.gsub(/<[\/a].*?>/, '') %></td>
-  </tr><tr>
+  </tr>
+  <% end %>
+  <tr>
     <th><%= @item.locale(:title) %></th>
     <td><%=h safe{@item.title} %></td>
   </tr>

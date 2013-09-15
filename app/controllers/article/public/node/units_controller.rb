@@ -5,7 +5,8 @@ class Article::Public::Node::UnitsController < Cms::Controller::Public::Base
   def pre_dispatch
     return http_error(404) unless @content = Core.current_node.content
     
-    @limit = 10
+    @page  = params[:page]
+    @limit = 50
     
     if params[:name]
       item = Article::Unit.new.public
@@ -23,16 +24,18 @@ class Article::Public::Node::UnitsController < Cms::Controller::Public::Base
   def show
     return http_error(404) unless params[:file] =~ /^(index|more)$/
     @more  = params[:file] == 'more'
-    @limit = 50 if @more
+    @page  = 1  unless @more
+    @limit = 10 unless @more
     
     doc = Article::Doc.new.public
     doc.agent_filter(request.mobile)
     doc.and :content_id, @content.id
     request.mobile? ? doc.visible_in_list : doc.visible_in_recent
     doc.unit_is @item
-    doc.page params[:page], @limit
+    doc.page @page, @limit
     @docs = doc.find(:all, :order => 'published_at DESC')
     return true if render_feed(@docs)
+    return http_error(404) if @more == true && @docs.current_page > @docs.total_pages
     
     if @item.level_no == 2
       show_department
@@ -55,7 +58,7 @@ class Article::Public::Node::UnitsController < Cms::Controller::Public::Base
       doc.visible_in_list
       doc.unit_is @item
       doc.attribute_is attr
-      doc.page 1, @limit
+      doc.page @page, @limit
       @docs = doc.find(:all, :order => 'published_at DESC')
     end
   end
@@ -71,7 +74,7 @@ class Article::Public::Node::UnitsController < Cms::Controller::Public::Base
       doc.visible_in_list
       doc.unit_is @item
       doc.attribute_is attr
-      doc.page 1, @limit
+      doc.page @page, @limit
       @docs = doc.find(:all, :order => 'published_at DESC')
     end
   end
@@ -87,7 +90,8 @@ class Article::Public::Node::UnitsController < Cms::Controller::Public::Base
     doc.visible_in_list
     doc.unit_is @item
     doc.attribute_is @attr
-    doc.page params[:page], @limit
+    doc.page @page, @limit
     @docs = doc.find(:all, :order => 'published_at DESC')
+    return http_error(404) if @docs.current_page > @docs.total_pages
   end
 end

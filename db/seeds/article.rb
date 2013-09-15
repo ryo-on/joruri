@@ -209,7 +209,6 @@ def create_inquiry(unid)
 end
 
 ## article/docs ##サンプル記事
-
 d = create doc.id, 5 , 2  , 11 , nil, 'hidden' , nil       ,'ジョールリ市ホームページを公開しました。', file('docs/001/body')
     create_inquiry(d.unid)
 d = create doc.id, 66, nil, nil, nil  , 'hidden' , nil     ,'サンプル記事　災害'

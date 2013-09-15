@@ -91,7 +91,16 @@ ActionController::Routing::Routes.draw do |map|
       :controller  => "admin/piece/areas",
       :path_prefix => "/_admin/#{mod}"
   end
+
+  map.connect "_admin/#{mod}/tool_import_uri",
+    :controller => "#{mod}/admin/tool/import_uri",
+    :action     => :import
   
+  map.connect "_admin/#{mod}/tool_import_html",
+    :controller => "#{mod}/admin/tool/import_html",
+    :action     => :import,
+    :conditions => {:method => :post}
+    
   ## public
   map.namespace(mod, :namespace => '', :path_prefix => '/_public') do |ns|
     ns.connect "node_docs/:name/index.html",

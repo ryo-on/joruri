@@ -42,11 +42,22 @@ module ApplicationHelper
     end
     links = will_paginate(items, defaults.merge!(options))
     return links if links.blank?
+    
     if Core.request_uri != Core.internal_uri
-      links.gsub!(/href="#{URI.encode(Core.internal_uri)}/) do |m|
-        m.gsub(/^(href=").*/, '\1' + URI.encode(Core.request_uri))
+      links.gsub!(/href="(#{URI.encode(Core.internal_uri)}[^"]+)/m) do |m|
+        page = m =~ /(\?|\&amp;)page=([0-9]+)/ ? m.gsub(/.*(\?|\&amp;)page=([0-9]+).*/, '\\2') : 1
+        uri  = m.gsub(/^href="#{URI.encode(Core.internal_uri)}/, URI.encode(Page.uri))
+        uri.gsub!(/\/(\?|$)/, "/index.html\\1")
+        uri.gsub!(/\.p[0-9]+\.html/, ".html")
+        uri.gsub!(/\.html/, ".p#{page}.html") if page.to_i > 1
+        %Q(href="#{uri})
       end
     end
+#    if Core.request_uri != Core.internal_uri
+#      links.gsub!(/href="#{URI.encode(Core.internal_uri)}/) do |m|
+#        m.gsub(/^(href=").*/, '\1' + URI.encode(Core.request_uri))
+#      end
+#    end
     if request.mobile?
       links.gsub!(/<a [^>]*?rel="prev( |")/) {|m| m.gsub(/<a /, '<a accesskey="*" ')}
       links.gsub!(/<a [^>]*?rel="next( |")/) {|m| m.gsub(/<a /, '<a accesskey="#" ')}

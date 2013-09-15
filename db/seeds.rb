@@ -161,6 +161,7 @@ end
 c_site  = create_cms_concept :parent_id => 0, :sort_no => 1, :name => 'ジョールリ市'
 c_top   = create_cms_concept :sort_no => 10 , :name => 'トップページ'
 c_mayor = create_cms_concept :sort_no => 30 , :name => '市長室'
+c_life  = create_cms_concept :sort_no => 50 , :name => 'ライフイベント'
 
 ## ---------------------------------------------------------
 ## cms/contents
@@ -195,10 +196,12 @@ def create_cms_layout(params)
   Cms::Layout.create(params)
 end
 
-l_top   = create_cms_layout :concept_id => c_top.id  , :name => 'top'    , :title => 'トップページ'
-l_map   = create_cms_layout :concept_id => c_site.id , :name => 'sitemap', :title => 'サイトマップ'
-l_mayor = create_cms_layout :concept_id => c_mayor.id, :name => 'mayor'  , :title => '市長の部屋'
-l_page  = create_cms_layout :concept_id => c_site.id , :name => 'page'   , :title => '詳細ページ'
+l_top      = create_cms_layout :concept_id => c_top.id  , :name => 'top'          , :title => 'トップページ'
+l_map      = create_cms_layout :concept_id => c_site.id , :name => 'sitemap'      , :title => 'サイトマップ'
+l_mayor    = create_cms_layout :concept_id => c_mayor.id, :name => 'mayor'        , :title => '市長の部屋'
+l_life     = create_cms_layout :concept_id => c_life.id , :name => 'lifeevent'    , :title => 'ライフイベント'
+l_life_top = create_cms_layout :concept_id => c_life.id , :name => 'lifeevent-top', :title => 'ライフイベントTOP'
+l_page     = create_cms_layout :concept_id => c_site.id , :name => 'page'         , :title => '詳細ページ'
 
 ## ---------------------------------------------------------
 ## cms/pieces
@@ -234,11 +237,15 @@ end
   [ c_top.id  , 'Cms::Free'      , 'photo'                , 'トップ写真' ],
   [ c_top.id  , 'Cms::Free'      , 'useful-information'   , 'お役立ち情報' ],
   [ c_top.id  , 'Cms::Free'      , 'topic'                , 'トピック' ],
+  [ c_top.id  , 'Cms::Free'      , 'lifeevent'            , 'ライフイベント' ],
   [ c_top.id  , 'Cms::Free'      , 'category'             , 'カテゴリ' ],
   [ c_top.id  , 'Cms::Free'      , 'inquiry'              , 'お問い合わせバナー' ],
+  [ c_top.id  , 'Cms::Free'      , 'population'           , '人口' ],
   [ c_mayor.id, 'Cms::Free'      , 'mayor-side'           , '市長室サイドメニュー' ],
   [ c_mayor.id, 'Cms::Free'      , 'mayor'                , '市長室' ],
   [ c_mayor.id, 'Cms::Free'      , 'mayor-title'          , '市長室タイトル' ],
+  [ c_life.id , 'Cms::Free'      , 'lifeevent-title'      , 'ライフイベントタイトル' ],
+  [ c_life.id , 'Cms::Free'      , 'lifeevent-side'       , 'ライフイベントサイドメニュー' ],
   [ c_site.id , 'Cms::Free'      , 'mobile-common-header' , 'モバイル：ヘッダー画像' ],
   [ c_site.id , 'Cms::Free'      , 'mobile-copyright'     , 'モバイル：コピーライト' ],
   [ c_top.id  , 'Cms::Free'      , 'mobile-address'       , 'モバイル：住所' ],
@@ -284,6 +291,17 @@ p = create_cms_node :parent_id => m.id, :concept_id => c_mayor.id, :layout_id =>
     create_cms_node :parent_id => p.id, :concept_id => c_mayor.id, :layout_id => l_mayor.id, :model => 'Cms::Page'     , :name => 'index.html', :title => 'プロフィール', :body => file("nodes/mayor/dummy/body")
 p = create_cms_node :parent_id => m.id, :concept_id => c_mayor.id, :layout_id => l_mayor.id, :model => 'Cms::Directory', :name => 'activity'  , :title => '市長へのメール'
     create_cms_node :parent_id => p.id, :concept_id => c_mayor.id, :layout_id => l_mayor.id, :model => 'Cms::Page'     , :name => 'index.html', :title => '市長へのメール', :body => file("nodes/mayor/dummy/body")
+
+p = create_cms_node :parent_id => 1   , :concept_id => c_life.id, :layout_id => l_life.id    , :model => 'Cms::Directory', :name => 'lifeevent'    , :title => 'ライフイベント'
+    create_cms_node :parent_id => p.id, :concept_id => c_life.id, :layout_id => l_life_top.id, :model => 'Cms::Page'     , :name => 'index.html'   , :title => 'ライフイベント', :body => file("nodes/life/index/body")
+    create_cms_node :parent_id => p.id, :concept_id => c_life.id, :layout_id => l_life.id    , :model => 'Cms::Page'     , :name => 'fukushi.html' , :title => '福祉・介護'    , :body => file("nodes/life/fukushi/body")
+    create_cms_node :parent_id => p.id, :concept_id => c_life.id, :layout_id => l_life.id    , :model => 'Cms::Page'     , :name => 'hikkoshi.html', :title => '引越し'        , :body => file("nodes/life/hikkoshi/body")
+    create_cms_node :parent_id => p.id, :concept_id => c_life.id, :layout_id => l_life.id    , :model => 'Cms::Page'     , :name => 'kekkon.html'  , :title => '結婚・離婚'    , :body => file("nodes/life/kekkon/body")
+    create_cms_node :parent_id => p.id, :concept_id => c_life.id, :layout_id => l_life.id    , :model => 'Cms::Page'     , :name => 'kosodate.html', :title => '子育て・教育'  , :body => file("nodes/life/kosodate/body")
+    create_cms_node :parent_id => p.id, :concept_id => c_life.id, :layout_id => l_life.id    , :model => 'Cms::Page'     , :name => 'ninshin.html' , :title => '妊娠・出産'    , :body => file("nodes/life/ninshin/body")
+    create_cms_node :parent_id => p.id, :concept_id => c_life.id, :layout_id => l_life.id    , :model => 'Cms::Page'     , :name => 'seijin.html'  , :title => '成人になったら', :body => file("nodes/life/seijin/body")
+    create_cms_node :parent_id => p.id, :concept_id => c_life.id, :layout_id => l_life.id    , :model => 'Cms::Page'     , :name => 'shibo.html'   , :title => '死亡'          , :body => file("nodes/life/shibo/body")
+    create_cms_node :parent_id => p.id, :concept_id => c_life.id, :layout_id => l_life.id    , :model => 'Cms::Page'     , :name => 'shushoku.html', :title => '就職・退職'    , :body => file("nodes/life/shushoku/body")
 
 ## ---------------------------------------------------------
 ## other modules

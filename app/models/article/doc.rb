@@ -6,7 +6,7 @@ class Article::Doc < ActiveRecord::Base
   include Sys::Model::Rel::Creator
   include Cms::Model::Rel::Inquiry
   include Sys::Model::Rel::Recognition
-  include Sys::Model::Rel::Publication
+  include Sys::Model::Rel::Publication ##
   include Sys::Model::Rel::Task
   include Cms::Model::Rel::Map
   include Sys::Model::Rel::File

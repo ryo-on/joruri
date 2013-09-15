@@ -6,7 +6,8 @@ class Article::Public::Node::CategoriesController < Cms::Controller::Public::Bas
     return http_error(404) unless @content = Core.current_node.content
     @docs_uri = @content.public_uri('Article::Doc')
     
-    @limit = 10
+    @page  = params[:page]
+    @limit = 50
     
     if params[:name]
       item = Article::Category.new.public
@@ -24,17 +25,20 @@ class Article::Public::Node::CategoriesController < Cms::Controller::Public::Bas
 
   def show
     return http_error(404) unless params[:file] =~ /^(index|more)$/
-    @more  = params[:file] == 'more'
-    @limit = 50 if @more
+    @more  = (params[:file] == 'more')
+    @page  = 1  unless @more
+    @limit = 10 unless @more
     
     doc = Article::Doc.new.public
     doc.agent_filter(request.mobile)
     doc.and :content_id, @content.id
     request.mobile? ? doc.visible_in_list : doc.visible_in_recent
     doc.category_is @item
-    doc.page 1, 10
+    doc.page @page, @limit
     @docs = doc.find(:all, :order => 'published_at DESC')
     return true if render_feed(@docs)
+    
+    return http_error(404) if @more == true && @docs.current_page > @docs.total_pages
     
     if @item.level_no == 1
       show_group
@@ -55,7 +59,7 @@ class Article::Public::Node::CategoriesController < Cms::Controller::Public::Bas
       doc.and :content_id, @content.id
       doc.visible_in_list
       doc.category_is cate
-      doc.page 1, @limit
+      doc.page @page, @limit
       @docs = doc.find(:all, :order => 'published_at DESC')
     end
   end
@@ -70,7 +74,7 @@ class Article::Public::Node::CategoriesController < Cms::Controller::Public::Bas
       doc.visible_in_list
       doc.category_is @item
       doc.unit_is dep
-      doc.page 1, @limit
+      doc.page @page, @limit
       @docs = doc.find(:all, :order => 'published_at DESC')
     end
   end
@@ -86,7 +90,9 @@ class Article::Public::Node::CategoriesController < Cms::Controller::Public::Bas
     doc.visible_in_list
     doc.category_is @item
     doc.unit_is @attr
-    doc.page params[:page], @limit
+    doc.page @page, @limit
     @docs = doc.find(:all, :order => 'published_at DESC')
+    
+    return http_error(404) if @docs.current_page > @docs.total_pages
   end
 end

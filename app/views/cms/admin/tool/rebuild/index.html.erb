@@ -1,7 +1,8 @@
 <%
 
 concepts = Cms::Concept.new.readable_children
-contents = Cms::Content.find(:all, :order => :name).collect{|c| [c.name, c.id]}
+cond     = {:model => 'Article::Doc'} ##
+contents = Cms::Content.find(:all, :conditions => cond, :order => :name).collect{|c| [c.name, c.id]}
 
 %>
 <p class="form">コンテンツ</p>

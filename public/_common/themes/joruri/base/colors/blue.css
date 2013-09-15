@@ -64,7 +64,23 @@ h1 {
 #menu ul {
   background-color: #0000bb;
 }
-
+#menu #population .pieceHeader {
+  background-color: #0000bb;
+  background-image: none;
+  border:  1px solid #ffffff;
+  line-height:1.4;
+  padding:4px 7px;
+}
+#population th.noBorder,
+#population th {
+  background-color: #0000bb;
+  border: 1px solid #ffffff;
+}
+#population td.noBorder,
+#population td {
+  background-color: #0000bb;
+  border: 1px solid #ffffff;
+}
 /* links style
 ----------------------------------------------- */
 #links ul {
@@ -236,7 +252,72 @@ table.city tr.cycle {
   border: none;
   background-image: none;
 }
-
+/* lifeevent
+----------------------------------------------- */
+#lifeEventSide {
+  background-color: #0000bb;
+}
+#contentTitle .pieceContainer {
+  background-image: none;
+}
+#contentTitle .pieceBody {
+  border: 1px solid #ffffff;
+  background-image: none;
+}
+#lifeEvent td.pregnant p,
+#lifeEvent td.child p,
+#lifeEvent td.work p,
+#lifeEvent td.adult p,
+#lifeEvent td.moving p,
+#lifeEvent td.marriage p,
+#lifeEvent td.welfare p,
+#lifeEvent td.death p {
+  border: 1px solid #ffffff;
+  background-color: #0000bb;
+}
+.lifeevents .lifeevent {
+  width: 48%;
+  border: 1px solid #ffffff;
+  background-color: #0000bb;
+}
+#page-lifeevent-index .contentPage .body h2 {
+  border: none;
+  background-color: transparent;
+}
+#page-lifeevent-ninshin #pageTitle h1,
+#page-lifeevent-kosodate #pageTitle h1,
+#page-lifeevent-shushoku #pageTitle h1,
+#page-lifeevent-seijin #pageTitle h1,
+#page-lifeevent-hikkoshi #pageTitle h1,
+#page-lifeevent-kekkon #pageTitle h1,
+#page-lifeevent-fukushi #pageTitle h1,
+#page-lifeevent-shibo #pageTitle h1 {
+  padding: 0px 0px 0px 10px;
+  background-image: none;
+}
+#page-lifeevent-ninshin #pageTitle .pieceBody,
+#page-lifeevent-kosodate #pageTitle .pieceBody,
+#page-lifeevent-shushoku #pageTitle .pieceBody,
+#page-lifeevent-seijin #pageTitle .pieceBody,
+#page-lifeevent-hikkoshi #pageTitle .pieceBody,
+#page-lifeevent-kekkon #pageTitle .pieceBody,
+#page-lifeevent-fukushi #pageTitle .pieceBody,
+#page-lifeevent-shibo #pageTitle .pieceBody {
+  padding: 0px 0px 0px 10px;
+  border: 1px solid #ffffff;
+  background-image: none;
+}
+#page-lifeevent-ninshin h2.lifeEventTitle,
+#page-lifeevent-kosodate h2.lifeEventTitle,
+#page-lifeevent-shushoku h2.lifeEventTitle,
+#page-lifeevent-seijin h2.lifeEventTitle,
+#page-lifeevent-hikkoshi h2.lifeEventTitle,
+#page-lifeevent-kekkon h2.lifeEventTitle,
+#page-lifeevent-fukushi h2.lifeEventTitle,
+#page-lifeevent-shibo h2.lifeEventTitle {
+  border-bottom: #ffffff solid 1px;
+  border-left: #ffffff solid 1px;
+}
 /* headerÅEfotter pege
 ----------------------------------------------- */
 .contentPage .body h2 {

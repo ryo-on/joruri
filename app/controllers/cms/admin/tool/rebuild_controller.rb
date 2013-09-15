@@ -4,6 +4,12 @@ class Cms::Admin::Tool::RebuildController < Cms::Controller::Admin::Base
   
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:designer)
+    
+    if params.key?(:test)
+      start = Time.now.to_f
+      rs = render_component_as_string(:controller => 'cms/script/nodes', :action => 'publish')
+      flash.now[:notice] = "ページを書き出しました。"
+    end
   end
   
   def index

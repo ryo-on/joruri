@@ -64,11 +64,20 @@ module Sys::Model::Rel::Publication
     return false unless content
     @save_mode = :publish
     
-    self.state          = 'public'
-    self.published_at ||= Core.now
+    if !options[:path] ####################
+      self.state          = 'public'
+      self.published_at ||= Core.now
+      return false unless save(false)
+    end
     
-    return false unless save(false)
-    Util::File.put(public_path, :data => content, :mkdir => true) unless mobile_page?
+    if options[:path] ####################
+      path = options[:path].gsub(/\/$/, "/index.html")
+      Util::File.put(path, :data => content, :mkdir => true) unless mobile_page?
+      return true
+    end
+    
+    path = public_path.gsub(/\/$/, "/index.html")
+    Util::File.put(path, :data => content, :mkdir => true) unless mobile_page?
     
     pub                = publisher || Sys::Publisher.new
     pub.published_at   = Core.now

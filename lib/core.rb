@@ -112,9 +112,9 @@ class Core
       Page.ruby = true
       path = path.gsub(/\.r$/, '')
     end
-#    if path =~ /\/index\.html$/
-#      path = path.gsub(/index\.html$/, '')
-#    end
+    if path =~ /\.p[0-9]+\.html$/
+      path = path.gsub(/\.p[0-9]+\.html$/, '.html')
+    end
     if path =~ /\/$/
       path += 'index.html'
     end
@@ -143,7 +143,8 @@ class Core
     return nil unless node
     
     @@current_node = node
-    return "/_public/#{node.model.underscore.pluralize.gsub(/^(.*?\/)/, "\\1node_")}/#{rest}"
+    @@internal_uri = "/_public/#{node.model.underscore.pluralize.gsub(/^(.*?\/)/, "\\1node_")}/#{rest}"
+#    return "/_public/#{node.model.underscore.pluralize.gsub(/^(.*?\/)/, "\\1node_")}/#{rest}"
   end
   
   def self.concept(key = nil)

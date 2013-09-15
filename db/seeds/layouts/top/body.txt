@@ -38,6 +38,8 @@
 
 [[piece/topic]]
 
+[[piece/lifeevent]]
+
 [[piece/category]]
 
 </div>
@@ -59,6 +61,8 @@
 [[piece/application]]
 
 [[piece/useful-information]]
+
+[[piece/population]]
 
 [[piece/qr-code]]
 

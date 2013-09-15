@@ -523,6 +523,8 @@ html:first-child #globalNavi a.bosai {
   background-position: left top;
   background-repeat: no-repeat;
   font-size: 0px;
+  text-indent: -9999px;
+  line-height: 1;
 }
 #calendar .pieceBody {
   width: 100%;

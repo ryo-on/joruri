@@ -1,23 +1,30 @@
 # encoding: utf-8
 class Cms::Node < ActiveRecord::Base
   include Sys::Model::Base
+  include Sys::Model::Rel::Publication ###
+  include Cms::Model::Base::Page
   include Cms::Model::Base::Node
   include Sys::Model::Tree
   include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
-  include Sys::Model::Rel::Publication
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
   include Cms::Model::Rel::Content
   include Cms::Model::Auth::Concept
   
   belongs_to :status,   :foreign_key => :state,      :class_name => 'Sys::Base::Status'
+  belongs_to :parent,   :foreign_key => :parent_id,  :class_name => 'Cms::Node'
   belongs_to :layout,   :foreign_key => :layout_id,  :class_name => 'Cms::Layout'
   
   has_many   :children, :foreign_key => :parent_id,  :class_name => 'Cms::Node',
     :order => :name, :dependent => :destroy
   
   validates_presence_of :parent_id, :state, :model, :name, :title
+  
+  def validate
+    errors.add :parent_id, :invalid if id != nil && id == parent_id
+    errors.add :route_id, :invalid if id != nil && id == route_id
+  end
   
   def states
     [['公開','public'],['非公開','closed']]
@@ -40,6 +47,26 @@ class Cms::Node < ActiveRecord::Base
       end
     end
     return item
+  end
+  
+  def public_path
+    "#{site.public_path}#{public_uri}"
+  end
+  
+  def public_uri
+    return @public_uri if @public_uri
+    uri = site.uri
+    parents_tree.each{|n| uri += "#{n.name}/" if n.name != '/' }
+    uri = uri.gsub(/\/$/, '') if directory == 0
+    @public_uri = uri
+  end
+  
+  def public_full_uri
+    return @public_full_uri if @public_full_uri
+    uri = site.full_uri
+    parents_tree.each{|n| uri += "#{n.name}/" if n.name != '/' }
+    uri = uri.gsub(/\/$/, '') if directory == 0
+    @public_full_uri = uri
   end
   
   def inherited_concept(key = nil)
@@ -99,25 +126,44 @@ class Cms::Node < ActiveRecord::Base
     collection.call(all_nodes_with_level, 0)
   end
   
-  def public_uri
-    uri = site.uri
-    parents_tree.each{|n| uri += "#{n.name}/" if n.name != '/' }
-    uri = uri.gsub(/\/$/, '') if directory == 0
-    uri
-  end
-  
-  def public_full_uri
-    uri = site.full_uri
-    parents_tree.each{|n| uri += "#{n.name}/" if n.name != '/' }
-    uri = uri.gsub(/\/$/, '') if directory == 0
-    uri
-  end
-  
   def css_id
     ''
   end
   
   def css_class
     return 'content content' + self.controller.singularize.camelize
+  end
+  
+  def make_candidates(args1, args2)
+    choices = []
+    loop    = 0
+    down    = lambda do |p, i|
+      choices << [('　　' * i) + p.title, p.id]
+      self.class.find(:all, eval("{#{args2}}")).each do |c|
+        down.call(c, i + 1)
+        break if (loop += 1) > 20
+      end
+    end
+    
+    self.class.find(:all, eval("{#{args1}}")).each {|item| down.call(item, 0) }
+    return choices
+  end
+  
+  def candidate_parents
+    args1  = %Q( :conditions => ["id = ?", Core.site.root_node], )
+    args1 += %Q( :order => :name)
+    args2  = %Q( :conditions => ["id != ? AND parent_id = ?", id, p.id], )
+    args2  = %Q( :conditions => ["parent_id = ?", p.id], ) if new_record?
+    args2 += %Q( :order => :name)
+    make_candidates(args1, args2)
+  end
+  
+  def candidate_routes
+    args1  = %Q( :conditions => ["id = ?", Core.site.root_node], )
+    args1 += %Q( :order => :name)
+    args2  = %Q( :conditions => ["id != ? AND route_id = ?", id, p.id], )
+    args2  = %Q( :conditions => ["route_id = ?", p.id], ) if new_record?
+    args2 += %Q( :order => :name)
+    make_candidates(args1, args2)
   end
 end

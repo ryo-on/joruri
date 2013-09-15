@@ -48,7 +48,7 @@ class Cms::Admin::NodesController < Cms::Controller::Admin::Base
     @models = models(false)
     
     @item = Cms::Node.new(params[:item])
-    @item.parent_id    = @parent.id
+    #@item.parent_id    = @parent.id
     @item.state        = 'public'
     @item.published_at = Core.now
     @item.directory    = (@item.model_type == :directory)

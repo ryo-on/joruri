@@ -15,7 +15,7 @@ module Sys::Controller::Scaffold::Publication
 
 protected
   def _publish(item, options = {}, &block)
-    if item.publishable? && item.publish(render_public_as_string(item.public_uri, Core.site))
+    if item.publishable? && item.publish(render_public_as_string(item.public_uri))
       flash[:notice] = options[:notice] || '公開処理が完了しました。'
       yield if block_given?
       respond_to do |format|

@@ -34,7 +34,8 @@ module Article::Model::Rel::Doc::Unit
   end
 
   def unit
-    return nil if !creator && creator.group_id.blank?
+    return nil unless creator
+    return nil if creator.group_id.blank?
     Article::Unit.find_by_id(creator.group_id)
   end
 end

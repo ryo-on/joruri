@@ -47,14 +47,15 @@ module Cms::Model::Base::Node
     exists    = [self.id]
     routes    = [self]
     parent_id = route_id
-    while current = self.class.find_by_id(parent_id)
+    while (current = self.class.find_by_id(parent_id))
       break if exists.index(current.id)
       exists << current.id
       
       routes.unshift(current)
       parent_id = current.route_id
       break if parent_id == 0
-      break if (loop += 1) > 15
+      break if loop > 20
+      loop += 1
     end if id != parent_id
     [routes]
   end

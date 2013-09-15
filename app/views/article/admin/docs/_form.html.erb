@@ -1,3 +1,4 @@
+<script type="text/javascript" src="/_common/js/swfupload/swfupload.js"></script>
 <script type="text/javascript">
 //<![CDATA[
 
@@ -6,6 +7,7 @@ function stopSubmitting(e) {
   if (!e) var e = window.event;
   if (e.keyCode == 13) return false;
 }
+
 window.onload = function() {
   var list = document.getElementsByTagName('input');
   for (var i=0; i<list.length; i++) {
@@ -13,6 +15,26 @@ window.onload = function() {
       list[i].onkeypress = function (event) { return stopSubmitting(event); }
     }
   }
+  var swfu = new SWFUpload({
+    upload_url : "/_admin/article/tool_import_html",
+    post_params: { "authenticity_token" : "<%= form_authenticity_token %>" },
+    flash_url : "/_common/js/swfupload/swfupload.swf",
+        file_post_name : "file",
+        file_size_limit : "10 MB",
+        file_types : "*.htm;*.html",
+        file_types_description : "HTML File",
+        file_upload_limit : 0,
+        file_queue_limit : 0,
+        debug: false,
+        button_action: SWFUpload.BUTTON_ACTION.SELECT_FILE,
+        button_image_url: "/_common/themes/admin/images/bt-html_import.png",
+        button_width: "122",
+        button_height: "25",
+        button_placeholder_id: "uploadHtml",
+        file_dialog_complete_handler : function(numFilesSelected, numFilesQueued) { this.startUpload(); },
+        upload_error_handler : function(file, errorCode, message){ alert('読み込みに失敗しました。'); },
+        upload_success_handler : function(file, data, response) { tinyMCE.activeEditor.setContent(data); }
+  });
 }
 
 // イベントカレンダー
@@ -24,8 +46,8 @@ function onChangeEventCalendar(value) {
   }
 }
 
-// リンクチェック
-function linkCheck() {
+// Form UI
+function checkLinks() {
   var f = $('itemForm');
   var m = document.createElement('input');
   m.setAttribute('type', 'hidden');
@@ -34,6 +56,26 @@ function linkCheck() {
   f.appendChild(m);
   f.submit();
 }
+function importUri() {
+  var uri = window.prompt('URL', 'http://');
+  if (!uri) return false 
+  if (uri == "" || uri == "http://") return false;
+  new Ajax.Request('/_admin/article/tool_import_uri', {
+    method: 'GET',
+    parameters: {uri: uri},
+    onSuccess: function(request) {
+      tinyMCE.activeEditor.setContent(request.responseText);
+    },
+    onFailure: function(request) {
+      alert("読み込みに失敗しました。");
+    },
+    onException : function(request, e)  {
+      alert("エラーが発生しました\n" + e.message);
+    }
+  });
+  return false;
+}
+
 //]]>
 </script>
 
@@ -60,7 +102,9 @@ function linkCheck() {
     <td colspan="4" class="mceEditor">
       <%= f.text_area :body, :class => 'body mceEditor' %>
       <div class="lowerMenu">
-        <a href="#nul" onclick="return linkCheck();">リンクチェック</a>
+        <a href="#" onclick="return checkLinks();">リンクチェック</a>
+        <a href="#" onclick="return importUri();">URLインポート</a>
+        <a href="#" id="uploadHtml">HTMLインポート</a>
       </div>
     </td>
   </tr>

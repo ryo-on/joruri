@@ -24,7 +24,7 @@
 
   <h1><a href="/_admin">Joruri</a></h1>
   <div class="menu">
-    <span class="user"><%= safe{Core.user_group.name} %>　<%=h safe{Core.user.name_with_id} %></span>
+    <span class="user"><%= safe{Core.user_group.name} %>　<%=h safe{Core.user.name_with_account} %></span>
     <a class="web" href="<%= Core.site.full_uri %>" target="_blank">公開画面</a>
     <a class="logout" href="/_admin/logout">ログアウト</a>
   </div>

@@ -2,11 +2,11 @@ module Cms::Controller::Layout
   @skip_layout = nil
   @no_cache    = nil
   
-  def render_public_as_string(path, site)
+  def render_public_as_string(path, options = {})
     mode = Core.set_mode('preview')
     
     Page.initialize
-    Page.site = site
+    Page.site = options[:site] || Core.site
     Page.uri  = path
     
     begin
@@ -16,16 +16,21 @@ module Cms::Controller::Layout
       opt    = routes.recognize_optimized(node, env)
       ctl    = opt[:controller]
       act    = opt[:action]
-      
       opt[:authenticity_token] = params[:authenticity_token] if params[:authenticity_token]
+      
       body   = render_component_as_string :controller => ctl, :action => act, :params => opt
+      errstr = "Action Controller: Exception caught"
+      raise(errstr) if body.index("<title>#{errstr}</title>")
     rescue => e
+      Page.error = 404
     end
-    
-    Core.set_mode(mode) #restore
     
     error = Page.error
     Page.initialize
+    Page.site = options[:site] || Core.site ##
+    Page.uri  = path                        ##
+    
+    Core.set_mode(mode)
     
     return error ? nil : body
   end

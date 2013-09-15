@@ -103,8 +103,6 @@ ActiveRecord::Schema.define(:version => 0) do
     t.text     "outline_uri"
   end
 
-  add_index "article_sections", ["id"], :name => "id"
-
   create_table "article_tags", :force => true do |t|
     t.integer  "unid"
     t.datetime "created_at"
@@ -113,6 +111,8 @@ ActiveRecord::Schema.define(:version => 0) do
     t.text     "word"
   end
 
+  add_index "article_tags", ["unid"], :name => "unid"
+  
   create_table "cms_concepts", :force => true do |t|
     t.integer  "unid"
     t.integer  "parent_id"

@@ -15,7 +15,7 @@ class Article::Admin::Tool::DocsController < Cms::Controller::Admin::Base
     items = item.find(:all, :order => 'published_at DESC')
     items.each do |item|
       begin
-        if item.rebuild(render_public_as_string(item.public_uri, item.content.site))
+        if item.rebuild(render_public_as_string(item.public_uri, :site => item.content.site))
           results[0] += 1
         else
           raise item.errors.full_messages if item.errors.size > 0

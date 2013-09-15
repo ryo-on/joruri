@@ -60,7 +60,7 @@ ActionController::Routing::Routes.draw do |map|
       :path_prefix => "/_admin/#{mod}/:parent",
       :member => {:download => :get}
   end
-
+    
   map.connect "_admin/#{mod}/:parent/inline_files/files/:name.:format",
     :controller => 'sys/admin/inline/files',
     :action     => 'download'

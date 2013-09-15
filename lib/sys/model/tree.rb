@@ -5,10 +5,13 @@ module Sys::Model::Tree
   
 private
   def climb_parents_tree(id, options = {})
-    tree = []
+    climbed = [id]
+    tree    = []
     while current = options[:class].find_by_id(id)
       tree.unshift(current)
       id = current.parent_id
+      break if climbed.index(id)
+      climbed << id
     end
     return tree
   end

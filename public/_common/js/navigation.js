@@ -115,25 +115,33 @@ function Navigation_ruby(element, flag, noticeContainer) {
     
     //redirect
     if (flag == 'on') {
-      if (location.pathname.search(/\.html$/i) != -1) {
-        location.href = location.pathname.replace(/\.html/, ".html.r") + location.search;
+      if (location.pathname.search(/\/$/i) != -1) {
+        location.href = location.pathname + "index.html.r" + location.search;
       } else if (location.pathname.search(/\.html\.mp3$/i) != -1) {
         location.href = location.pathname.replace(/\.html\.mp3/, ".html.r") + location.search;
-      } else if (location.pathname.search(/\/$/i) != -1) {
-        location.href = location.pathname + "index.html.r" + location.search;
+      } else if (location.pathname.search(/\.html$/i) != -1) {
+        location.href = location.pathname.replace(/\.html/, ".html.r") + location.search;
       }
     } else {
-      if (location.pathname.search(/\.html\.r/i) != -1) {
-        location.href = location.pathname.replace(/\.html\.r/,".html") + location.search ;
+      if (location.pathname.search(/\.html\.r$/i) != -1) {
+        location.href = location.pathname.replace(/\.html\.r/, ".html") + location.search;
+      } else if (location.pathname.search(/\/$/i) != -1) {
+        location.reload();
       }
     }
     
   } else {
     // render
     if ((new CookieManager()).getCookie('navigation_ruby') == 'on') {
-      element.removeClassName('rubyOff');
-      element.addClassName('rubyOn');
-      Navigation.showNotice(noticeContainer);
+      if (location.pathname.search(/\/$/i) != -1) {
+        location.href = location.pathname + "index.html.r" + location.search;
+      } else if (location.pathname.search(/\.html$/i) != -1) {
+        location.href = location.pathname.replace(/\.html/, ".html.r") + location.search;
+      } else {
+        element.removeClassName('rubyOff');
+        element.addClassName('rubyOn');
+        Navigation.showNotice(noticeContainer);
+      }
     } else {
       element.removeClassName('rubyOn');
       element.addClassName('rubyOff');

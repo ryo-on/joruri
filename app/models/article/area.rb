@@ -1,9 +1,9 @@
 class Article::Area < ActiveRecord::Base
   include Sys::Model::Base
+  include Cms::Model::Base::Page
   include Sys::Model::Tree
   include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
-  include Sys::Model::Base::Page
   include Cms::Model::Auth::Content
   
   belongs_to :status ,  :foreign_key => :state,      :class_name => 'Sys::Base::Status'
@@ -19,6 +19,10 @@ class Article::Area < ActiveRecord::Base
   def self.root_items(conditions = {})
     conditions = conditions.merge({:parent_id => 0, :level_no => 1})
     self.find(:all, :conditions => conditions, :order => :sort_no)
+  end
+  
+  def public_path
+    "#{content.public_path}/areas/#{name}/index.html"
   end
   
   def node_label(options = {})

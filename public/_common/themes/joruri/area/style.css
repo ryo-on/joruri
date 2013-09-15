@@ -155,3 +155,17 @@ table.city tr.cycle {
 .contentArticleArea td.address {
   width: 25%;
 }
+
+/* pagination
+----------------------------------------------- */
+.pagination {
+  text-align: center;
+}
+.pagination a {
+  padding: 0px 6px;
+}
+.pagination span.current {
+  padding: 0px 3px;
+  font-size: 150%;
+  font-weight: bold;
+}
