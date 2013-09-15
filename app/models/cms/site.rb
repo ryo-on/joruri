@@ -24,12 +24,17 @@ class Cms::Site < ActiveRecord::Base
   end
   
   def public_path
-    Rails.public_path + '_' + format('%08d', id).to_s
+    "#{Rails.public_path}_#{format('%08d', id)}"
   end
   
   def uri
     return '/' unless full_uri.match(/^[a-z]+:\/\/[^\/]+\//)
     full_uri.sub(/^[a-z]+:\/\/[^\/]+\//, '/')
+  end
+  
+  def dirname
+    return nil if full_uri !~ /^.*?:\/\/[^\/]+\/.+/
+    full_uri.gsub(/^.*?:\/\/[^\/]+\//, '').gsub(/\/$/, '')
   end
   
   def domain
@@ -61,14 +66,24 @@ class Cms::Site < ActiveRecord::Base
   end
   
   def self.find_by_script_uri(script_uri)
-    base = script_uri.gsub(/^[a-z]+:\/\/([^\/]+\/).*/, '\1')
-    item = Cms::Site.new.public
-    cond = Condition.new do |c|
-      c.or :full_uri, 'LIKE', "http://#{base}%"
-      c.or :mobile_full_uri, 'LIKE', "http://#{base}%"
+    find = Proc.new do |_base|
+      item = Cms::Site.new.public
+      item.and Condition.new do |c|
+        c.or :full_uri, 'LIKE', "http://#{_base}%"
+        c.or :mobile_full_uri, 'LIKE', "http://#{_base}%"
+      end
+      item.find(:first, :order => :id)
     end
-    item.and cond
-    return item.find(:first, :order => :id)
+    
+    ## dir
+    if script_uri =~ /^[a-z]+:\/\/[^\/]+\/[^\/]+\/.*/
+      base = script_uri.gsub(/^[a-z]+:\/\/([^\/]+\/[^\/]+\/).*/, '\1')
+      item = find.call(base)
+      return item if item
+    end
+    
+    base = script_uri.gsub(/^[a-z]+:\/\/([^\/]+\/).*/, '\1')
+    return find.call(base)
   end
   
 protected

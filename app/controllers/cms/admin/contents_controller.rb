@@ -19,7 +19,7 @@ class Cms::Admin::ContentsController < Cms::Controller::Admin::Base
   def show_htaccess #dev
     conf = []
     
-    cond = {:model => "Article::Doc"}
+    cond = {:site_id => Core.site.id, :model => "Article::Doc"}
     Article::Content::Doc.find(:all, :conditions => cond, :order => :id).each do |c|
       next if c.doc_node == nil
       line  = "RewriteRule"
@@ -29,7 +29,7 @@ class Cms::Admin::ContentsController < Cms::Controller::Admin::Base
       conf << line
     end
     
-    cond = {:model => "Faq::Doc"}
+    cond = {:site_id => Core.site.id, :model => "Faq::Doc"}
     Faq::Content::Doc.find(:all, :conditions => cond, :order => :id).each do |c|
       next if c.doc_node == nil
       line  = "RewriteRule"

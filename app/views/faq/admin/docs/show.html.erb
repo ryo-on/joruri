@@ -4,7 +4,7 @@
 <% if rep = @item.replace_page %>
 <div class="noticeBox">更新用の記事が作成されています ： <%= link_to h(rep.title), faq_doc_path(@content.id, rep.id) %></div>
 <% elsif org = @item.replaced_page %>
-<div class="noticeBox">更新される記事 ： <%= link_to h(org.title), faq_doc_path(@content.id, org.id) %></div>
+<div class="noticeBox">公開時に更新される記事 ： <%= link_to h(org.title), faq_doc_path(@content.id, org.id) %></div>
 <% end %>
 
 <table class="show">

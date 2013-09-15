@@ -1,6 +1,8 @@
 <% form_for :item, :url => "", :html => {:method => :post, :multipart => true} do |f| %>
 <%= f.error_messages %>
 
+<input type="submit" value="no submit" style="display: none;" onclick="return false;" />
+
 <% disp = params[:create_directory] ? "" : "none" %>
 <div id="new_directory" class="navi" style="display: <%= disp %>; padding: 5px;">
   <table>

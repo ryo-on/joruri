@@ -11,7 +11,7 @@
 
 <%= select 'cms_navi', 'site',
   Cms::Site.find(:all, :order => :id).collect{|i| [i.name, i.id]},
-  {:selected => Core.site.id, :include_blank => ''},
+  {:selected => Core.site.id},
   {:onchange => "return submitCmsNavigationSite(this.value)"} %>
 
 </form>

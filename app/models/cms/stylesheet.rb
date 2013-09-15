@@ -185,7 +185,7 @@ class Cms::Stylesheet < ActiveRecord::Base
       return false
     end
     
-    File.open(src,'w') {|f| f.write(file.read) }
+    ::File.open(src,'w') {|f| f.write(file.read) }
     return true
   rescue => e
     errors.add_to_base(e.to_s)
@@ -193,7 +193,7 @@ class Cms::Stylesheet < ActiveRecord::Base
   end
   
   def update_file
-    File.open(upload_path, 'w') {|f| f.write(self.body) }
+    ::File.open(upload_path, 'w') {|f| f.write(self.body) }
     return true
   rescue => e
     errors.add_to_base(e.to_s)

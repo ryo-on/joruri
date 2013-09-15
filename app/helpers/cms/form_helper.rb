@@ -96,9 +96,9 @@ module Cms::FormHelper
   
   def piece_replace_menu(item)
     if rep = item.replace_page
-      %Q(<div class="noticeBox">更新用の記事が作成されています ： #{link_to h(rep.title), rep.admin_uri}</div>)
+      %Q(<div class="noticeBox">更新用のピースが作成されています ： #{link_to h(rep.title), rep.admin_uri}</div>)
     elsif org = item.replaced_page
-      %Q(<div class="noticeBox">更新される記事 ： #{link_to h(org.title), org.admin_uri}</div>)
+      %Q(<div class="noticeBox">公開時に更新されるピース ： #{link_to h(org.title), org.admin_uri}</div>)
     end
   end
 end

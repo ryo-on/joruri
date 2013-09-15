@@ -24,14 +24,14 @@ function Navigation(settings) {
     }
     if (this.settings['ruby']) {
       var k = this.settings['ruby'];
-      if (k) {
+      if (k && $(k)) {
         Event.observe($(k), 'click', function(evt) {self.ruby(evt); Event.stop(evt);}, false);
       }
     }
     if (this.settings['talk']) {
       var k = this.settings['talk'];
-      if (k) {
-        $(this.settings['talk']).addClassName('talkOff');
+      if (k && $(k)) {
+        $(k).addClassName('talkOff');
         Event.observe($(k), 'click', function(evt) {self.talk(evt); Event.stop(evt);}, false);
       }
     }

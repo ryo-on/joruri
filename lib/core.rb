@@ -108,6 +108,11 @@ class Core
   def self.search_node(path)
     return nil unless Page.site
     
+    if dir = Page.site.dirname
+      return nil if path !~ /^\/#{Regexp.escape(dir)}/
+      path = path.gsub(/^\/#{Regexp.escape(dir)}/, '')
+    end
+    
     if path =~ /\.html\.r$/
       Page.ruby = true
       path = path.gsub(/\.r$/, '')

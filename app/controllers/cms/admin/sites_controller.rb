@@ -32,6 +32,7 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
     _create @item do
       make_concept(@item)
       make_node(@item)
+      ::FileUtils.mkdir_p(@item.public_path)
     end
   end
   

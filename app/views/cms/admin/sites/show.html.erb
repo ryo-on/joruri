@@ -13,6 +13,9 @@
   </tr><tr>
     <th><%= @item.locale(:related_site) %></th>
     <td><%=hbr @item.related_site %></td>
+  </tr><tr>
+    <th>ドキュメントルート</th>
+    <td><%=h @item.public_path %></td>
   </tr>
 </table>
 
