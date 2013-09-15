@@ -132,6 +132,10 @@ ja:
       cms/node/sitemap:
         name: "ファイル名"
 
+      ## piece
+      cms/piece/bread_crumb:
+        top_label: "TOPリンク文字"
+
       ## tool
       cms/model/tool/export:
         concept_id: "コンセプト"

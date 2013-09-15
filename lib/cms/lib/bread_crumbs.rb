@@ -9,12 +9,15 @@ class Cms::Lib::BreadCrumbs
     @crumbs
   end
   
-  def to_links
+  def to_links(options = {})
+    top_label = 'TOP'
+    top_label = options[:top_label] if !options[:top_label].blank?
+    
     h = ''
     @crumbs.each do |r|
       links = []
       if r.first[1] == Page.site.uri
-        r.first[0] = "TOP"
+        r.first[0] = top_label
       end
       if r.last[1] =~ /index\.html$/
         r.pop

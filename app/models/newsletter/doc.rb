@@ -5,7 +5,6 @@ class Newsletter::Doc < ActiveRecord::Base
   include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
   include Cms::Model::Rel::Content
-  include Cms::Model::Rel::Concept
   include Cms::Model::Auth::Concept
   include Newsletter::Model::Base::Delivery
 

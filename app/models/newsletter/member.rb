@@ -3,7 +3,6 @@ class Newsletter::Member < ActiveRecord::Base
   include Sys::Model::Base
   include Sys::Model::Base::Config
   include Cms::Model::Rel::Content
-  include Cms::Model::Rel::Concept
   include Cms::Model::Auth::Concept
   include Newsletter::Model::Base::Letter
 
