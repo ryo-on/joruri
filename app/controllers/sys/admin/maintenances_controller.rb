@@ -19,7 +19,7 @@ class Sys::Admin::MaintenancesController < Cms::Controller::Admin::Base
 
   def new
     @item = Sys::Maintenance.new({
-      :state        => 'closed',
+      :state        => 'public',
       :published_at => Core.now,
     })
   end

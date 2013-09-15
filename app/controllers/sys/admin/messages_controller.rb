@@ -19,7 +19,7 @@ class Sys::Admin::MessagesController < Cms::Controller::Admin::Base
 
   def new
     @item = Sys::Message.new({
-      :state        => 'closed',
+      :state        => 'public',
       :published_at => Core.now,
     })
   end

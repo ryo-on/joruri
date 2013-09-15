@@ -37,7 +37,7 @@ class Sys::Admin::UsersController < Cms::Controller::Admin::Base
   def create
     @item = Sys::User.new(params[:item])
     _create(@item, :location => sys_groups_path(@parent)) do
-      save_users_group(@item)
+      save_users_group(@item, params[:item][:group_id])
     end
   end
   
@@ -45,7 +45,7 @@ class Sys::Admin::UsersController < Cms::Controller::Admin::Base
     @item = Sys::User.new.find(params[:id])
     @item.attributes = params[:item]
     _update(@item, :location => sys_groups_path(@parent)) do
-      save_users_group(@item)
+      save_users_group(@item, params[:item][:group_id])
     end
   end
   
@@ -54,11 +54,15 @@ class Sys::Admin::UsersController < Cms::Controller::Admin::Base
     _destroy(@item, :location => sys_groups_path(@parent))
   end
   
-  def save_users_group(item)
-    unless ugroup = item.group_rels[0]
-      ugroup = Sys::UsersGroup.new({:user_id => item.id})
+  def save_users_group(item, group_id)
+    return true unless group_id
+    unless ug = item.group_rels[0]
+      ug = Sys::UsersGroup.new({:user_id => item.id})
     end
-    ugroup.group_id = item.group_id
-    ugroup.save
+    if ug.group_id != group_id
+      ug.group_id = group_id
+      ug.save
+    end
+    return true
   end
 end

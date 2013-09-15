@@ -11,7 +11,7 @@ class Sys::Group < ActiveRecord::Base
   
   has_many   :children  , :foreign_key => :parent_id, :class_name => 'Sys::Group', :order => :code, :dependent => :destroy
   has_and_belongs_to_many :users, :class_name => 'Sys::User',
-    :join_table => 'sys_users_groups', :order => '(sys_users.name)'
+    :join_table => 'sys_users_groups', :order => '(sys_users.id)'
   
   validates_presence_of :state, :level_no, :code, :name, :name_en, :ldap
   

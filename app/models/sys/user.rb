@@ -60,12 +60,12 @@ class Sys::User < ActiveRecord::Base
   end
   
   def group
-    return @group if @group
-    @group = (groups.size == 0 ? nil : groups[0])
+    Sys::Group.find_by_id(group_id)
   end
   
   def group_id
-    group ? group.id : nil
+    return @group_id if @group_id
+    groups.size == 0 ? nil : groups[0].id
   end
   
   def has_auth?(name)
@@ -101,17 +101,6 @@ class Sys::User < ActiveRecord::Base
       c.and :role_id, 'ON', roles.collect{|i| i.role_id}
     end
     Sys::UsersRole.find(:first, :conditions => cond.where)
-    
-#    cond  = "user_id = :user_id"
-#    cond += " AND role_id IN (" +
-#      " SELECT role_id FROM sys_object_privileges" +
-#      " WHERE action = :action AND item_unid = :item_unid )"
-#    params = {
-#      :user_id   => id,
-#      :action    => action.to_s,
-#      :item_unid => item,
-#    }
-#    Sys::UsersRole.find(:first, :conditions => [cond, params])
   end
 
   def delete_group_relations

@@ -52,7 +52,11 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
 
     _create @item do
       @item.fix_tmp_files(params[:_tmp])
-      send_recognition_request_mail(@item) if @item.state == 'recognize'
+      if @item.state == 'recognize'
+        send_recognition_request_mail(@item)
+      else
+        @item.recognition.destroy if @item.recognition;
+      end
     end
   end
 
@@ -62,7 +66,11 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
     @item.state      = params[:commit_recognize] ? 'recognize' : 'draft'
 
     _update(@item) do
-      send_recognition_request_mail(@item) if @item.state == 'recognize'
+      if @item.state == 'recognize'
+        send_recognition_request_mail(@item)
+      else
+        @item.recognition.destroy if @item.recognition;
+      end
       @item.close if @item.published_at
     end
   end

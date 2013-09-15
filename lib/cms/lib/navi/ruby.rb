@@ -5,8 +5,8 @@ class Cms::Lib::Navi::Ruby
     sh = Shell.cd("#{Rails.root}/ext")
     chasenrc = './config/chasenrc_ruby'
     format = '%P /'
-    command  = "echo \"#{str}\" | chasen -i w -r #{chasenrc} -F '#{format}'"
-    return sh.system(command).to_s.gsub(/\/.*/, '').strip
+    command = "echo \"#{str}\" | chasen -i w -r #{chasenrc} -F '#{format}'"
+    return sh.system(command).to_s.force_encoding('utf-8').gsub(/\/.*/, '').strip
   end
   
   def self.convert(str)

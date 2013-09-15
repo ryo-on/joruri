@@ -73,8 +73,8 @@ p = Sys::Group.create(:parent_id => 1, :level_no => 2, :sort_no => 20, :state =>
 ## user
 u1 = Sys::User.create(:state => 'enabled', :ldap => 0, :auth_no => 5, :name => 'システム管理者', :account => 'admin', :password => 'admin')
 u2 = Sys::User.create(:state => 'enabled', :ldap => 0, :auth_no => 2, :name => '徳島　太郎', :account => 'user1', :password => 'user1')
-u3 = Sys::User.create(:state => 'enabled', :ldap => 0, :auth_no => 5, :name => '徳島　花子', :account => 'user2', :password => 'user2')
-u4 = Sys::User.create(:state => 'enabled', :ldap => 0, :auth_no => 5, :name => '吉野　三郎', :account => 'user3', :password => 'user3')
+u3 = Sys::User.create(:state => 'enabled', :ldap => 0, :auth_no => 2, :name => '徳島　花子', :account => 'user2', :password => 'user2')
+u4 = Sys::User.create(:state => 'enabled', :ldap => 0, :auth_no => 2, :name => '吉野　三郎', :account => 'user3', :password => 'user3')
 
 ## users_group
 group = Sys::Group.find_by_name_en('hisyokohoka')

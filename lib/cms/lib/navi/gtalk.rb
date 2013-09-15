@@ -6,7 +6,7 @@ class Cms::Lib::Navi::Gtalk
     chasenrc = '../config/chasenrc_gtalk'
     format = '%P /'
     command  = "echo \"#{str}\" | chasen -i w -r #{chasenrc} -F '#{format}'"
-    return sh.system(command).to_s.gsub(/\/.*/, '').strip
+    return sh.system(command).to_s.force_encoding('utf-8').gsub(/\/.*/, '').strip
   end
   
   def self.make_text(content)

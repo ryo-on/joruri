@@ -86,8 +86,9 @@ private
       rec.created_at   = Core.now
       rec.updated_at   = Core.now
       rec.save_with_direct_sql
+      rec = Sys::Recognition.find_by_id(rec.id)
     end
-    rec = recognition(true)
+    rec.reset_info
     
     sql = "UPDATE #{self.class.table_name} SET recognized_at = NULL WHERE id = #{id}"
     self.recognized_at = nil
