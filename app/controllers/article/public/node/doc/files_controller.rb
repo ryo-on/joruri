@@ -2,6 +2,7 @@
 class Article::Public::Node::Doc::FilesController < Cms::Controller::Public::Base
   def show
     doc = Article::Doc.new.public_or_preview
+    doc.agent_filter(request.mobile)
     doc.and :name, params[:name]
     return http_error(404) unless @doc = doc.find(:first)
     

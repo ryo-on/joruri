@@ -18,6 +18,7 @@ class Article::Public::Piece::RecentTabsController < Sys::Controller::Public::Ba
       tab_class = "#{tab.name} current" if current
       
       doc = Article::Doc.new.public
+      doc.agent_filter(request.mobile)
       doc.and :content_id, @content.id
       doc.visible_in_recent
       doc.group_is(tab)

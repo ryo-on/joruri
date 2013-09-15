@@ -34,7 +34,8 @@ ja:
         site_uri: "公式サイトURL"
       
       article/doc: 
-        state_no: "状態"
+        state: "状態"
+        agent_state: "表示端末"
         published: "公開"
         closed: "定休日"
         publish_date: "発行日"

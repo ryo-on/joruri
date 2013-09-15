@@ -83,6 +83,13 @@
   </tr>
 </table>
 
+<table class="show">
+  <tr>
+    <th><%= @item.locale(:agent_state) %></th>
+    <td><%= @item.agent_status.name %></td>
+  </tr>
+</table>
+
 <% if !@item.mobile_title.blank? || !@item.mobile_body.blank? %>
 <br /><p class="form">携帯向け</p>
 

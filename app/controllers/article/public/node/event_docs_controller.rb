@@ -38,6 +38,7 @@ class Article::Public::Node::EventDocsController < Cms::Controller::Public::Base
     @items = []
     prev   = nil
     item = Article::Doc.new.public
+    item.agent_filter(request.mobile)
     item.and :content_id, Core.current_node.content.id
     item.event_date_is(:year => @calendar.year, :month => @calendar.month)
     docs = item.find(:all, :order => 'event_date')

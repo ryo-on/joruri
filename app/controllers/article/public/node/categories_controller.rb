@@ -28,6 +28,7 @@ class Article::Public::Node::CategoriesController < Cms::Controller::Public::Bas
     @limit = 50 if @more
     
     doc = Article::Doc.new.public
+    doc.agent_filter(request.mobile)
     doc.and :content_id, @content.id
     request.mobile? ? doc.visible_in_list : doc.visible_in_recent
     doc.category_is @item
@@ -50,6 +51,7 @@ class Article::Public::Node::CategoriesController < Cms::Controller::Public::Bas
 
     @item_docs = Proc.new do |cate|
       doc = Article::Doc.new.public
+      doc.agent_filter(request.mobile)
       doc.and :content_id, @content.id
       doc.visible_in_list
       doc.category_is cate
@@ -63,6 +65,7 @@ class Article::Public::Node::CategoriesController < Cms::Controller::Public::Bas
 
     @item_docs = Proc.new do |dep|
       doc = Article::Doc.new.public
+      doc.agent_filter(request.mobile)
       doc.and :content_id, Core.current_node.content.id
       doc.visible_in_list
       doc.category_is @item
@@ -78,6 +81,7 @@ class Article::Public::Node::CategoriesController < Cms::Controller::Public::Bas
     return http_error(404) unless @attr = attr.find(:first, :order => :sort_no)
     
     doc = Article::Doc.new.public
+    doc.agent_filter(request.mobile)
     doc.and :content_id, Core.current_node.content.id
     doc.visible_in_list
     doc.category_is @item

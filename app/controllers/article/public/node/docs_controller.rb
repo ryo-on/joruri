@@ -9,6 +9,7 @@ class Article::Public::Node::DocsController < Cms::Controller::Public::Base
   
   def index
     doc = Article::Doc.new.public
+    doc.agent_filter(request.mobile)
     doc.and :content_id, @content.id
     doc.and :language_id, 1
     doc.visible_in_list
@@ -31,9 +32,9 @@ class Article::Public::Node::DocsController < Cms::Controller::Public::Base
 
   def show
     doc = Article::Doc.new.public_or_preview
+    doc.agent_filter(request.mobile) if Core.mode != 'preview'
     doc.and :content_id, Core.current_node.content.id
     doc.and :name, params[:name]
-
     return http_error(404) unless @item = doc.find(:first)
 
     Page.current_item = @item

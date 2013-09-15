@@ -15,7 +15,7 @@
 <% end %>
 
 <% @docs.each do |doc| %>
-<div>・<%= link_to h(doc.title), doc.public_uri %><%=h doc.date_and_unit %></div><% end %>
+<div class="doc">・<%= link_to h(doc.title), doc.public_uri %></div><% end %>
 
 <%= paginate @docs %>
 

@@ -5,6 +5,7 @@ class Article::Public::Piece::RecentDocsController < Sys::Controller::Public::Ba
     @node = @content.recent_node
     
     doc = Article::Doc.new.public
+    doc.agent_filter(request.mobile)
     doc.and :content_id, @content.id
     doc.visible_in_recent
     doc.page 1, 10

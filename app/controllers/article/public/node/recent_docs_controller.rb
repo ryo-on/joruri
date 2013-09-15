@@ -6,6 +6,7 @@ class Article::Public::Node::RecentDocsController < Cms::Controller::Public::Bas
     @content = Core.current_node.content
     
     doc = Article::Doc.new.public
+    doc.agent_filter(request.mobile)
     doc.and :content_id, @content.id
     doc.visible_in_recent
     #doc.search params

@@ -14,6 +14,7 @@ class Article::Public::Node::TagDocsController < Cms::Controller::Public::Base
       params[:search] = true
       
       doc = Article::Doc.new.public
+      doc.agent_filter(request.mobile)
       doc.and :content_id, Core.current_node.content.id
       doc.and 'language_id', 1
       joins = "inner join article_tags USING(unid)"

@@ -3,51 +3,30 @@
 <div id="header">
 <div id="headerContainer">
 <div id="headerBody">
-
-[[piece/common-header]]
-
-</div>
-
+[[piece/mobile-common-header]]
+<!-- end #headerBody --></div>
 <!-- end #headerContainer --></div>
 <!-- end #header --></div>
-
-<div id="banner">
-<div id="bannerContainer">
-<div id="bannerBody">
-
-[[piece/common-banner]]
-[[piece/global-navi]]
-[[piece/bread-crumbs]]
-
-</div>
-<!-- end #bannerContainer --></div>
-<!-- end #banner --></div>
-
-<div id="main">
-
-<div id="wrapper">
 
 <div id="content">
 <div id="contentContainer">
 <div id="contentBody">
 
+[[piece/page-title]]
+
 [[content]]
 
-</div>
+<!-- end #contentBody --></div>
 <!-- end #contentContainer --></div>
 <!-- end #content --></div>
 
-<!-- end #wrapper --></div>
-<!-- end #main --></div>
-
 <div id="footer">
 <div id="footerContainer">
-
-
 <div id="footerBody">
-[[piece/footer-navi]]
-</div>
 
+[[piece/mobile-back-navi]]
+
+<!-- end #footerBody --></div>
 <!-- end #footerContainer --></div>
 <!-- end #footer --></div>
 

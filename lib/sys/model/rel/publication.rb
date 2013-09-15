@@ -55,7 +55,11 @@ module Sys::Model::Rel::Publication
     return false unless editable?
     return state == 'public'# && published_at
   end
-
+  
+  def mobile_page?
+    false
+  end
+  
   def publish(content, options = {})
     return false unless content
     @save_mode = :publish
@@ -64,7 +68,7 @@ module Sys::Model::Rel::Publication
     self.published_at ||= Core.now
     
     return false unless save(false)
-    Util::File.put(public_path, :data => content, :mkdir => true)
+    Util::File.put(public_path, :data => content, :mkdir => true) unless mobile_page?
     
     pub                = publisher || Sys::Publisher.new
     pub.published_at   = Core.now

@@ -22,6 +22,7 @@ module Cms::Controller::Layout
     rescue => e
     end
     
+    dump body
     Core.set_mode(mode) #restore
     
     error = Page.error

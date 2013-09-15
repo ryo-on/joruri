@@ -46,6 +46,7 @@ class Article::Doc < ActiveRecord::Base
     :if => %Q(state == "recognize")
   
   before_save :check_digit
+  before_save :modify_attributes
   
   def validate_platform_dependent_characters
     [:title, :body, :mobile_body].each do |attr|
@@ -59,6 +60,17 @@ class Article::Doc < ActiveRecord::Base
     [['下書き保存','draft'], ['承認待ち','recognize']]
   end
 
+  def agent_states
+    [['全てに表示',''], ['PCのみ表示','pc'], ['携帯のみ表示','mobile']]
+  end
+  
+  def agent_status
+    agent_states.each do |name, id|
+      return Sys::Base::Status.new(:id => id, :name => name) if agent_state.to_s == id
+    end
+    nil
+  end
+  
   def notice_states
     [['表示','visible'],['非表示','hidden']]
   end
@@ -92,6 +104,22 @@ class Article::Doc < ActiveRecord::Base
   def public_full_uri
     return nil unless node = content.doc_node
     "#{node.public_full_uri}#{name}/"
+  end
+  
+  def mobile_page?
+    agent_state == 'mobile'
+  end
+  
+  def agent_filter(agent)
+    self.and do |c|
+      c.or :agent_state, 'IS', nil
+      if agent #TODO/mobile
+        c.or :agent_state, 'mobile'
+      else
+        c.or :agent_state, 'pc'
+      end
+    end
+    self
   end
   
   def visible_in_notice
@@ -160,6 +188,11 @@ class Article::Doc < ActiveRecord::Base
     self
   end
   
+  def modify_attributes
+    self.agent_state = nil if agent_state == ''
+    return true
+  end
+  
   def check_digit
     return true if name.to_s != ''
     date = Date.strptime(Core.now, '%Y-%m-%d').strftime('%Y%m%d')
@@ -169,7 +202,7 @@ class Article::Doc < ActiveRecord::Base
     self.name = Util::String::CheckDigit.check(name)
     return true
   end
-
+  
   def bread_crumbs(doc_node)
     crumbs = []
     

@@ -1,3 +1,6 @@
+1.0.7
+  * ALTER TABLE `article_docs` ADD `agent_state` VARCHAR( 15 ) NULL AFTER `state`;
+
 1.0.6
   * CREATE TABLE `sys_ldap_synchros` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -14,7 +17,7 @@
     PRIMARY KEY (`id`),
     KEY `version` (`version`,`parent_id`,`entry_type`)
   );
-  
+
 1.0.3
   * ALTER TABLE `cms_nodes` ADD `mobile_title` TEXT NULL AFTER `body`;
   * ALTER TABLE `cms_nodes` ADD `mobile_body` LONGTEXT NULL AFTER `mobile_title`;

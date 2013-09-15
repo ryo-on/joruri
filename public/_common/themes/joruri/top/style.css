@@ -145,13 +145,13 @@
   color: #333333;
 }
 #footerNavi a {
-  color: #0000ff;
+  color: #003399;
 }
 #footerNavi a:visited {
-  color: #0000ff;
+  color: #660099;
 }
 #footerNavi a:hover {
-  color: #0000ff;
+  color: #FF0000;
 }
 
 /* qr-code

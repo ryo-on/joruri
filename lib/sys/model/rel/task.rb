@@ -21,7 +21,7 @@ module Sys::Model::Rel::Task
   def in_tasks
     unless val = read_attribute(:in_tasks)
       val = {}
-      tasks.each {|task| val[task.name] = task.process_at.strftime('%Y-%m-%d %H:%m') if task.process_at }
+      tasks.each {|task| val[task.name] = task.process_at.strftime('%Y-%m-%d %H:%M') if task.process_at }
       write_attribute(:in_tasks, val)
     end
     read_attribute(:in_tasks)

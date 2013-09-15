@@ -59,6 +59,7 @@ ActiveRecord::Schema.define(:version => 0) do
     t.integer  "unid"
     t.integer  "content_id"
     t.string   "state",         :limit => 15
+    t.string   "agent_state",   :limit => 15
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "recognized_at"

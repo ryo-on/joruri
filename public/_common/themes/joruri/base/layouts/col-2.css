@@ -22,7 +22,7 @@ body {
   margin:0px auto;
 }
 * html #container {
-  width : expression(document.body.clientWidth < 801? "800px" : document.body.clientWidth > 1201? "1200px" : "auto");
+  width : expression(document.body.clientWidth < 802? "800px" : document.body.clientWidth > 1202? "1200px" : "auto");
   }
 
 /* header
