@@ -8,9 +8,9 @@
 ----------------------------------------------- */
 body {
   width: 100%;
-  margin: 0px;
-  padding: 0px;
-  border: 0px;
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
 /* container
@@ -19,11 +19,11 @@ body {
   width: 100%;
   max-width: 1200px;
   min-width: 800px;
-  margin:0px auto;
+  margin: 0 auto;
 }
 * html #container {
   width:expression(document.documentElement.clientWidth < 802? "800px" : document.documentElement.clientWidth > 1202? "1200px" : "auto");
-  }
+}
 
 /* header
 ----------------------------------------------- */
@@ -31,7 +31,7 @@ body {
   clear: both;
 }
 #headerContainer {
-  padding: 0px 10px;
+  padding: 0 10px;
 }
 
 /* banner
@@ -41,7 +41,7 @@ body {
   margin-bottom: 7px;
 }
 #bannerContainer {
-  padding: 0px 10px;
+  padding: 0 10px;
 }
 
 /* navi
@@ -50,38 +50,37 @@ body {
   clear: both;
 }
 #naviContainer {
-  padding: 0px 10px;
+  padding: 0 10px;
 }
-
 
 /* main
 ----------------------------------------------- */
 #main {
   clear: both;
   margin-top: 10px;
-  padding: 0px 10px;
+  padding: 0 10px;
 }
 #main:after {
-    content: "";
-    clear: both;
-    height: 0;
-    display: block;
-    visibility: hidden;
+  content: "";
+  clear: both;
+  height: 0;
+  display: block;
+  visibility: hidden;
 }
 
-/* content(中央カラム)
+/* content(center column)
 ----------------------------------------------- */
 #content {
   float: right;
   width: 100%;
   margin-left: -190px;
-  margin-bottom:20px;
+  margin-bottom: 20px;
 }
 #contentBody {
   padding-left: 180px;
 }
 
-/* menu(左カラム)
+/* menu(left column)
 ----------------------------------------------- */
 #menu {
   float: left;
@@ -96,11 +95,11 @@ body {
   width: 100%;
 }
 #footerContainer {
-  padding: 30px 10px 0px 10px;
+  padding: 30px 10px 0;
 }
 
 /* pieces
 ----------------------------------------------- */
 #main .pieceSeparator {
-  margin: 10px 0px;
+  margin: 10px 0;
 }

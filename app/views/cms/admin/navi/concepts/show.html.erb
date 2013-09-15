@@ -21,7 +21,7 @@
     <th style="width: 240px;"><%= Cms::Layout.new.locale(:name) %></th>
     <th><%= Cms::Layout.new.locale(:title) %></th>
   </tr>
-  <% @item.layouts.each do |item| %>
+  <% @item.layouts.find(:all, :order => "name, id").each do |item| %>
   <tr <%= cycle '', 'class="cycle"' %>>
     <td><%= link_to h(item.name), cms_layout_path(item) %></td>
     <td><%=h item.title %></td>
@@ -37,10 +37,10 @@
     <th style="width: 240px;"><%= Cms::Piece.new.locale(:name) %></th>
     <th><%= Cms::Piece.new.locale(:title) %></th>
   </tr>
-  <% @item.pieces.each do |item| %>
+  <% @item.pieces.find(:all, :order => "name, id").each do |item| %>
   <tr <%= cycle '', 'class="cycle"' %>>
     <td><%= link_to h(item.name), item.admin_uri %></td>
-    <td><%= item.title %></td>
+    <td><%= item.title %><%= " （更新用）" if item.replace_page? %></td>
   </tr>
   <% end %>
   <% if @item.pieces.size == 0 %><tr><td colspan="2"><br /></td></tr><% end %>

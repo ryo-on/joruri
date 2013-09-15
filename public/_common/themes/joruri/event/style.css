@@ -17,7 +17,7 @@
 /* event-calender
 ----------------------------------------------- */
 .contentArticleEventDocs h2 {
-  margin: 0px 0 10px 0;
+  margin: 0 0 10px;
   padding: 5px 0 5px 10px;
   background-color: #e3f0fa;
   font-weight: bold;
@@ -36,16 +36,15 @@
 .contentArticleEventDocs td.title {
   width: 60%;
 }
-
 td.attribute span {
   display: block;
   width: 90%;
-  padding: 3px 0px;
-  border: 1px solid #666;
+  padding: 3px 0;
+  border: 1px solid #66666;
   text-align: center;
 }
 .attributeNyusatsu span {
-  background-color: #95C837;
+  background-color: #95c837;
   text-align: center;
 }
 .attributeSaiyo span {
@@ -65,8 +64,8 @@ td.attribute span {
   text-align: center;
 }
 .attributeKyoka span {
-  text-align: center;
   background-color: #dbe4ff;
+  text-align: center;
 }
 .pagination {
   margin-top: 10px;

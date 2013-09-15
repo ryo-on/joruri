@@ -33,7 +33,6 @@ class Article::Public::Node::AttributesController < Cms::Controller::Public::Bas
     @limit = 10 if !@more
     
     doc = Article::Doc.new.public
-    #doc.and :content_id, @content.id
     doc.visible_in_recent
     doc.agent_filter(request.mobile)
     doc.attribute_is @item
@@ -46,7 +45,6 @@ class Article::Public::Node::AttributesController < Cms::Controller::Public::Bas
 
     @item_docs = Proc.new do |dep|
       doc = Article::Doc.new.public
-      #doc.and :content_id, @content.id
       doc.visible_in_list
       doc.agent_filter(request.mobile)
       doc.attribute_is @item
@@ -70,7 +68,6 @@ class Article::Public::Node::AttributesController < Cms::Controller::Public::Bas
     return http_error(404) unless @attr = attr.find(:first, :order => :sort_no)
     
     doc = Article::Doc.new.public
-    #doc.and :content_id, @content.id
     doc.visible_in_list
     doc.agent_filter(request.mobile)
     doc.attribute_is @item

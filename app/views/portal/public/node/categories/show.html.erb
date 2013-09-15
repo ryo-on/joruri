@@ -1,5 +1,10 @@
 <div class="contentPortalCategory contentPortalCategoryDate">
 
+<div class="feed">
+  <%= link_to 'RSS' , "index.rss" , :class => 'feedRss' %>
+  <%= link_to 'Atom', "index.atom", :class => 'feedAtom' %>
+</div>
+
 <div class="entries">
   <% @items.each_with_index do |item, idx| %>
   <% if item[:date] %><%= "</ul>" if idx != 0  %>

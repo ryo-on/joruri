@@ -34,7 +34,7 @@ class Cms::Admin::NodesController < Cms::Controller::Admin::Base
     #item.and :directory, 0
     item.search params
     item.page params[:page], params[:limit]
-    item.order params[:sort], 'parent_id, name, id'
+    item.order params[:sort], 'parent_id, directory DESC, name, id'
     @items = item.find(:all)
     
     @skip_navi = true

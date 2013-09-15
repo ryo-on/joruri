@@ -72,4 +72,20 @@ class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
       end
     end
   end
+  
+  def duplicate_for_replace(item)
+    if item.editable? && dupe_item = item.duplicate(:replace)
+      flash[:notice] = '複製処理が完了しました。'
+      respond_to do |format|
+        format.html { redirect_to cms_pieces_path }
+        format.xml  { head :ok }
+      end
+    else
+      flash[:notice] = "複製処理に失敗しました。"
+      respond_to do |format|
+        format.html { redirect_to url_for(:action => :show) }
+        format.xml  { render :xml => item.errors, :status => :unprocessable_entity }
+      end
+    end
+  end
 end

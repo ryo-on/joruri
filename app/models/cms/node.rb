@@ -206,8 +206,10 @@ class Cms::Node < ActiveRecord::Base
         self.and_keywords v, :body
       when 's_directory'
         self.and :directory, v
+      when 's_name_or_title'
+        self.and_keywords v, :name, :title
       when 's_keyword'
-        self.and_keywords v, :title, :body
+        self.and_keywords v, :title, :body, :mobile_title, :mobile_body
       end
     end if params.size != 0
 

@@ -1,58 +1,54 @@
 # encoding: utf-8
 require 'mime/types'
-class Cms::Stylesheet < Sys::Model::ValidationModel::Base
-  attr_reader   :full_path, :path
-  attr_accessor :name, :body
+class Cms::Stylesheet < ActiveRecord::Base
+  include Sys::Model::Base
+  include Cms::Model::Auth::Concept
+  
+  attr_accessor :name, :body, :base_path, :base_uri
   attr_accessor :new_directory, :new_file, :upload
   
   validates_presence_of :name
   validates_format_of :name, :with=> /^[0-9A-Za-z@\.\-\_]+$/, :message=> :not_a_filename
   
-  def initialize(full_path, params = {})
-    @full_path  = full_path
-    @root       = params[:root]
-    @path       = @full_path
-    @path       = @path.gsub(@root + '/', '') if @root
-    @base_uri   = params[:base_uri] || ""
-    @new_record = params[:new_record] ? true : false
-    self.name   = ::File.basename(@path)
+  after_destroy :remove_file
+  
+  def self.new_by_path(path)
+    item = self.find_by_path(path) || self.new(:path => path)
+    item.base_path = "#{Rails.root}/public/_common/themes"
+    item.base_uri  = "/_common/themes/"
+    item.name      = ::File.basename(path)
+    #item.new_record = params[:new_record] ? true : false
+    return item
   end
   
-  def self.find(full_path, params = {})
-    params[:new_record] = false
-    self.new(full_path, params)
-  end
-  
-  def child_directories
-    items = []
-    Dir::entries(@full_path).sort.each do |name|
-      next if name =~ /^\.+/
-      path = ::File.join(@full_path, name)
-      next if ::FileTest.file?(path)
-      items << self.class.find(path, :root => @root, :base_uri => @base_uri)
+  def concept(reload = nil)
+    return @_concept if !reload && @_concept
+    if directory?
+      @_concept = concept_id ? Cms::Concept.find_by_id(concept_id) : nil
+    else
+      dir = self.class.new_by_path(::File.dirname(path))
+      @_concept = dir ? dir.concept : nil
     end
-    items
   end
   
-  def child_files
-    items = []
-    Dir::entries(@full_path).sort.each do |name|
-      next if name =~ /^\.+/
-      path = ::File.join(@full_path, name)
-      next if ::FileTest.directory?(path)
-      items << self.class.find(path, :root => @root, :base_uri => @base_uri)
-    end
-    items
+  def upload_path
+    ::File.join(base_path, path)
   end
   
-  ## Attributes
+  # def public_path
+    # ::File.join(base_uri, path)
+  # end
+  
+  def public_uri
+    ::File.join(base_uri, path)
+  end
   
   def directory?
-    ::FileTest.directory?(@full_path)
+    ::FileTest.directory?(upload_path)
   end
   
   def file?
-    ::FileTest.file?(@full_path)
+    ::FileTest.file?(upload_path)
   end
   
   def textfile?
@@ -60,18 +56,23 @@ class Cms::Stylesheet < Sys::Model::ValidationModel::Base
     mime_type.blank? || mime_type =~ /^text/i
   end
   
-  def escaped_path
-    URI.escape(path)
+  def read_stat
+    @_stat ||= ::File.stat(upload_path)
+    @_stat
   end
   
-  def uri
-    @full_path.gsub(@base_uri[0], @base_uri[1])
+  def read_body
+    self.body = NKF.nkf('-w', ::File.new(upload_path).read.to_s) if textfile?
+  rescue Exception
+    self.body = "#読み込みに失敗しました。"
+  end
+  
+  def mtime
+    read_stat.mtime
   end
   
   def mime_type
-    unless @_mime_type
-      @_mime_type = MIME::Types.type_for(@full_path)[0].to_s
-    end
+    @_mime_type ||= MIME::Types.type_for(upload_path)[0].to_s
     @_mime_type
   end
   
@@ -80,31 +81,35 @@ class Cms::Stylesheet < Sys::Model::ValidationModel::Base
     mime_type.gsub(/.*\//, '')
   end
   
-  def read_stat
-    unless @_stat
-      @_stat = ::File.stat(@full_path)
-    end
-    @_stat
-  end
-  
   def size(unit = nil)
-    read_stat
+    stat = read_stat
     if unit == :kb
-      (@_stat.size.to_f/1024).ceil
+      (stat.size.to_f/1024).ceil
     else
-      @_stat.size
+      stat.size
     end
   end
   
-  def updated_at
-    read_stat
-    @_stat.mtime
+  def child_directories
+    items = []
+    Dir::entries(upload_path).sort.each do |name|
+      next if name =~ /^\.+/
+      child_path = ::File.join(upload_path, name)
+      next if ::FileTest.file?(child_path)
+      items << self.class.new_by_path(::File.join(path, name))
+    end
+    items
   end
   
-  def read_body
-    self.body = NKF.nkf('-w', ::File.new(@full_path).read.to_s) if textfile?
-  rescue Exception
-    self.body = "#読み込みに失敗しました。"
+  def child_files
+    items = []
+    Dir::entries(upload_path).sort.each do |name|
+      next if name =~ /^\.+/
+      child_path = ::File.join(upload_path, name)
+      next if ::FileTest.directory?(child_path)
+      items << self.class.new_by_path(::File.join(path, name))
+    end
+    items
   end
   
   ## Validation
@@ -142,21 +147,11 @@ class Cms::Stylesheet < Sys::Model::ValidationModel::Base
     return errors.size == 0
   end
   
-  ## Atcion methods
-  
-  def save
-    File.open(@full_path,'w') {|f| f.write(self.body) }
-    return true
-  rescue => e
-    errors.add_to_base(e.to_s)
-    return false
-  end
-  
   def create_directory(name)
     @new_directory = name.to_s
     return false unless valid_filename?(:new_directory, @new_directory)
     
-    src = ::File::join(@full_path, @new_directory)
+    src = ::File::join(upload_path, @new_directory)
     return false unless valid_exist?(src)
     
     FileUtils.mkdir(src)
@@ -169,7 +164,7 @@ class Cms::Stylesheet < Sys::Model::ValidationModel::Base
     @new_file = name.to_s
     return false unless valid_filename?(:new_file, @new_file)
     
-    src = ::File::join(@full_path, @new_file)
+    src = ::File::join(upload_path, @new_file)
     return false unless valid_exist?(src)
     
     FileUtils.touch(src)
@@ -184,7 +179,7 @@ class Cms::Stylesheet < Sys::Model::ValidationModel::Base
       return false
     end
     
-    src = ::File::join(@full_path, file.original_filename)
+    src = ::File::join(upload_path, file.original_filename)
     if ::File.exist?(src) && FileTest.directory?(src)
       errors.add_to_base "同名のディレクトリが既に存在します。"
       return false
@@ -197,15 +192,27 @@ class Cms::Stylesheet < Sys::Model::ValidationModel::Base
     return false
   end
   
+  def update_file
+    File.open(upload_path, 'w') {|f| f.write(self.body) }
+    return true
+  rescue => e
+    errors.add_to_base(e.to_s)
+    return false
+  end
+  
   def rename(name)
-    @name = name.to_s
-    return false unless valid_filename?(:name, @name)
+    @new_name = name.to_s
+    return false unless valid_filename?(:name, @new_name)
     
-    src = @full_path
-    dst = ::File::join(::File.dirname(@full_path), @name)
-    return true if src == dst
+    src = upload_path
+    dst = ::File::join(::File.dirname(upload_path), @new_name)
     
-    FileUtils.mv(src, dst)
+    is_dir = directory?
+    FileUtils.mv(src, dst) if src != dst
+    
+    self.path = ::File.join(::File.dirname(path), @new_name)
+    return false if is_dir && !save
+    
     return true
   rescue => e
     errors.add_to_base(e.to_s)
@@ -213,25 +220,28 @@ class Cms::Stylesheet < Sys::Model::ValidationModel::Base
   end
   
   def move(new_path)
-    @path = new_path.to_s.gsub(/\/+/, '/')
+    @new_path = new_path.to_s.gsub(/\/+/, '/')
     
-    return false unless valid_path?(:path, @path)
+    return false unless valid_path?(:path, @new_path)
     
-    src = @full_path
-    dst = ::File::join(@root, @path)
+    src = upload_path
+    dst = ::File::join(base_path, @new_path)
     return true if src == dst
     
     if !::File.exist?(::File.dirname(dst))
-      dir = ::File.dirname(dst.gsub(@base_uri[0], @base_uri[1]))
-      errors.add_to_base "ディレクトリが見つかりません。（ #{dir} ）"
-    elsif file? && !::File.exist?(::File.dirname(dst))
-      dir = ::File.dirname(dst.gsub(@base_uri[0], @base_uri[1]))
-      errors.add_to_base "ディレクトリが見つかりません。（ #{dir} ）"
+      errors.add_to_base "ディレクトリが見つかりません。（ #{::File.dirname(dst)} ）"
+    elsif src == ::File.dirname(dst)
+      errors.add_to_base "ディレクトリが見つかりません。（ #{src} ）"
     end
     return false if errors.size != 0
     return false unless valid_exist?(dst, :file)
     
+    is_dir = directory?
     FileUtils.mv(src, dst)
+    
+    self.path = @new_path
+    return false if is_dir && !save
+    
     return true
   rescue => e
     if e.to_s =~ /^same file/i
@@ -244,12 +254,15 @@ class Cms::Stylesheet < Sys::Model::ValidationModel::Base
     return false
   end
   
-  def destroy
-    src = @full_path
-    FileUtils.rm_rf(src)
+  def remove_file
+    FileUtils.rm_rf(upload_path)
     return true
   rescue => e
     errors.add_to_base(e.to_s)
     return false
   end
+  
+  # def escaped_path
+    # URI.escape(path)
+  # end
 end

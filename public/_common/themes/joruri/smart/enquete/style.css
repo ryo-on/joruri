@@ -23,7 +23,7 @@
 }
 .enqueteForms .form .summary,
 .enqueteForm .form .body {
-  padding: 10px 10px 5px 10px;
+  padding: 10px 10px 5px;
   border-top: 1px solid #dddddd;
 }
 .enqueteForms .form h2,
@@ -46,7 +46,7 @@
   margin: 20px 0;
 }
 .enqueteForm .column {
-  margin: 10px 0 20px 0;
+  margin: 10px 0 20px;
 }
 .enqueteForm .column .body {
   margin: 10px 15px 0;

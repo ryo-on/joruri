@@ -19,7 +19,7 @@ class Cms::Feed < ActiveRecord::Base
     self
   end
 
-  def ass(alt = nil, &block)
+  def safe(alt = nil, &block)
     begin
       yield
     rescue NoMethodError => e
@@ -93,8 +93,8 @@ class Cms::Feed < ActiveRecord::Base
         entry.state          ||= 'public'
         entry.entry_id         = entry_id
         entry.entry_updated    = entry_updated
-        entry.title            = ass{e.elements['title'].text}
-        entry.summary          = ass{e.elements['summary'].text}
+        entry.title            = safe{e.elements['title'].texts.join}
+        entry.summary          = safe{e.elements['summary'].texts.join}
 
         ## links
         e.each_element('link') do |l|
@@ -124,9 +124,9 @@ class Cms::Feed < ActiveRecord::Base
 
         ## author
         if author = e.elements['author']
-          entry.author_name    = ass{author.elements['name'].text}
-          entry.author_email   = ass{author.elements['email'].text}
-          entry.author_uri     = ass{author.elements['uri'].text}
+          entry.author_name    = safe{author.elements['name'].text}
+          entry.author_email   = safe{author.elements['email'].text}
+          entry.author_uri     = safe{author.elements['uri'].text}
         end
 
         if entry.save

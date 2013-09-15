@@ -16,9 +16,10 @@ class Enquete::Public::Node::FormsController < Cms::Controller::Public::Base
   end
   
   def show
+    dump params
     item = Enquete::Form.new.public
     item.and :content_id, @content.id
-    item.and :id, params[:id]
+    item.and :id, params[:form]
     @item = item.find(:first)
     return http_error(404) unless @item
     
@@ -79,7 +80,7 @@ class Enquete::Public::Node::FormsController < Cms::Controller::Public::Base
   def sent
     item = Enquete::Form.new.public
     item.and :content_id, @content.id
-    item.and :id, params[:id]
+    item.and :id, params[:form]
     @item = item.find(:first)
   end
   

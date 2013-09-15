@@ -1,3 +1,14 @@
+1.2.5
+  CREATE TABLE cms_stylesheets (
+    id int(11) NOT NULL AUTO_INCREMENT,
+    concept_id int(11) DEFAULT NULL,
+    site_id int(11) DEFAULT NULL,
+    created_at datetime DEFAULT NULL,
+    updated_at datetime DEFAULT NULL,
+    path varchar(255) DEFAULT NULL,
+    PRIMARY KEY (id)
+  );
+
 1.2.2
   CREATE TABLE faq_categories (
     id int(11) NOT NULL AUTO_INCREMENT,

@@ -1,4 +1,5 @@
 @charset "UTF-8";
+
 /* =========================================================
    Pieces
 ========================================================= */
@@ -21,13 +22,13 @@
 .head-tools {
   width: 100%;
   margin: 0;
-  padding: 4px 0 3px 0;
+  padding: 4px 0 3px;
   background-position: left top;
   text-align: right;
 }
 
 /* navigationNotice
----------------------- */
+----------------------------------------------- */
 #navigationNotice {
   padding: 6px 10px;
   background-color: #dddddd;
@@ -51,13 +52,13 @@
   text-align:left;
 }
 #commonBanner .logo a {
-  font-weight:bold;
-  font-size:200%;
   width: 100%;
   height: 0px !important;
   height /**/: 70px; /* gokanmode */
-  line-height:70px;
+  line-height: 70px;
   padding-top: 70px;
+  font-weight: bold;
+  font-size: 200%;
 }
 #commonBanner .menu {
   float: right;
@@ -71,7 +72,7 @@
   padding-right: 10px;
 }
 #commonBanner .lowerMenu {
-  margin: 0px 0px 5px 0px;
+  margin: 0 0 5px;
   padding-right: 10px;
 }
 #commonBanner .menu form {
@@ -80,6 +81,7 @@
 input#search-box {
   width: 130px;
 }
+
 /* global navi
 ----------------------------------------------- */
 #globalNavi {
@@ -92,41 +94,26 @@ input#search-box {
   float: left;
   width: 12.45%;
   height: 34px;
-  background-color:#002B93;
+  line-height: 34px;
+  background-color: #002b93;
   color: #ffffff;
   font-weight: bold;
   text-decoration: none;
   text-align: center;
-  line-height: 34px;
 }
 #globalNavi a:hover {
   color: #ffffff;
 }
 #globalNavi a.top {
-  background-color:#42BEFD;
+  background-color: #42befd;
 }
 #globalNavi a.bosai {
-  background-color:#E34665;
+  background-color: #e34665;
 }
 *:first-child+html #globalNavi a {
   height: auto;
 }
-/* Opera9.6after */
-#globalNavi a:not(\*|*) {
-  width: 13%;
-}
-#globalNavi a.bosai:not(\*|*) {
-  width: 12%;
-}
-/* Opera9.6before */
-html:first-child #globalNavi a {
-  width: 12.5%;
-  margin-bottom: 7px;
-}
-html:first-child #globalNavi a.bosai {
-  width: 16.5%;
-  margin-bottom: 7px;
-}
+
 /* IE */
 * html #globalNavi {
   width: 100%;
@@ -137,13 +124,14 @@ html:first-child #globalNavi a.bosai {
 *:first-child+html #globalNavi {
   width: 100.3%;
 }
+
 /* global navi active
 ----------------------------------------------- */
 #page-index #globalNavi a.top,
 #globalNavi a.current,
 #globalNavi a.current:hover {
-  background-position: left -80px;
   background-repeat: repeat-x;
+  background-position: left -80px;
   color: #000000;
 }
 
@@ -156,6 +144,7 @@ html:first-child #globalNavi a.bosai {
   border-top: 1px solid #cccccc;
   border-bottom: 1px solid #cccccc;
 }
+
 /* footer-navi
 ---------------------- */
 #footerNavi {
@@ -163,7 +152,7 @@ html:first-child #globalNavi a.bosai {
   background-color: #001c66;
 }
 #footerNavi .pieceBody {
-  padding: 10px 0px;
+  padding: 10px 0;
   color: #ffffff;
   text-align: center;
 }
@@ -181,17 +170,18 @@ html:first-child #globalNavi a.bosai {
   color: #ffffff;
 }
 #footerNavi img{
-display:none;
+  display: none;
 }
+
 /* breadCrumbs
 ----------------------------------------------- */
 #breadCrumbs {
   clear: both;
-  margin: 7px 0px 0px 0px;
+  margin: 7px 0 0;
   line-height: 1.3;
 }
 #breadCrumbs .direction {
-  margin: 0px;
+  margin: 0;
 }
 #pageTop {
   text-align: right;
@@ -199,7 +189,7 @@ display:none;
 
 /* calendar
 ----------------------------------------------- */
-* html .calender {
+*html .calender {
   height: 1%;
 }
 #calendar .pieceContainer {
@@ -207,24 +197,24 @@ display:none;
 }
 #menu #calendar .pieceHeader,
 #links #calendar .pieceHeader {
-  display:none;
+  display: none;
 }
 #calendar .pieceBody {
   width: 100%;
   margin: 0;
   padding: 0;
-  border:1px solid #666666;
+  border: 1px solid #666666;
 }
 #calendar .calendar {
   float: left;
   width: 162px;
-  padding: 5px 0px 0px 6px;
-  font-size: 12px;
+  padding: 5px 0 0 6px;
   font-weight: bold;
+  font-size: 12px;
 }
 #calendar .links {
   clear: both;
-  padding: 5px 0px 10px 0px;
+  padding: 5px 0 10px;
   text-align: center;
 }
 #calendar .calendar .wdays .wday {
@@ -232,8 +222,8 @@ display:none;
   float: left;
   width: 17px;
   padding: 2px;
-  border-right: solid 1px #aaaaaa;
   border-top: solid 1px #aaaaaa;
+  border-right: solid 1px #aaaaaa;
   border-bottom: solid 1px #aaaaaa;
   text-align: center;
 }
@@ -259,8 +249,8 @@ display:none;
 }
 .january, .february, .march, .april, .may, .june, .july, .august, .september, .october, .november, .december {
   height: 25px;
-  line-height:25px;
-  padding-left:10px;
+  line-height: 25px;
+  padding-left: 10px;
 }
 .calendar .prevMonth, .calendar .nextMonth {
   color: #ffffff;
@@ -269,8 +259,9 @@ display:none;
   padding-left: 13px;
 }
 .links a.nextMonth {
-  padding-right:13px;
+  padding-right: 13px;
 }
+
 /* piece
 ----------------------------------------------- */
 .piece {
@@ -297,34 +288,34 @@ display:none;
   text-align: center;
 }
 #footerAdBanner .pieceBody {
-  padding: 10px 0px 5px 0px;
+  padding: 10px 0 5px;
 }
 #footerAdBanner a {
-  margin: 0px 10px;
+  margin: 0 10px;
 }
 
 /* page-title
 ----------------------------------------------- */
 *html #pageTitle {
-  height: 0px;
+  height: 0;
 }
 #pageTitle .pieceContainer {
-  margin: 0px;
-  padding: 0px;
-  background-color:#d0e6f3;
+  margin: 0;
+  padding: 0;
+  background-color: #d0e6f3;
   background-image: url(./images/tl-pegetitle-repeat.gif);
-  background-position: left top;
   background-repeat: repeat-x;
+  background-position: left top;
 }
 #pageTitle .pieceBody {
+  border: 1px solid #233f9b;
   background-image: url(./images/tl-pagetitle.gif);
   background-repeat: no-repeat;
-  border: 1px solid #233f9b;
 }
 #pageTitle h1 {
-  padding: 7px 0px 4px 20px;
-  font-size: 200%;
+  padding: 7px 0 4px 20px;
   font-weight: bold;
+  font-size: 200%;
 }
 h1 {
   color: #000000;
@@ -334,32 +325,31 @@ h1 {
 ----------------------------------------------- */
 #links ul,
 #menu ul {
-  padding: 5px 5px 0px 5px;
+  padding: 5px 5px 0;
   background-color: #f5f5f5;
 }
 #links li,
 #menu li {
-  padding: 0px 0px 5px 8px;
+  padding: 0 0 5px 8px;
   background-image: url(./files/icon_square_g.gif);
-  background-position: left 5px;
   background-repeat: no-repeat;
+  background-position: left 5px;
 }
 #menu .pieceHeader,
 #links .pieceHeader {
-  padding:0 5px;
-  background-color:#003FCD;
   line-height: 25px;
+  padding: 0 5px;
+  background-color:# 003fcd;
 }
 #menu .pieceHeader h2,
 #links .pieceHeader h2 {
   color: #ffffff;
   font-weight: bold;
 }
-
-#menu ul ,
-#links ul{
-  padding: 5px 10px 5px 10px;
-  border: 1px solid #003FCD;
+#menu ul,
+#links ul {
+  padding: 5px 10px;
+  border: 1px solid #003fcd;
 }
 
 /* Doc Tabs
@@ -367,7 +357,6 @@ h1 {
 #docTab {
   margin-bottom: 15px;
 }
-
 
 /* tabs
 ------------------------------------- */
@@ -382,15 +371,15 @@ h1 {
   width: 15%; 
   line-height: 24px;
   margin-right: 3px;
-  padding: 0px 3px;
-  background-color:#DDDDDD;
-  color: #333333;
+  padding: 0 3px;
   border: 1px solid #cccccc;
   border-bottom: none;
-  text-align: center;
-  white-space: nowrap;
+  background-color:#dddddd;
+  color: #333333;
   font-weight: bold;
+  text-align: center;
   text-decoration: none;
+  white-space: nowrap;
 }
 #docTabPortal .tabs:after,
 #docTab .tabs:after {  
@@ -403,22 +392,22 @@ h1 {
   clear: both;  
 }
 #docTabPortal .tabs a.bosai:hover, #docTab .tabs a.bosai:hover {
-  background-color:#001C66;
+  background-color: #001C66;
   color: #ffffff;
 }
 #docTabPortal .tabs a:hover,
 #docTab .tabs a:hover {
-  background-color:#001C66;
+  background-color: #001c66;
   color: #ffffff;
 }
 #docTabPortal .tabs a.bosai,
 #docTab .tabs a.bosai {
-  background-color:#FFCCCC;
+  background-color:#ffcccc;
   color: #cc0000;
 }
 #docTabPortal .tabs a.current,
 #docTab .tabs a.current {
-  background-color:#001C66;
+  background-color: #001c66;
   color: #ffffff;
 }
 
@@ -428,64 +417,61 @@ h1 {
 #docTab .wrapper {
   clear: both;
   width: 100%;
-  margin: 0px;
+  margin: 0;
   border: 1px solid #cccccc;
 }
 #docTabPortal .content,
 #docTab .content {
   clear: both;
   height: auto !important;
-  padding: 10px 0px;
+  padding: 10px 0;
 }
 #docTabPortal .content ul,
 #docTab .content ul {
-  padding: 0px 20px 0px 15px;
+  padding: 0 20px 0 15px;
 }
 #docTabPortal .content li,
 #docTab .content li {
-  margin: 0px;
-  padding: 0px 0px 0px 10px;
-  background-image: url(./files/ic-list-shinchaku.gif);
-  background-position: left 7px;
-  background-repeat: no-repeat;
   line-height: 1.5;
+  margin: 0;
+  padding: 0 0 0 10px;
+  background-image: url(./files/ic-list-shinchaku.gif);
+  background-repeat: no-repeat;
+  background-position: left 7px;
 }
 
 /* links
 ------------------------------------- */
-#docTab .links {
-}
 #docTab .links .feed {
   position: absolute;
   float: left;
   margin-top: 10px;
 }
- #docTab .links .feed a {
-  display: -moz-inline-box;
+#docTab .links .feed a {
   display: inline-block;
 } 
- #docTab .links .feed a.rss {
+#docTab .links .feed a.rss {
   width: 40px;
-  height: 0px;
+  height: 0;
+  vertical-align: middle;
+  overflow: hidden;
   margin-left: 15px;
   padding-top: 13px;
   background-image: url(./images/bt-rss.gif);
   background-repeat: no-repeat;
-  overflow: hidden;
-  vertical-align: middle;
 } 
 #docTab .links .feed a.atom {
   width: 45px;
-  height: 0px;
+  height: 0;
+  vertical-align: middle;
+  overflow: hidden;
   margin-left: 5px;
   padding-top: 13px;
   background-image: url(./images/bt-atom.gif);
   background-repeat: no-repeat;
-  overflow: hidden;
-  vertical-align: middle;
 }
 #docTabPortal .links .more,
- .links .more {
+.links .more {
   text-align: right;
   padding: 10px 20px 10px 10px;
 }

@@ -17,6 +17,16 @@ class Cms::Layout < ActiveRecord::Base
   
   after_destroy :remove_css_files
   
+  def self.find_contains_piece_name(name)
+    item = self.new
+    item.and Condition.new do |cond|
+      cond.or :body, 'LIKE', "%[[piece/#{name}]]%"
+      cond.or :mobile_body, 'LIKE', "%[[piece/#{name}]]%"
+      cond.or :smart_phone_body, 'LIKE', "%[[piece/#{name}]]%"
+    end
+    item.find(:all, :order => "concept_id, name")
+  end
+  
   def states
     [['公開','public']]
   end
@@ -225,5 +235,21 @@ class Cms::Layout < ActiveRecord::Base
     end
     
     return item.save(false)
+  end
+  
+  def search(params)
+    params.each do |n, v|
+      next if v.to_s == ''
+      
+      case n
+      when 's_name_or_title'
+        self.and_keywords v, :name, :title
+      when 's_keyword'
+        self.and_keywords v, :name, :title, :head, :body, :stylesheet, :mobile_head, :mobile_body, :mobile_stylesheet,
+          :smart_phone_head, :smart_phone_body, :smart_phone_stylesheet
+      end
+    end if params.size != 0
+    
+    return self
   end
 end

@@ -68,11 +68,11 @@
   display: block;
   width: 100px;
   height: 36px;
+  line-height: 36px;
   margin: 0 auto;
   padding: 3px 0;
   border: 1px solid #999999;
   background-color: #ececec;
-  line-height: 36px;
 }
 
 /* docs ichiran
@@ -165,6 +165,11 @@
   background-position: 0 7px;
   background-repeat: no-repeat;
 }
+.contentArticleRecentDocs .feed,
+.contentPortalEntries .feed,
+.contentPortalCategory .feed {
+  display: none;
+}
 
 /* =========================================================
     tag search
@@ -176,14 +181,13 @@
 .contentArticleTags table th {
   display: inline-block;
   width: 35px;
-  padding-right: 5px;
   vertical-align: middle;
+  padding-right: 5px;
   text-align: right;
 }
 .contentArticleTags td {
   display: inline-block;
   width: 87%;
-
 }
 input#s_tag {
   width: 95% !important;
@@ -192,7 +196,6 @@ input#s_tag {
 .contentArticleTags td.submitters {
   width: 55%;
   padding: 10px 0 0 45px;
-
 }
 .contentArticleTags .hit {
   height: 30px;
@@ -202,7 +205,7 @@ input#s_tag {
   color: #ffffff;
 }
 .contentArticleTags li {
-  border-bottom: 1px solid #CCCCCC;
+  border-bottom: 1px solid #cccccc;
 }
 .contentArticleTags li a {
   display: block;
@@ -211,8 +214,8 @@ input#s_tag {
   line-height: 44px;
   overflow: hidden;
   background-image: url("/_common/themes/joruri/smart/piece/images/ic-kiji.png");
-  background-position: 95% center;
   background-repeat: no-repeat;
+  background-position: 95% center;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -232,12 +235,12 @@ input.reset {
 ========================================================= */
 .dir-groupPortal .category h2 a {
   display: block;
-  background-image: url("/_common/themes/joruri/smart/piece/images/ic-link.png");
-  background-position: 95% center;
-  background-repeat: no-repeat;
-  border-bottom: 1px solid #CCCCCC;
   height: 44px;
   line-height: 44px;
   padding: 0 30px 0 15px;
+  background-image: url("/_common/themes/joruri/smart/piece/images/ic-link.png");
+  background-repeat: no-repeat;
+  background-position: 95% center;
+  border-bottom: 1px solid #cccccc;
 }
 

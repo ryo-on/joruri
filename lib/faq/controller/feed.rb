@@ -43,7 +43,7 @@ module Faq::Controller::Feed
           xml.item do
             xml.title        doc.title
             xml.link         doc.public_full_uri
-            xml.description  strimwidth(doc.body, 500)
+            xml.description  strimwidth(doc.body.to_s.gsub(/&nbsp;/, ' '), 500)
             xml.pubDate      doc.published_at.rfc822
             doc.category_items.each do |category|
               xml.category   category.title

@@ -15,12 +15,11 @@ div {
   font-size: small;
 }
 ul {
-  list-style-type: disc;
-  list-style-position: outside;
   margin: 0;
   padding: 0;
+  list-style-type: disc;
+  list-style-position: outside;
 }
-
 rp, rt {
   font-size: 80%;
   text-decoration: none;
@@ -35,7 +34,3 @@ a:visited {
 a:hover {
   color: #660099;
 }
-
-
-
-

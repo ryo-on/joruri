@@ -23,7 +23,7 @@ module Cms::Lib::Layout
     order << ' ELSE 100 END, id'
   end
   
-  def self.find_design_pieces(html, concepts)
+  def self.find_design_pieces(html, concepts, params)
     names = []
     #html.scan(/\[\[piece\/([0-9a-zA-Z\._-]+)\]\]/) {|name| names << name[0]}
     html.scan(/\[\[piece\/([^\]]+)\]\]/) {|name| names << name[0]}
@@ -45,6 +45,12 @@ module Cms::Lib::Layout
       end
       items[name] = item if item = item.find(:first, :order => concepts_order(concepts))
     end
+    
+    if Core.mode == "preview" && params[:piece_id]
+      item = Cms::Piece.find_by_id(params[:piece_id])
+      items[item.name] = item if item
+    end
+    
     return items
   end
   

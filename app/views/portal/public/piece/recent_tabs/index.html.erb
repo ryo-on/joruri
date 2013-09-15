@@ -25,6 +25,9 @@ var feedTabs<%= Page.current_piece.id %> = new ArticleDocTabs('<%= Page.current_
     <% @tabs.each do |tab| %>
     <div class="<%= tab[:name] %>" <%= 'style="display: none;"' unless tab[:current] %>>
       <% if tab[:more] %>
+      <div class="feed">
+        <a href="<%= ::File.join(tab[:more], 'index.rss') %>" class="rss">RSS</a>
+        <a href="<%= ::File.join(tab[:more], 'index.atom') %>" class="atom">Atom</a></div>
       <div class="more">
         <a href="<%= tab[:more] %>"><%=h @more_label %></a></div>
       <% end %>

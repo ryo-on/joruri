@@ -8,5 +8,5 @@
 </ul>
 
 <% if @node %><div class="links">
-  <%= link_to '&gt;&gt;一覧へ' , @node.public_uri , :class => 'more' %>
+  <%= link_to h(@more_label), @node.public_uri , :class => 'more' %>
 </div><% end %>

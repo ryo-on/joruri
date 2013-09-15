@@ -32,6 +32,19 @@ class Cms::DataFileNode < ActiveRecord::Base
     end
   end
   
+  def search(params)
+    params.each do |n, v|
+      next if v.to_s == ''
+      
+      case n
+      when 's_keyword'
+        self.and_keywords v, :name, :title
+      end
+    end if params.size != 0
+    
+    return self
+  end
+
 private
   def remove_files
     files.each {|file| file.destroy }

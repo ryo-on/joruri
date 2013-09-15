@@ -32,7 +32,6 @@ class Article::Public::Node::CategoriesController < Cms::Controller::Public::Bas
     @limit = 10 if !@more
     
     doc = Article::Doc.new.public
-    #doc.and :content_id, @content.id
     request.mobile? ? doc.visible_in_list : doc.visible_in_recent
     doc.agent_filter(request.mobile)
     doc.category_is @item
@@ -41,13 +40,6 @@ class Article::Public::Node::CategoriesController < Cms::Controller::Public::Bas
     return true if render_feed(@docs)
     
     return http_error(404) if @more == true && @docs.current_page > @docs.total_pages
-    
-    if @docs.size == 0
-      doc = Article::Doc.new.public
-      request.mobile? ? doc.visible_in_list : doc.visible_in_recent
-      doc.category_is @item
-      @no_recent = doc.find(:first) ? false : true
-    end
     
     if @item.level_no == 1
       show_group
@@ -70,7 +62,6 @@ class Article::Public::Node::CategoriesController < Cms::Controller::Public::Bas
 
     @item_docs = Proc.new do |cate|
       doc = Article::Doc.new.public
-      #doc.and :content_id, @content.id
       doc.visible_in_list
       doc.agent_filter(request.mobile)
       doc.category_is cate
@@ -82,13 +73,8 @@ class Article::Public::Node::CategoriesController < Cms::Controller::Public::Bas
   def show_detail
     @items = Article::Unit.find_departments(:web_state => 'public')
 
-    if @no_recent
-      return @item_docs = Proc.new {|dep| Array.new.paginate }
-    end
-    
     @item_docs = Proc.new do |dep|
       doc = Article::Doc.new.public
-      #doc.and :content_id, Page.current_node.content.id
       doc.visible_in_list
       doc.agent_filter(request.mobile)
       doc.category_is @item
@@ -106,7 +92,6 @@ class Article::Public::Node::CategoriesController < Cms::Controller::Public::Bas
     return http_error(404) unless @attr = attr.find(:first, :order => :sort_no)
     
     doc = Article::Doc.new.public
-    #doc.and :content_id, Page.current_node.content.id
     doc.visible_in_list
     doc.agent_filter(request.mobile)
     doc.category_is @item

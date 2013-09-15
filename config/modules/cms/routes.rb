@@ -105,9 +105,12 @@ ActionController::Routing::Routes.draw do |map|
       :controller => "admin/tool/import",
       :action     => :index
   end
-      
+  
   ## public
   map.namespace(mod, :namespace => '', :path_prefix => '/_public') do |ns|
+    ns.connect "node_preview/",
+      :controller => "public/node/preview",
+      :action     => :index
     ns.connect "node_pages/",
       :controller => "public/node/pages",
       :action     => :index

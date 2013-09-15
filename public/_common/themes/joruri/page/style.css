@@ -16,10 +16,10 @@
   font-weight: bold;
 }
 .contentPage .body p {
-  margin: 0px 0px 15px 10px;
+  margin: 0 0 15px 10px;
 }
 .contentPage .body ul {
-  margin: 0px 0px 15px 20px;
+  margin: 0 0 15px 20px;
   list-style-type: disc;
 }
 
@@ -30,16 +30,17 @@
   padding-left: 10px;
 }
 .usefunction {
-  margin: 3px 0px;
+  margin: 3px 0;
   padding: 3px;
   background-color: #ececec;
 }
 .usefunction img {
   vertical-align: middle;
 }
+
 /* mobile
 ----------------------------------------------- */
 .img-box1 {
   float: left;
-  margin: 0px 30px 0px 0px;
+  margin: 0 30px 0 0;
 }

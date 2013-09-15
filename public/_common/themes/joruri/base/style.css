@@ -7,8 +7,8 @@
 /* elements
 ----------------------------------------------- */
 * {
-  margin: 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
   font-size: 1.0em;
   font-size: 100%;
   font-style: normal;
@@ -19,13 +19,13 @@ html {
 }
 body {
   height: 100%;
-  border: 0px;
+  border: 0;
   background-color: #ffffff;
   font-size: 80%;
 }
 body, td, th, select, option {
   font-family: "MS PGothic", "ＭＳ Ｐゴシック", Arial, Verdana, Osaka, sans-serif;
- font-weight: lighter; 
+  font-weight: lighter; 
 }
 input, textarea {
   font-size: 110%;
@@ -33,7 +33,7 @@ input, textarea {
   font-family: Arial, sans-serif;
 }
 blockquote {
-  margin: 10px 20px 10px 20px;
+  margin: 10px 20px;
 }
 h1, h2, h3, h4, h5 {
   font-size: 120%;
@@ -50,7 +50,7 @@ pre {
 }
 table {
   border-collapse: collapse;
-  border-spacing: 0px;
+  border-spacing: 0;
   empty-cells: show;
 }
 ul {
@@ -73,7 +73,7 @@ a:visited {
   color: #660099;
 }
 a:hover {
-  color: #FF0000;
+  color: #ff0000;
   text-decoration: underline;
 }
 
@@ -84,56 +84,56 @@ a:hover {
 /* blank to clear
 ----------------------------------------------- */
 div.clearBlank {
- clear: both;
- height: 1px;
- font-size: 1px;
- line-height: 1px;
+  clear: both;
+  height: 1px;
+  font-size: 1px;
+  line-height: 1px;
 }
 
 /* icon
 ----------------------------------------------- */
 img.fileIcon {
- position: relative;
- margin-right: 3px;
- vertical-align: middle;
+  position: relative;
+  margin-right: 3px;
+  vertical-align: middle;
 }
 
 /* Notices
 ----------------------------------------------- */
 ul.notices {
- margin: 0px 0px 15px 0px;
- padding: 5px 10px;
- background-color: #ddeeff;
- border: 1px solid #bbddff;
+  margin: 0px 0px 15px;
+  padding: 5px 10px;
+  background-color: #ddeeff;
+  border: 1px solid #bbddff;
 }
 ul.notices li {
- color: #3355ff;
+  color: #3355ff;
 }
 
 /* Errors
 ----------------------------------------------- */
 .formError {
- margin: 15px 0px;
- padding: 10px;
- border: 1px solid #ee0000;
- color: #ee0000;
+  margin: 15px 0;
+  padding: 10px;
+  border: 1px solid #ee0000;
+  color: #ee0000;
 }
 .elementError {
- margin: 3px 0px 0px 0px;
- color: #ee0000;
+  margin: 3px 0 0;
+  color: #ee0000;
 }
 .errorExplanation {
-  margin: 0px 10px 20px 10px;
+  margin: 0 10px 20px;
   color: #ee0000;
 }
 .errorExplanation h2 {
   padding: 4px 6px;
   font-weight: bold;
   border: 1px solid #ee4;
-  background-color: #FFFF99;
+  background-color: #ffff99;
 }
 .errorExplanation p {
-  margin: 15px 10px 10px 10px;
+  margin: 15px 10px 10px;
   font-weight: bold;
 }
 .errorExplanation ul {
@@ -147,66 +147,66 @@ ul.notices li {
 /* Form relation
 ----------------------------------------------- */
 div.submitters {
- margin: 20px 10px;
+  margin: 20px 10px;
 }
 div.submitters input, div.submitters a {
- margin: 0px 10px;
+  margin: 0 10px;
 }
 div.submitters input {
- width: 100px;
+  width: 100px;
 }
 
 /* Table for list
 ----------------------------------------------- */
 table.list {
- width: 100%;
+  width: 100%;
 }
 table.list th {
- padding: 6px 7px;
- border: 1px solid #bbbbbb;
- background-color: #e4e4e4;
- color: #000;
- font-weight: lighter;
- text-align: left;
+  padding: 6px 7px;
+  border: 1px solid #bbbbbb;
+  background-color: #e4e4e4;
+  color: #000000;
+  font-weight: lighter;
+  text-align: left;
 }
 table.list td {
- padding: 6px 7px;
- border: 1px solid #cccccc;
+  padding: 6px 7px;
+  border: 1px solid #cccccc;
 }
 table.list tr.cycle td {
- background-color: #f7f7f7;
+  background-color: #f7f7f7;
 }
 
 /* Table for form
 ----------------------------------------------- */
 table.form {
- width: 100%;
- margin: 10px 0px 0px 0px;
+  width: 100%;
+  margin: 10px 0 0;
 }
 table.form th {
- width: 200px;
- padding: 6px 7px;
- border: 1px solid #bbbbbb;
- background-color: #e4e4e4;
- color: #000;
- font-weight: lighter;
- text-align: left;
+  width: 200px;
+  padding: 6px 7px;
+  border: 1px solid #bbbbbb;
+  background-color: #e4e4e4;
+  color: #000000;
+  font-weight: lighter;
+  text-align: left;
 }
 table.form td {
- padding: 6px 7px;
- border: 1px solid #cccccc;
+  padding: 6px 7px;
+  border: 1px solid #cccccc;
 }
 
 /* Form relation
 ----------------------------------------------- */
 div.submitters {
- margin: 20px 10px;
+  margin: 20px 10px;
 }
 div.submitters input, div.submitters a {
- margin: 0px 10px;
+  margin: 0 10px;
 }
 div.submitters input {
- width: 100px;
+  width: 100px;
 }
 
 /* Icons.

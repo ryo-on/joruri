@@ -16,22 +16,22 @@
 /* Content
 ----------------------------------------------- */
 #contentTitle {
-  margin: 0px;
-  padding: 0px;
-  background-color:#d0e6f3;
+  margin: 0;
+  padding: 0;
+  background-color: #d0e6f3;
   background-image: url(../piece/images/tl-pegetitle-repeat.gif);
-  background-position: left top;
   background-repeat: repeat-x;
+  background-position: left top;
 }
 #contentTitle .pieceContainer {
+  border: 1px solid #233f9b;
   background-image: url(../piece/images/tl-pagetitle.gif);
   background-repeat: no-repeat;
-  border: 1px solid #233f9b;
 }
 #contentTitle .pieceBody {
-  padding: 8px 0px 7px 20px;
-  font-size: 200%;
+  padding: 8px 0 7px 20px;
   font-weight: bold;
+  font-size: 200%;
 }
 .body {
   padding-left: 10px;
@@ -54,24 +54,24 @@
   margin-bottom: 10px;
   background-color: #ffffff;
   background-image: url(./images/tl-shinchaku-repeat.gif);
-  background-position: left top;
   background-repeat: repeat-x;
+  background-position: left top;
 }
 #pageTitle .pieceBody {
   border: none;
   background-image: url(./images/tl-bottom2.gif);
-  background-position: right top;
   background-repeat: no-repeat;
+  background-position: right top;
 }
 #pageTitle h1 {
-  margin: 0px;
+  margin: 0;
   padding: 7px 10px;
   background-image: url(./images/tl-top2.gif);
-  background-position: left top;
   background-repeat: no-repeat;
+  background-position: left top;
   color: #ffffff;
-  font-size: 120%;
   font-weight: bold;
+  font-size: 120%;
 }
 h1 {
   color: #000000;

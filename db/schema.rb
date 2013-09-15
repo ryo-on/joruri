@@ -423,6 +423,14 @@ ActiveRecord::Schema.define(:version => 20110803122623) do
     t.text     "related_site"
   end
 
+  create_table "cms_stylesheets", :force => true do |t|
+    t.integer  "concept_id"
+    t.integer  "site_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "path"
+  end
+
   create_table "cms_talk_tasks", :force => true do |t|
     t.integer  "unid"
     t.string   "dependent",    :limit => 64

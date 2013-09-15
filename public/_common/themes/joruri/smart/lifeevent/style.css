@@ -19,9 +19,9 @@
   background-position: left top;
 }
 #contentTitle h2 {
-  padding-left: 22px;
   height: 44px;
   line-height: 46px;
+  padding-left: 22px;
   font-size: 140%;
 }
 
@@ -104,8 +104,8 @@
   font-size: 140%;
 }
 .lifeevent {
-  background-position: 10px center;
   background-repeat: no-repeat;
+  background-position: 10px center;
   border-bottom: 1px solid #cccccc;
 }
 .lifeeventPregnant {

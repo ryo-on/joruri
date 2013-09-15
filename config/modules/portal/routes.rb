@@ -56,7 +56,7 @@ ActionController::Routing::Routes.draw do |map|
 
   ## public
   map.namespace(mod, :namespace => '', :path_prefix => '/_public') do |ns|
-    ns.connect "node_feed_entries/index.html",
+    ns.connect "node_feed_entries/index.:format",
       :controller => "public/node/feed_entries",
       :action     => :index
     ns.connect "node_event_entries/:year/:month/index.html",
@@ -65,7 +65,7 @@ ActionController::Routing::Routes.draw do |map|
     ns.connect "node_event_entries/index.html",
       :controller => "public/node/event_entries",
       :action     => :month
-    ns.connect "node_categories/:name/:file.html",
+    ns.connect "node_categories/:name/:file.:format",
       :controller => "public/node/categories",
       :action     => :show
     ns.connect "node_categories/index.html",

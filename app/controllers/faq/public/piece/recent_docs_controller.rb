@@ -2,7 +2,11 @@
 class Faq::Public::Piece::RecentDocsController < Sys::Controller::Public::Base
   def index
     @content = Faq::Content::Doc.find(Page.current_piece.content_id)
-    @node = @content.recent_node
+    @node    = @content.recent_node
+    @piece   = Page.current_piece
+    
+    @more_label = @piece.setting_value(:more_label)
+    @more_label = ">>一覧へ" if @more_label.blank?
     
     limit = Page.current_piece.setting_value(:list_count)
     limit = (limit.to_s =~ /^[1-9][0-9]*$/) ? limit.to_i : 10

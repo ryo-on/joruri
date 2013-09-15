@@ -34,10 +34,10 @@ ActionController::Routing::Routes.draw do |map|
     ns.connect "node_forms/index.:format",
       :controller => "public/node/forms",
       :action     => :index
-    ns.connect "node_forms/:id/index.:format",
+    ns.connect "node_forms/:form/index.:format",
       :controller => "public/node/forms",
       :action     => :show
-    ns.connect "node_forms/:id/sent.:format",
+    ns.connect "node_forms/:form/sent.:format",
       :controller => "public/node/forms",
       :action     => :sent
   end

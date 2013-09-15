@@ -89,7 +89,7 @@ img.fileIcon {
 /* Notices
 ----------------------------------------------- */
 ul.notices {
-  margin: 0 0 15px 0;
+  margin: 0 0 15px;
   padding: 5px 10px;
   border: 1px solid #bbddff;
   background-color: #ddeeff;
@@ -107,7 +107,7 @@ ul.notices li {
   color: #ee0000;
 }
 .elementError {
-  margin: 3px 0 0 0;
+  margin: 3px 0 0;
   color: #ee0000;
 }
 .errorExplanation {

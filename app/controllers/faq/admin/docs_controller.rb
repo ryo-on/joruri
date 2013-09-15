@@ -121,7 +121,7 @@ class Faq::Admin::DocsController < Cms::Controller::Admin::Base
   end
   
   def duplicate_for_replace(item)
-    if dupe_item = item.duplicate(:replace)
+    if item.editable? && dupe_item = item.duplicate(:replace)
       flash[:notice] = '複製処理が完了しました。'
       respond_to do |format|
         format.html { redirect_to url_for(:action => :index) }

@@ -17,7 +17,11 @@ class Faq::Public::Node::Doc::FilesController < Cms::Controller::Public::Base
     item.and :name, "#{params[:file]}.#{params[:format]}"
     return http_error(404) unless @file = item.find(:first)
     
-    file_path = "#{::File.dirname(@doc.public_path)}/files/#{@file.name}"
+    if Core.mode == "preview"
+      file_path = @file.upload_path
+    else ## public
+      file_path = "#{::File.dirname(@doc.public_path)}/files/#{@file.name}"
+    end
     return http_error(404) unless FileTest.exists?(file_path)
     
     if img = @file.mobile_image(request.mobile, :path => file_path)

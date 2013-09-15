@@ -32,7 +32,6 @@ class Faq::Public::Node::CategoriesController < Cms::Controller::Public::Base
     @limit = 10 if !@more
     
     doc = Faq::Doc.new.public
-    #doc.and :content_id, @content.id
     request.mobile? ? doc.visible_in_list : doc.visible_in_recent
     doc.agent_filter(request.mobile)
     doc.category_is @item
@@ -51,7 +50,6 @@ class Faq::Public::Node::CategoriesController < Cms::Controller::Public::Base
 
     @item_docs = Proc.new do |cate|
       doc = Faq::Doc.new.public
-      #doc.and :content_id, @content.id
       doc.agent_filter(request.mobile)
       doc.visible_in_list
       doc.category_is cate

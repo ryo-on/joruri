@@ -1,10 +1,16 @@
 # encoding: utf-8
 module Sys::Model::Rel::UnidRelation
   def self.included(mod)
-    mod.has_many :rel_unids, :primary_key => 'unid', :foreign_key => 'unid', :class_name => 'Sys::UnidRelation',
-      :dependent => :destroy
-    mod.has_many :rel_unids_for_destroy, :primary_key => 'unid', :foreign_key => 'rel_unid', :class_name => 'Sys::UnidRelation',
-      :dependent => :destroy
+    mod.has_many :rel_unids, :primary_key => 'unid', :foreign_key => 'unid', :class_name => 'Sys::UnidRelation'
+    
+    mod.after_destroy :remove_unid_relations
+  end
+  
+  def remove_unid_relations
+    replace_page?
+    Sys::UnidRelation.destroy_all(:unid => unid)
+    Sys::UnidRelation.destroy_all(:rel_unid => unid)
+    return true
   end
   
   def unid_related?(options = {})
@@ -20,8 +26,9 @@ module Sys::Model::Rel::UnidRelation
   end
   
   def replace_page?
+    return @unid_relation_replace_page if @unid_relation_replace_page
     cond = {:unid => unid, :rel_type => "replace"}
-    Sys::UnidRelation.find(:first, :conditions => cond) ? true : nil
+    @unid_relation_replace_page = Sys::UnidRelation.find(:first, :conditions => cond) ? true : nil
   end
   
   def replaced_page?

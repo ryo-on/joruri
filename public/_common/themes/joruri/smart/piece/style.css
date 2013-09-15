@@ -1,4 +1,5 @@
 @charset "UTF-8";
+
 /* =========================================================
    Pieces
 ========================================================= */
@@ -152,6 +153,10 @@
 }
 #smartDocTab .attributes,
 #smartDocTabPortal .attributes {
+  display: none;
+}
+#smartDocTab .feed,
+#smartDocTabPortal .feed {
   display: none;
 }
 

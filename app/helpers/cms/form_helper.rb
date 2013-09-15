@@ -93,4 +93,12 @@ module Cms::FormHelper
     locals = {:item => item}
     render :partial => 'cms/admin/_partial/maps/view', :locals => locals
   end
+  
+  def piece_replace_menu(item)
+    if rep = item.replace_page
+      %Q(<div class="noticeBox">更新用の記事が作成されています ： #{link_to h(rep.title), rep.admin_uri}</div>)
+    elsif org = item.replaced_page
+      %Q(<div class="noticeBox">更新される記事 ： #{link_to h(org.title), org.admin_uri}</div>)
+    end
+  end
 end

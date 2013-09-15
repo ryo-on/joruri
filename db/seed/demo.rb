@@ -278,9 +278,8 @@ end
 
 #Cms::Node.update_all({:layout_id => l_top.id}, {:id => 1})
 Cms::Node.update_all({:concept_id => c_top.id, :layout_id => l_top.id}, {:id => 2})
-#create_cms_node :parent_id => 0, :layout_id => l_top.id , :model => 'Cms::Directory', :name => '/'          , :title => site_name
-#create_cms_node :parent_id => 1, :layout_id => l_top.id , :model => 'Cms::Page'     , :name => 'index.html' , :title => site_name, :concept_id => c_top.id
-create_cms_node :parent_id => 1, :layout_id => l_page.id, :model => 'Cms::Page'     , :name => 'mobile.html', :title => 'ジョールリ市携帯サイトのご紹介', :body => file("nodes/pages/mobile/body")
+create_cms_node :parent_id => 1, :layout_id => l_page.id, :model => 'Cms::Page', :name => 'mobile.html', :title => 'ジョールリ市携帯サイトのご紹介', :body => file("nodes/pages/mobile/body")
+create_cms_node :parent_id => 1, :layout_id => l_page.id, :model => 'Cms::Page', :name => 'smart.html', :title => 'ジョールリ市スマートフォンサイトのご紹介', :body => file("nodes/pages/smart/body")
 
 p = create_cms_node :layout_id => l_map.id, :model => 'Cms::Directory', :name => 'sitemap'   , :title => 'サイトマップ'
     create_cms_node :layout_id => l_map.id, :model => 'Cms::Sitemap'  , :name => 'index.html', :title => 'サイトマップ',

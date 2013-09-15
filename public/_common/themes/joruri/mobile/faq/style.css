@@ -12,21 +12,21 @@
   padding: 4px;
   background-color: #003399;
   color: #ffffff;
-  font-size: small;
   font-weight: bold;
+  font-size: small;
 }
 .pieceHeader h2{
   margin-bottom: 5px;
   padding: 3px;
   background-color: #e3f0fa;
-  font-size: small;
   font-weight: normal;
+  font-size: small;
 }
 .question span.mark {
   color: #0049c5;
 }
 .body.answer {
- padding: 0;
+  padding: 0;
 }
 .body.answer span.mark {
   color: #ff4c97;

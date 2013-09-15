@@ -2,9 +2,11 @@
 @import "../base/init.css";
 @import "../base/style.css";
 @import "../piece/style.css";
+
 /* =========================================================
    calender
 ========================================================= */
+
 /* main
 ----------------------------------------------- */
 .calendarEvents {
@@ -16,15 +18,14 @@ h2 {
   font-size: 130%;
 }
 .upperPagination {
-  background-color: #EDEDED;
+  background-color: #ededed;
 }
 .date {
-  border-top: 1px solid #ccc;
+  border-top: 1px solid #cccccc;
 }
 .date {
   display: block;
   min-height: 1px;
-  /* \*/
 }
 * html .date {
   height: 1%;
@@ -45,11 +46,11 @@ h2 {
   padding-left: 5px;
 }
 .sat {
-  color: #3366FF;
+  color: #3366ff;
 }
-.sun ,
+.sun,
 .holiday {
-  color: #FF0000;
+  color: #ff0000;
 }
 .events {
   float: left;
@@ -64,18 +65,19 @@ h2 {
   padding-right: 5px;
   text-align: right;
 }
+
 /* sidemenu
 ----------------------------------------------- */
 #menu .pieceHeader {
   background-repeat: repeat-y;
 }
 #menu ul {
-  padding: 0 0 5px 0;
-  background-color: #FFFFFF;
+  padding: 0 0 5px;
+  background-color: #ffffff;
 }
 #menu li {
   width: 170px;
-  padding: 0 0 0 0;
+  padding: 0;
   background-image: none;
 }
 #menu li a {
@@ -94,11 +96,11 @@ h2 {
   display: block;
   width: 160px;
   padding-left: 10px;
-  background-color: #D3E8F4;
+  background-color: #d3e8f4;
 }
 #menu li .year:hover ,
 #menu li .month:hover {
-  background-color: #FFFF72;
+  background-color: #ffff72;
 }
 #menu li .month12 {
   height: 25px;

@@ -4,10 +4,12 @@ class Cms::Admin::PiecesController < Cms::Controller::Admin::Base
   
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:designer)
+    return redirect_to :action => 'index' if params[:reset]
   end
   
   def index
     item = Cms::Piece.new.readable
+    item.search params
     item.page  params[:page], params[:limit]
     item.order params[:sort], 'name, id'
     @items = item.find(:all)
@@ -15,7 +17,18 @@ class Cms::Admin::PiecesController < Cms::Controller::Admin::Base
   end
   
   def show
-    exit
+    if params[:do] == "preview"
+      preview
+    else
+      exit
+    end
+  end
+  
+  def preview
+    @item = Cms::Piece.new.find(params[:id])
+    return error_auth unless @item.readable?
+    
+    render :preview
   end
   
   def new

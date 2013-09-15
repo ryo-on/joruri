@@ -5,10 +5,12 @@ class Cms::Admin::LayoutsController < Cms::Controller::Admin::Base
   
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:designer)
+    return redirect_to :action => 'index' if params[:reset]
   end
   
   def index
     item = Cms::Layout.new.readable
+    item.search params
     item.page  params[:page], params[:limit]
     item.order params[:sort], 'name, id'
     @items = item.find(:all)

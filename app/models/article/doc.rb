@@ -345,6 +345,7 @@ class Article::Doc < ActiveRecord::Base
     end
     
     publish_page(content, :path => public_path, :uri => public_uri)
+    publish_files
   end
   
   def close
@@ -352,15 +353,18 @@ class Article::Doc < ActiveRecord::Base
     self.state = 'closed' if self.state == 'public'
     #self.published_at = nil
     return false unless save(false)
-    close_page
+    close_files
     return true
   end
   
   def close_page(options = {})
-    return false unless super
-    publishers.destroy_all if publishers.size > 0
-    FileUtils.rm_f(::File.dirname(public_path))
-    return true
+    return true if replace_page?
+    super
+  end
+  
+  def close_files
+    return true if replace_page?
+    super
   end
   
   def rebuild(content, options)

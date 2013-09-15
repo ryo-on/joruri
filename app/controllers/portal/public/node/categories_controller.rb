@@ -38,7 +38,7 @@ class Portal::Public::Node::CategoriesController < Cms::Controller::Public::Base
     @entries = entry.find_with_own_docs(@content.doc_content, :groups, {:item => @item})
     return true if render_feed(@entries)
 
-    return http_error(404) if @entries.current_page > @entries.total_pages
+    return http_error(404) if @entries.current_page > 1 && @entries.current_page > @entries.total_pages
 
     prev   = nil
     @items = []

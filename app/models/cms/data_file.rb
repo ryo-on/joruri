@@ -88,6 +88,8 @@ class Cms::DataFile < ActiveRecord::Base
       case n
       when 's_node_id'
         self.and :node_id, v
+      when 's_name_or_title'
+        self.and_keywords v, :name, :title
       end
     end if params.size != 0
     

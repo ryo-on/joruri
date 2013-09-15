@@ -17,22 +17,22 @@ function showNewForm(showId) {
 </script>
 
 <div class="navi">
-  <%= @full_path.gsub(@base_uri[0], @base_uri[1]) %>
+  <%=h @item.public_uri %>
 </div>
 
 <div class="actionMenu">
 <%= link_to "上へ", cms_stylesheets_path(::File.dirname(@path)) if @path != "" && !params[:do] && @item.directory? %>
 <%= link_to :index, cms_stylesheets_path(::File.dirname(@path)) if params[:do] %>
-<% if !params[:do] && @item.directory? %>
+<% if !params[:do] && @item.directory? && @item.creatable? %>
   <%= link_to "新規ディレクトリ", "#", :onclick => "return showNewForm('new_directory');" %>
   <%= link_to "新規ファイル", "#", :onclick => "return showNewForm('new_file');" %>
   <%= link_to "アップロード", "#", :onclick => "return showNewForm('new_upload');" %>
 <% end %>
 <% if params[:do] == "show" %>
-  <%= link_to :edit, cms_stylesheets_path(@path, :do => :edit) if @item.textfile? %>
-  <%= link_to "名称変更", cms_stylesheets_path(@path, :do => :rename) %>
-  <%= link_to "移動", cms_stylesheets_path(@path, :do => :move) %>
-  <%= link_to "削除", cms_stylesheets_path(@path, :do => :destroy), :confirm => "削除してよろしいですか？" %>
+  <%= link_to(:edit, cms_stylesheets_path(@path, :do => :edit)) if @item.textfile? && @item.editable? %>
+  <%= link_to("名称変更", cms_stylesheets_path(@path, :do => :rename)) if @item.editable? %>
+  <%= link_to("移動", cms_stylesheets_path(@path, :do => :move)) if @item.editable? %>
+  <%= link_to("削除", cms_stylesheets_path(@path, :do => :destroy), :confirm => "削除してよろしいですか？") if @item.deletable? %>
 <% elsif params[:do] %>
   <%= link_to :show, cms_stylesheets_path(@path, :do => :show) %>
 <% end %>

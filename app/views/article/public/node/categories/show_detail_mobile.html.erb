@@ -10,4 +10,13 @@
 </div>
 
 <%= paginate @docs %>
+
+<% if @docs.size > 0 && (items = @item.public_children).size > 0 %>
+<br />
+<div class="categories">
+  <div class="h3">■小分野別</div>
+  <div><% items.each do |c| %><%= link_to "#{c.title}", "../#{c.name}/" %><span>/</span><% end %></div>
+</div>
+<% end %>
+
 </div>

@@ -4,7 +4,7 @@ class Cms::Admin::Data::FilesController < Cms::Controller::Admin::Base
 
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:designer)
-    return redirect_to :action => 'index', :params => { :parent => '0' }  if params[:reset] || params['s_node_id'] == ''
+    return redirect_to :action => 'index' if params[:reset]
     
     if params[:parent] && params[:parent] != '0'
       @parent = Cms::DataFileNode.find(params[:parent])
@@ -15,14 +15,11 @@ class Cms::Admin::Data::FilesController < Cms::Controller::Admin::Base
   end
 
   def index
-    if params['s_node_id']
-      return redirect_to :action => 'index', :params => { :parent => params['s_node_id'] }
-    end
-    
     @nodes = Cms::DataFileNode.find(:all, :conditions => {:concept_id => Core.concept(:id)}, :order => :name)
     
     item = Cms::DataFile.new.readable
-    item.and 'node_id', @parent.id if @parent.id != 0
+    #item.and 'node_id', @parent.id if @parent.id != 0
+    item.search params
     item.page  params[:page], params[:limit]
     item.order params[:sort], 'name, id'
     @items = item.find(:all)

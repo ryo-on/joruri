@@ -15,4 +15,19 @@ class Cms::DataText < ActiveRecord::Base
   validates_uniqueness_of :name, :scope => :concept_id
   validates_format_of :name, :with => /^[0-9a-zA-Z\-_]+$/, :if => "!name.blank?",
     :message => "は半角英数字、ハイフン、アンダースコアで入力してください。"
+  
+  def search(params)
+    params.each do |n, v|
+      next if v.to_s == ''
+      
+      case n
+      when 's_name_or_title'
+        self.and_keywords v, :name, :title
+      when 's_keyword'
+        self.and_keywords v, :name, :title, :body
+      end
+    end if params.size != 0
+    
+    return self
+  end
 end

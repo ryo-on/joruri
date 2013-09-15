@@ -13,6 +13,7 @@
   height: 44px;
   line-height: 44px;
   padding-left: 10px;
+  background-image: -moz-linear-gradient(left, #004bee, #001a6b);
   background-image: -webkit-gradient(linear, left top, left bottom, from(#004bee), color-stop(100%, #001a6b));
   vertical-align: middle;
   color: #ffffff;

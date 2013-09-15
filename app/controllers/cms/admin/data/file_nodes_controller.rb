@@ -4,14 +4,14 @@ class Cms::Admin::Data::FileNodesController < Cms::Controller::Admin::Base
 
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:designer)
-  end
-  
-  def pre_dispatch
+    return redirect_to :action => 'index' if params[:reset]
+    
     @parent = params[:parent] || '0'
   end
 
   def index
     item = Cms::DataFileNode.new.readable
+    item.search params
     item.page  params[:page], params[:limit]
     item.order params[:sort], 'name, id'
     @items = item.find(:all)

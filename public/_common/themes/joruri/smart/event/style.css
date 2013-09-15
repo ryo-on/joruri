@@ -7,12 +7,12 @@
    bbs
 ========================================================= */
 .entryForm h2 {
+  line-height: 36px;
   margin-bottom: 10px;
   padding-left: 10px;
   background-color: #232f8c;
   color: #ffffff;
   font-size: 110%;
-  line-height: 36px;
 }
 .entryForm dt {
   padding: 4px 10px;
@@ -26,7 +26,7 @@ textarea.body {
   margin: 15px 10px 10px;
 }
 div.submitters {
-    margin: 10px 0 30px;
+  margin: 10px 0 30px;
 }
 .calendarEvents.calendarMonthlyEvents {
   margin-bottom: 20px;
@@ -67,27 +67,27 @@ div.submitters {
   visibility: hidden;
 }
 .calendarEvents.calendarMonthlyEvents h2 {
+  line-height: 40px;
   margin-bottom: 20px;
   padding-left: 5px;
   background-color: #d3e8f4;
-  line-height: 40px;
 }
 .pagination.upperPagination {
-  background-color: #f1f1f1;
   line-height: 25px;
+  background-color: #f1f1f1;
 }
 .pagination.lowerPagination {
+  line-height: 25px;
   border-top: 1px solid #cccccc;
   background-color: #f1f1f1;
-  line-height: 25px;
 }
 .contentArticleEventDocs h2 {
-  background-color: #e3f0fa;
+  line-height: 35px;
   margin: 0 0 10px;
   padding: 5px 0 5px 10px;
-  font-size: 130%;
+  background-color: #e3f0fa;
   font-weight: bold;
-  line-height: 35px;
+  font-size: 130%;
 }
 table.calendar {
   width: 100%;
@@ -97,21 +97,21 @@ table.calendar a {
   text-decoration: underline;
 }
 .calendar tr {
-  border-bottom: 1px solid #666666;
   line-height: 55px;
+  border-bottom: 1px solid #666666;
 }
 .day {
   width: 25%;
   min-width: 65px;
-  padding: 15px 0 15px 10px;
   line-height: 1.5;
-  text-align: center;
   vertical-align: middle;
+  padding: 15px 0 15px 10px;
+  text-align: center;
 }
 td.attribute.attributeEvent {
   width: 30%;
-  padding: 15px 10px;
   vertical-align: middle;
+  padding: 15px 10px;
 }
 td.attribute.attributeEvent span {
   background-color: #ffcc00;
@@ -120,19 +120,19 @@ td.attribute.attributeEvent span.attribute {
   display: block;
   width: 80%;
   min-width: 110px;
+  line-height: 25px;
   border: 1px solid #666666;
   text-align: center;
-  line-height: 25px;
 }
 td.title {
   width: 45%;
-  padding: 15px 0;
   line-height: 1.5;
   vertical-align: middle;
+  padding: 15px 0;
 }
 .pagination {
+  line-height: 35px;
   margin-bottom: 20px;
   background-color: #f1f1f1;
   font-size: 120%;
-  line-height: 35px;
 }

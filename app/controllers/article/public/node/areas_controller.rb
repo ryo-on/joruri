@@ -31,7 +31,6 @@ class Article::Public::Node::AreasController < Cms::Controller::Public::Base
     @limit = 10 if !@more
     
     doc = Article::Doc.new.public
-    #doc.and :content_id, @content.id
     request.mobile? ? doc.visible_in_list : doc.visible_in_recent
     doc.agent_filter(request.mobile)
     doc.area_is @item
@@ -61,7 +60,6 @@ class Article::Public::Node::AreasController < Cms::Controller::Public::Base
 
     @item_docs = Proc.new do |city|
       doc = Article::Doc.new.public
-      #doc.and :content_id, @content.id
       doc.visible_in_list
       doc.agent_filter(request.mobile)
       doc.area_is city
@@ -76,7 +74,6 @@ class Article::Public::Node::AreasController < Cms::Controller::Public::Base
 
     @item_docs = Proc.new do |attr|
       doc = Article::Doc.new.public
-      #doc.and :content_id, @content.id
       doc.visible_in_list
       doc.agent_filter(request.mobile)
       doc.area_is @item
@@ -94,7 +91,6 @@ class Article::Public::Node::AreasController < Cms::Controller::Public::Base
     return http_error(404) unless @attr = attr.find(:first, :order => :sort_no)
     
     doc = Article::Doc.new.public
-    #doc.and :content_id, @content.id
     doc.visible_in_list
     doc.agent_filter(request.mobile)
     doc.area_is @item

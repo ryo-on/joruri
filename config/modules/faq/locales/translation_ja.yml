@@ -43,3 +43,4 @@ ja:
       ## piece
       faq/piece/recent_doc:
         list_count: "表示件数"
+        more_label: "一覧リンク文字"

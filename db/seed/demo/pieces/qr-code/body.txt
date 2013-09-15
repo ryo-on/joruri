@@ -2,7 +2,7 @@
 <div class="pieceContainer">
 <div class="pieceBody">
 <a href="#"><img src="/_common/themes/joruri/top/images/qr.jpg" alt="QRコード" title="QRコード" /></a>
-左のQRコードから<br /><a href="#">携帯サイト</a>へ<br />アクセスできます。
+左のQRコードからスマートフォンサイト、携帯サイトへアクセスできます。
 </div>
 </div>
 <!-- end .piece --></div>

@@ -18,16 +18,6 @@ body {
   width: 720px;
 }
 
-/* Opera9.6before */
-#header:not(\*|*), #banner:not(\*|*), #navi:not(\*|*), #main:not(\*|*), #footer:not(\*|*) {
-  width: 680px;
-}
-
-/* Opera9.6before */
-html:first-child #header, html:first-child #banner, html:first-child #navi, html:first-child #main, html:first-child #footer {
-  width: 680px;
-}
-
 /* Header Banner
 ----------------------------------------------- */
 .menu,
@@ -46,7 +36,7 @@ html:first-child #header, html:first-child #banner, html:first-child #navi, html
 .attributeSaiyojoho,
 .attributeBosyu,
 .attributeKyoka {
-  margin-left: 0px;
+  margin-left: 0;
 }
 
 /* page-title piece

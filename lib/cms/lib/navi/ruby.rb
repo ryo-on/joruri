@@ -32,7 +32,11 @@ class Cms::Lib::Navi::Ruby
     
     ## next char
     next_char = Proc.new do |i|
-      chars[i].blank? ? nil : chars[i][:data][2]
+      if chars[i].blank?
+        nil
+      else
+        chars[i][:data][2] ? chars[i][:data][2] : ' '
+      end
     end
     
     ## forward char

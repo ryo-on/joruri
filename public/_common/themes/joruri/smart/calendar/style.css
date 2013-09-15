@@ -7,12 +7,12 @@
    bbs
 ========================================================= */
 .entryForm h2 {
+  line-height: 36px;
   margin-bottom: 10px;
   padding-left: 10px;
   background-color: #232f8c;
   color: #ffffff;
   font-size: 110%;
-  line-height: 36px;
 }
 .entryForm dt {
   padding: 4px 10px;
@@ -70,20 +70,20 @@ div.submitters {
   visibility: hidden;
 }
 .calendarEvents.calendarMonthlyEvents h2 {
+  line-height: 45px;
   margin-bottom: 10px;
   padding-left: 10px;
   background-color: #e3f0fa;
-  line-height: 45px;
   font-size: 130%;
 }
 .pagination.upperPagination {
+  line-height: 35px;
   background-color: #f1f1f1;
   font-size: 120%;
-  line-height: 35px;
 }
 .pagination.lowerPagination {
+  line-height: 35px;
   border-top: 1px solid #cccccc;
   background-color: #f1f1f1;
   font-size: 120%;
-  line-height: 35px;
 }

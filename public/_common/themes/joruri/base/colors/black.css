@@ -2,7 +2,7 @@
 ----------------------------------------------- */
 body, body div {
   background-color: #000000;
-  color: #ffffff;  
+  color: #ffffff;
 }
 a {
   color: #ffffff;
@@ -22,15 +22,20 @@ h1 {
 #contentBody .docTab .content li {
   color: #ffffff;
 }
+span {
+  color: #ffffff !important;
+}
 
 /* header
 --------------------------------------------------- */
 #commonHeader,
 #commonHeader .pieceContainer,
-#commonHeader .pieceBody,
-#navigationNotice {
+#commonHeader .pieceBody {
   background-color: #ececec;
-  color: #000000;
+  color: #000;
+}
+#navigationNotice {
+  color: #000;
 }
 
 /* banner style
@@ -67,9 +72,10 @@ h1 {
 #menu #population .pieceHeader {
   background-color: #000000;
   background-image: none;
-  border:  1px solid #ffffff;
-  line-height:1.4;
-  padding:4px 7px;
+  border: 1px solid #ffffff;
+  border-bottom: none;
+  line-height: 1.4;
+  padding: 4px 7px;
 }
 #population th.noBorder,
 #population th {
@@ -85,26 +91,34 @@ h1 {
   border: 1px solid #ffffff;
   background-image: none;
 }
+
 /* links style
 ----------------------------------------------- */
 #links ul {
   background-color: #000000;
 }
 #calendar .pieceHeader {
+  border: none;
   background-color: #000000;
-  color: #fff;
+  color: #ffffff;
 }
 #calendar .pieceBody {
   width: 100%;
   margin: 0;
   padding: 0;
-  background-image:url(../../piece/images/bg-calendar-repeat.gif);
-  background-position: left top;
-  background-repeat: repeat-y;
+}
+#calendar .pieceBody .links {
+  width: 166px;
+  border-bottom: 1px solid #b4b4b4;
+  border-left: 1px solid #b4b4b4;
+  background-image: none;
 }
 #calendar .calendar {
   width: 160px;
   margin-left: 1px;
+}
+.sat, .sun, .holiday {
+  color: #ffffff;
 }
 
 /* page-title piece
@@ -113,6 +127,7 @@ h1 {
   border: 1px solid #ffffff;
   background-image: none;
 }
+
 /* category
 ----------------------------------------------- */
 .category {
@@ -184,6 +199,7 @@ table.unit tr.cycle {
   background-color: #000000;
   color: #ffffff;
 }
+
 /* area
 ----------------------------------------------- */
 table.ward {
@@ -209,6 +225,7 @@ table.city tr.cycle {
   background-color: #000000;
   color: #ffffff;
 }
+
 /* shinchaku portal
 ----------------------------------------------- */
 #recentDocsTitle .pieceHeader {
@@ -218,6 +235,7 @@ table.city tr.cycle {
   border: 1px solid #ffffff;
   background-image: none;
 }
+
 /* calendar
 ----------------------------------------------- */
 .contentArticleEventDocs h2 {
@@ -234,6 +252,26 @@ table.city tr.cycle {
   border: 1px solid #ffffff;
   background-color: #000000;
   color: #ffffff;
+}
+#calendarDailyLinks .pieceHeader {
+  border: none;
+}
+#calendarDailyLinks .calendar {
+  width: 160px;
+  margin-left: 1px;
+}
+#calendarDailyLinks .links {
+  width: 166px;
+  margin-left: 1px;
+  border-bottom: 1px solid #9a9a9a;
+  background-image: none;
+}
+.calendarEvents .pagination {
+  background-color: #000000;
+}
+#menu li .year,
+#menu li .month {
+  background-color: #000000;
 }
 
 /* doc
@@ -283,6 +321,23 @@ table.city tr.cycle {
   color: #ffffff;
 }
 
+/* enquete
+----------------------------------------------- */
+.enqueteForms .form h2, .enqueteForm .form h2,
+.enqueteForm .submitters,
+.enqueteForm .back a {
+  border: 1px solid #ffffff;
+  background-color: #000000;
+}
+.enqueteForm .column .name {
+  border: 1px solid #ffffff;
+  border-left: 4px solid #ffffff;
+  background-color: #000000;
+}
+.enqueteForm .errorExplanation {
+  color: #ffffff !important;
+}
+
 /* sitemap
 ----------------------------------------------- */
 .level1 li, ul.level3, ul.level2, .level2 li {
@@ -296,13 +351,13 @@ ul.sitemap li.level1,
 ul.sitemap ul.level2 {
   background-color: #000000;
 }
+
 /* mayor
 ----------------------------------------------- */
 #mayorSide {
   background-color: #000000;
 }
 .contentTitle {
-
   background-color: #000000;
 }
 .contentTitle .contentTitleBody,
@@ -311,6 +366,7 @@ ul.sitemap ul.level2 {
   border: none;
   background-image: none;
 }
+
 /* topic
 ----------------------------------------------- */
 #topic .pieceHeader {
@@ -321,6 +377,10 @@ ul.sitemap ul.level2 {
   background-image: none;
   color: #ffffff;
 }
+#topic h3 {
+  color: #ffffff;
+}
+
 /* lifeevent
 ----------------------------------------------- */
 #lifeEvent .pieceHeader {
@@ -341,14 +401,14 @@ ul.sitemap ul.level2 {
   border: 1px solid #ffffff;
   background-image: none;
 }
-#lifeEvent td.pregnant p,
-#lifeEvent td.child p,
-#lifeEvent td.work p,
-#lifeEvent td.adult p,
-#lifeEvent td.moving p,
-#lifeEvent td.marriage p,
-#lifeEvent td.welfare p,
-#lifeEvent td.death p {
+#lifeEvent li.pregnant p,
+#lifeEvent li.child p,
+#lifeEvent li.work p,
+#lifeEvent li.adult p,
+#lifeEvent li.moving p,
+#lifeEvent li.marriage p,
+#lifeEvent li.welfare p,
+#lifeEvent li.death p {
   border: 1px solid #ffffff;
   background-color: #000000;
 }
@@ -369,7 +429,7 @@ ul.sitemap ul.level2 {
 #page-lifeevent-kekkon #pageTitle h1,
 #page-lifeevent-fukushi #pageTitle h1,
 #page-lifeevent-shibo #pageTitle h1 {
-  padding: 0px 0px 0px 10px;
+  padding: 0 0 0 10px;
   background-image: none;
 }
 #page-lifeevent-ninshin #pageTitle .pieceBody,
@@ -380,7 +440,7 @@ ul.sitemap ul.level2 {
 #page-lifeevent-kekkon #pageTitle .pieceBody,
 #page-lifeevent-fukushi #pageTitle .pieceBody,
 #page-lifeevent-shibo #pageTitle .pieceBody {
-  padding: 0px 0px 0px 10px;
+  padding: 0 0 0 10px;
   border: 1px solid #ffffff;
   background-image: none;
 }
@@ -395,6 +455,7 @@ ul.sitemap ul.level2 {
   border-bottom: #ffffff solid 1px;
   border-left: #ffffff solid 1px;
 }
+
 /* headerÅEfotter pege
 ----------------------------------------------- */
 .contentPage .body h2 {
@@ -409,84 +470,93 @@ ul.sitemap ul.level2 {
 #emergencyMailmagazine .pieceBody,
 #emergencyInquiry .pieceBody {
   background-color: #000000;
-  color:#ffffff;
+  color: #ffffff;
 }
 #emergency {
-border:2px solid #ffffff;
+  border: 2px solid #ffffff;
 }
 #emergency .pieceBody ul {
-border:none;
+  border: none;
 }
 #emergencyInfo .pieceContainer {
-background-color:#000000;
-border:2px solid #ffffff;
-}
-/* calendar
------------------------------------------------ */
-.calendarEvents .pagination{
+  border: 2px solid #ffffff;
   background-color: #000000;
 }
-#menu li .year ,
-#menu li .month {
-    background-color: #000000;
+
+/* mailmagazine
+----------------------------------------------- */
+.contentNewsletterForms h2 {
+  border: 1px solid #ffffff;
+  background-color: #000000;
 }
+.contentNewsletterForms .column .name {
+  border: 1px solid #ffffff;
+  border-left: 4px solid #ffffff;
+  background-color: #000000;
+}
+
 /* bbs
 ----------------------------------------------- */
 .contentBbsThreads .entryForm h2.formTitle {
   background-color: #000000;
 }
 .contentBbsThreads .threadItem h2 {
-  color: #ffffff;
   background-color: #000000;
+  color: #ffffff;
 }
-.contentBbsThreads .poster span ,
+.contentBbsThreads .poster span,
 .contentBbsThreads .poster .no {
   color: #ffffff;
 }
 .contentBbsThreads .deleteForm h2.formTitle {
   background-color: #000000;
 }
-#bbsRecent .pieceHeader ,
-#bbsThread .pieceHeader ,
+#bbsRecent .pieceHeader,
+#bbsThread .pieceHeader,
 #bbsRes .pieceHeader {
   padding: 0 5px 0 10px;
-  border: 1px solid #FFFFFF;
+  border: 1px solid #ffffff;
   background-image: none;
 }
-#bbsRecent ul ,
-#bbsThread ul ,
+#bbsRecent ul,
+#bbsThread ul,
 #bbsRes ul {
   border-width: medium 1px 1px;
-  border-color: #FFFFFF;
+  border-color: #ffffff;
   border-style: none solid solid;
-  border-right: 1px solid #FFFFFF;
+  border-right: 1px solid #ffffff;
 }
 .notice {
   border: 1px solid #ffffff;
-  color: #ffffff;
   background-color: #000000;
+  color: #ffffff;
 }
 .errorExplanation {
   border-width: medium 1px 1px;
-  border-color: #FFFFFF;
+  border-color: #ffffff;
   border-style: none solid solid;
-  border-right: 1px solid #FFFFFF;
+  border-right: 1px solid #ffffff;
   color: #ffffff;
 }
 .errorExplanation h2 {
-  border: 1px solid #ffffff;
+  border-top: 1px solid #ffffff;
+  border-right: none;
+  border-bottom: 1px solid #ffffff;
+  border-left: none;
   background-color: #000000;
 }
 .contentBbsThreads .back a {
   background-color: #000000;
 }
+
 /* faq
 ----------------------------------------------- */
 #faqRecentDocs .pieceHeader {
   border: 1px solid #ffffff;
   background-image: none;
 }
-.contentFaqDoc .body.answer, .contentFaqDoc .question,
+.contentFaqDoc .body.answer,
+.contentFaqDoc .question,
 .contentFaqDoc .header {
   background-color: #000000;
 }

@@ -17,8 +17,8 @@
   background-color: #e3f0fa;
 }
 .contentArticleDoc .header h1 {
-  font-size: 150%;
   font-weight: bold;
+  font-size: 150%;
   text-align: center;
 }
 .contentArticleDoc .header .publishedAt {
@@ -29,27 +29,27 @@
 .contentArticleDoc .rels,
 .contentArticleDoc .tags {
   margin-bottom: 50px;
-  padding: 0px 20px;
+  padding: 0 20px;
 }
 .contentArticleDoc .maps h2,
 .contentArticleDoc .rels h2,
 .contentArticleDoc .tags h2 {
   margin-bottom: 5px;
-  padding: 3px 0px 3px 8px;
+  padding: 3px 0 3px 8px;
   border-left: 2px solid #232f92;
   background-color: #f1f1f1;
   font-weight: bold;
 }
 .contentArticleDoc .rels li {
-  margin: 0px;
+  margin: 0;
   padding-left: 8px;
   background-image: url(./images/ic-list-shinchaku.gif);
-  background-position: left 7px;
   background-repeat: no-repeat;
+  background-position: left 7px;
 }
 .contentArticleDoc ul,
 .contentArticleDoc ol {
-  margin: 0px 0px 0px 40px;
+  margin: 0 0 0 40px;
 }
 .contentArticleDoc .tags div a {
   padding-right: 8px;
@@ -59,13 +59,14 @@
   text-align: center;
 }
 .contentArticleDoc .back a {
-  display:block;
-  width:95px;
-  margin: 0px auto;
-  padding: 3px 0px;
+  display: block;
+  width: 95px;
+  margin: 0 auto;
+  padding: 3px 0;
   border: 1px solid #999999;
   background-color: #ececec;
 }
+
 /* docs ichiran
 ----------------------------------------------- */
 .contentPortalCategory .entries,
@@ -76,7 +77,7 @@
 .contentPortalCategory h2.date,
 .contentPortalEntries h2.date,
 .contentArticleDocs .docs h2 {
-  margin: 0px 0px 5px 0px;
+  margin: 0 0 5px;
   padding: 5px 0 5px 10px;
   background-color: #e3f0fa;
   font-weight: bold;
@@ -84,46 +85,46 @@
 .contentPortalCategory .entries ul,
 .contentPortalEntries .entries ul,
 .contentArticleDocs .docs ul {
-  margin: 0px 0px 25px 7px;
+  margin: 0 0 25px 7px;
 }
 .contentPortalCategory .entries li,
 .contentPortalEntries .entries li,
 .contentArticleDocs .docs li {
-  margin: 0px;
-  padding: 0px 0px 5px 10px;
+  margin: 0;
+  padding: 0 0 5px 10px;
   background-image: url(./images/ic-list-shinchaku.gif);
-  background-position: 0px 7px;
   background-repeat: no-repeat;
+  background-position: 0 7px;
 }
 
 /* group-portal
 ----------------------------------------------- */
 .contentPortalCategory .category h2 {
-  margin: 0px 0px 0px 10px;
-  padding: 0px 0px 5px 8px;
+  margin: 0 0 0 10px;
+  padding: 0 0 5px 8px;
   background-image: url(./images/ic-list.gif);
-  background-position: 0px 7px;
   background-repeat: no-repeat;
+  background-position: 0 7px;
 }
 .contentPortalCategory .category .children {
-  margin: 0px 0px 15px 0px;
+  margin: 0 0 15px;
 }
 .contentPortalCategory .category .children a {
-  margin: 0px 0px 0px 20px;
-  padding: 0px 0px 5px 10px;
+  margin: 0 0 0 20px;
+  padding: 0 0 5px 10px;
   background-image: url(./images/ic-list-shinchaku.gif);
-  background-position: 0px 7px;
   background-repeat: no-repeat;
+  background-position: 0px 7px;
 }
 
 /* address
 ----------------------------------------------- */
 .contentArticleDoc .body ul {
-  list-style-type: disc
+  list-style-type: disc;
 }
 .inquiry {
   clear: both;
-  margin: 0px 0px 20px 0px;
+  margin: 0 0 20px;
   padding: 5px 10px;
   border-top: 1px solid #cccccc;
   border-bottom: 1px solid #cccccc;
@@ -132,8 +133,8 @@
 .inquiry h2 {
   margin-bottom: 5px;
   background-image: none;
-  font-size: 110%;
   font-weight: bold;
+  font-size: 110%;
 }
 .tel, .fax, .email {
   display: inline;
@@ -142,9 +143,9 @@
   font-weight: bold;
 }
 .top,.middle {
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
-.department,.section,.tel,.fax {
+.department, .section, .tel, .fax {
   margin-right: 10px;
 }
 
@@ -155,20 +156,20 @@
   margin-left: 10px;
 }
 .contentArticleRecentDocs .docs h2 {
-  margin: 0px 0px 5px 0px;
+  margin: 0 0 5px;
   padding: 5px 0 5px 10px;
   background-color: #e3f0fa;
   font-weight: bold;
 }
 .contentArticleRecentDocs .docs ul {
-  margin: 0px 0px 25px 7px;
+  margin: 0 0 25px 7px;
 }
 .contentArticleRecentDocs .docs li {
-  margin: 0px;
-  padding: 0px 0px 5px 10px;
+  margin: 0;
+  padding: 0 0 5px 10px;
   background-image: url(./images/ic-list-shinchaku.gif);
-  background-position: 0px 7px;
   background-repeat: no-repeat;
+  background-position: 0 7px;
 }
 
 /* pagination
@@ -177,12 +178,12 @@
   text-align: center;
 }
 .pagination a {
-  padding: 0px 6px;
+  padding: 0 6px;
 }
 .pagination span.current {
-  padding: 0px 3px;
-  font-size: 150%;
+  padding: 0 3px;
   font-weight: bold;
+  font-size: 150%;
 }
 
 /* recent Docs Title
@@ -198,18 +199,19 @@
   margin-bottom: 10px;
   padding-left: 10px;
   background-image: url(./images/tl-shinchaku.gif);
-  background-position: left top;
   background-repeat: no-repeat;
-  font-size: 120%;
-  font-weight: bold;
+  background-position: left top;
   color: #ffffff;
+  font-weight: bold;
+  font-size: 120%;
 }
+
 /* RSS Atom
 ----------------------------------------------- */
 .feed {
   float: right;
   position: relative;
-  top: -27px;
+  top: -31px;
   right: 10px;
   height: 13px;
   background-color: transparent;
@@ -218,26 +220,19 @@
   display: inline-block;
   width: 40px;
   height: 13px;
+  overflow: hidden;
   background-image: url(./images/bt-rss.gif);
   background-repeat: no-repeat;
   text-indent: 50px;
-  overflow: hidden;
 }
 .feed a.feedAtom {
   display: inline-block;
   width: 40px;
   height: 13px;
+  overflow: hidden;
   background-image:url(./images/bt-atom.gif);
   background-repeat:no-repeat;
   text-indent: 50px;
-  overflow: hidden;
-}
-
-/* For firefox2 */
-.feed a.feedAtom,y:-moz-any-link,
-.feed a.feedRss,x:-moz-any-link {
-  display: -moz-inline-box;
-  padding-top: 13px;
 }
 .links {
   text-align: right;
@@ -246,20 +241,20 @@
 /* SideMenu
 ----------------------------------------------- */
 #menu .pieceBody li {
-  margin: 0px;
+  margin: 0;
 }
 
 /* =========================================================
     tag search
 ========================================================= */
 .contentArticleTags .search {
-  margin: 10px 0px;
+  margin: 10px 0;
   padding: 10px;
-  background-color: #e3f0fa;
   border: 1px solid #dddddd;
+  background-color: #e3f0fa;
 }
 .contentArticleTags .search td {
-  padding: 0px 15px 0px 5px;
+  padding: 0 15px 0 5px;
 }
 .contentArticleTags .search td input {
   width: 140px;
@@ -269,22 +264,21 @@
   font-size: 100%;
 }
 .contentArticleTags .hit {
-  padding: 5px 0px 5px 10px;
+  padding: 5px 0 5px 10px;
   background-image: url(./images/bg-shinchaku-repeat.gif);
-  background-position: left top;
   background-repeat: repeat-x;
-  font-size: 110%;
-  font-weight: bold;
+  background-position: left top;
   color: #ffffff;
+  font-weight: bold;
+  font-size: 110%;
 }
 .contentArticleTags li {
-  margin: 0px;
-  padding: 0px 0px 5px 10px;
+  margin: 0;
+  padding: 0 0 5px 10px;
   background-image: url(./images/ic-list-shinchaku.gif);
   background-repeat: no-repeat;
   background-position: left 5px;
 }
 .contentArticleTags ul {
-  padding: 10px 5px 25px 5px;
+  padding: 10px 5px 25px;
 }
-
