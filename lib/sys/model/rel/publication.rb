@@ -48,20 +48,20 @@ module Sys::Model::Rel::Publication
 
   def rebuildable?
     return false unless editable?
-    return published_at != nil
+    return state == 'public'# && published_at
   end
 
   def closable?
     return false unless editable?
-    return published_at != nil
+    return state == 'public'# && published_at
   end
 
   def publish(content, options = {})
     return false unless content
     @save_mode = :publish
     
-    self.state        = 'public'
-    self.published_at = Core.now if published_at == nil || options[:skip_update] == nil
+    self.state          = 'public'
+    self.published_at ||= Core.now
     
     return false unless save(false)
     Util::File.put(public_path, :data => content, :mkdir => true)
@@ -100,7 +100,7 @@ module Sys::Model::Rel::Publication
       self.in_creator = {:user_id => '', :group_id => ''}
     end
 
-    publish(content, :skip_update => true)
+    publish(content)
   end
 
   def close
@@ -111,8 +111,7 @@ module Sys::Model::Rel::Publication
       publisher(true)
     end
 
-    self.state        = 'closed' if self.state == 'public'
-    self.published_at = nil
+    self.state = 'closed' if self.state == 'public'
     save(false)
   end
 end

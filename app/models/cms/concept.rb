@@ -5,6 +5,7 @@ class Cms::Concept < ActiveRecord::Base
   include Sys::Model::Rel::Role
   include Sys::Model::Tree
   include Sys::Model::Base::Page
+  include Sys::Model::Auth::Manager
   
   belongs_to :status  , :foreign_key => :state     , :class_name => 'Sys::Base::Status'
   

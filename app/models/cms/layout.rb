@@ -8,7 +8,6 @@ class Cms::Layout < ActiveRecord::Base
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
   include Cms::Model::Auth::Concept
-  include Cms::Model::Navi
 
   belongs_to :status,  :foreign_key => :state,      :class_name => 'Sys::Base::Status'
   

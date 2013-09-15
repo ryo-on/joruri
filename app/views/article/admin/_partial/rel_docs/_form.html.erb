@@ -1,6 +1,7 @@
 <%
 
-docs = Article::Doc.new.public.find(:all, :order => "published_at DESC").collect{|c| [h(c.title), c.id] }
+docs = Article::Doc.new.public.find(:all, :conditions => {:content_id => @content.id},
+  :order => "published_at DESC").collect{|c| [h(c.title), c.id] }
 
 %><table class="show">
   <tr>

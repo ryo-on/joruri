@@ -63,8 +63,10 @@ class ActionView::Helpers::FormBuilder
     options[:selected] ||= array_value(method)
     method = method.to_s.index('[') ? array_name(method) : "#{@object_name}[#{method}]"
     
+    value   = options[:value] || :id
     label   = options[:label] || :name
     order   = options[:order] || :sort_no
+    cond    = options[:conditions] || {}
     
     choices = []
     roots = root.to_a
@@ -72,8 +74,8 @@ class ActionView::Helpers::FormBuilder
       iclass  = roots[0].class
       indstr  = '　　'
       down = lambda do |_parent, _indent|
-        choices << [(indstr * _indent) + _parent.send(label), _parent.send(:id).to_s]
-        iclass.find(:all, :conditions => {:parent_id => _parent.id}, :order => order).each do |_child|
+        choices << [(indstr * _indent) + _parent.send(label), _parent.send(value).to_s]
+        iclass.find(:all, :conditions => cond.merge({:parent_id => _parent.id}), :order => order).each do |_child|
           down.call(_child, _indent + 1)
         end
       end

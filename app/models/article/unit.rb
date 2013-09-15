@@ -63,4 +63,8 @@ class Article::Unit < Sys::Group
     end
     Cms::Lib::BreadCrumbs.new(crumbs)
   end
+  
+  def editable?
+    return Core.user.has_auth?(:designer)
+  end
 end

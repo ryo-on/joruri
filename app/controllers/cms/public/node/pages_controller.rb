@@ -1,7 +1,7 @@
 # encoding: utf-8
 class Cms::Public::Node::PagesController < Cms::Controller::Public::Base
   def index
-    @item = Core.current_node
+    @item = Cms::Model::Node::Page.find(Core.current_node.id)
     
     Page.current_item = @item
     Page.title        = @item.title

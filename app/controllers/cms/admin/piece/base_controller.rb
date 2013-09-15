@@ -1,15 +1,21 @@
 class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   
-  @@_model = Cms::Piece
+  before_filter :pre_dispatch_piece
   
-  def self.model(model)
-    @@_model = model
+  @@_models = {}
+  
+  def self.set_model(model)
+    @@_models[self] = model
   end
   
-  def pre_dispatch
-    return error_auth unless @piece = Cms::Piece.find(params[:id])
-    #return error_auth unless @piece.editable?
+  def model
+    @@_models[self.class] ? @@_models[self.class] : Cms::Piece
+  end
+  
+  def pre_dispatch_piece
+    return error_auth unless Core.user.has_auth?(:designer)
+    return error_auth unless @piece = Cms::Piece.new.readable.find(params[:id])
     default_url_options :piece => @piece
   end
   
@@ -18,7 +24,7 @@ class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
   end
   
   def show
-    @item = @@_model.new.find(params[:id])
+    @item = model.new.find(params[:id])
     return error_auth unless @item.readable?
     _show @item
   end
@@ -32,7 +38,7 @@ class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
   end
   
   def update
-    @item = @@_model.new.find(params[:id])
+    @item = model.new.find(params[:id])
     @item.attributes = params[:item]
     
     _update @item do
@@ -43,7 +49,7 @@ class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
   end
   
   def destroy
-    @item = @@_model.new.find(params[:id])
+    @item = model.new.find(params[:id])
     _destroy @item do
       respond_to do |format|
         format.html { return redirect_to(cms_pieces_path) }

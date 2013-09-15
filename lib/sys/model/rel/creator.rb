@@ -60,48 +60,4 @@ module Sys::Model::Rel::Creator
     creator(true)
     return true
   end
-  
-## conditions
-  
-  def readable
-    join_creator
-    self.and "sys_creators.group_id", Core.user_group.id
-    return self
-  end
-
-  def editable
-    join_creator
-    self.and "sys_creators.group_id", Core.user_group.id
-    return self
-  end
-
-  def deletable
-    join_creator
-    self.and "sys_creators.group_id", Core.user_group.id
-    return self
-  end
-  
-## verify
-  
-  def creatable?
-    return true
-  end
-
-  def readable?
-    return true if Core.user.has_auth?(:manager)
-    return false unless creator
-    return creator.group_id == Core.user_group.id
-  end
-
-  def editable?
-    return true if Core.user.has_auth?(:manager)
-    return false unless creator
-    return creator.group_id == Core.user_group.id
-  end
-
-  def deletable?
-    return true if Core.user.has_auth?(:manager)
-    return false unless creator
-    return creator.group_id == Core.user_group.id
-  end
 end

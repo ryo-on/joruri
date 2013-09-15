@@ -15,6 +15,9 @@ config.action_view.cache_template_loading            = true
 # Use a different logger for distributed setups
 # config.logger = SyslogLogger.new
 
+config.logger = Logger.new(config.log_path)
+config.logger.level = Logger::WARN
+
 # Use a different cache store in production
 # config.cache_store = :mem_cache_store
 
@@ -26,3 +29,14 @@ config.action_view.cache_template_loading            = true
 
 # Enable threaded mode
 # config.threadsafe!
+
+# Sendmail
+config.action_mailer.delivery_method                 = :smtp
+config.action_mailer.smtp_settings                   = {
+  :address        => 'localhost',
+  :port           => 25,
+  :domain         => 'localhost',
+  :user_name      => nil,
+  :password       => nil,
+  :authentication => nil
+}

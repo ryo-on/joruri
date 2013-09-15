@@ -3,6 +3,7 @@ class Cms::Admin::Data::FilesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Publication
 
   def pre_dispatch
+    return error_auth unless Core.user.has_auth?(:designer)
     return redirect_to :action => 'index', :params => { :parent => '0' }  if params[:reset] || params['s_node_id'] == ''
     
     if params[:parent] && params[:parent] != '0'
@@ -21,7 +22,6 @@ class Cms::Admin::Data::FilesController < Cms::Controller::Admin::Base
     @nodes = Cms::DataFileNode.find(:all, :conditions => {:concept_id => Core.concept(:id)}, :order => :name)
     
     item = Cms::DataFile.new.readable
-    item.conditions_to_navi
     item.and 'node_id', @parent.id if @parent.id != 0
     item.page  params[:page], params[:limit]
     item.order params[:sort], 'name, id'
@@ -30,8 +30,7 @@ class Cms::Admin::Data::FilesController < Cms::Controller::Admin::Base
   end
 
   def show
-    item = Cms::DataFile.new
-    item.conditions_to_navi
+    item = Cms::DataFile.new.readable
     @item = item.find(params[:id])
     return error_auth unless @item.readable?
 
@@ -67,8 +66,7 @@ class Cms::Admin::Data::FilesController < Cms::Controller::Admin::Base
   end
 
   def download
-    item = Cms::DataFile.new
-    item.conditions_to_navi
+    item = Cms::DataFile.new.readable
     item.and :id, params[:id]
     return error_auth unless @file = item.find(:first)
     

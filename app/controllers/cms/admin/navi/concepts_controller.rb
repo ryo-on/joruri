@@ -11,17 +11,5 @@ class Cms::Admin::Navi::ConceptsController < Cms::Controller::Admin::Base
     end
     
     @item = Core.concept
-    
-    item = Cms::Content.new
-    item.conditions_to_navi
-    @contents = item.find(:all)
-    
-    item = Cms::Layout.new
-    item.conditions_to_navi
-    @layouts = item.find(:all, :order => :name)
-    
-    item = Cms::Piece.new
-    item.conditions_to_navi
-    @pieces = item.find(:all, :order => :name)
   end
 end

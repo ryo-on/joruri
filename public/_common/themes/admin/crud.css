@@ -111,6 +111,14 @@ table.show input.number {
   width: 100px;
   ime-mode: disabled;
 }
+table.show input.date {
+  width: 80px;
+  font-family: "MS PGothic";
+}
+table.show input.dateTime {
+  width: 120px;
+  font-family: "MS PGothic";
+}
 table.show td.mceEditor {
   padding: 0px;
 }
@@ -137,8 +145,7 @@ table.show td textarea.head {
 }
 .crudTree .tree {
   float: left;
-  x_width: 350px;
-  width: 30%;
+  width: 35%;
   margin: 0px 0px 0px 0px;
   border: 1px solid #ccc;
 }
@@ -164,7 +171,7 @@ table.show td textarea.head {
 .crudTree .content {
   x_margin-left: 360px;
   float: right;
-  width: 69%;
+  width: 64%;
 }
 .crudTree .content p {
 }

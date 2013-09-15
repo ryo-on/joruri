@@ -24,8 +24,6 @@ class Article::Admin::UnitsController < Cms::Controller::Admin::Base
   
   def show
     @item = Article::Unit.new.find(params[:id])
-    return error_auth unless @item.readable?
-    
     _show @item
   end
 

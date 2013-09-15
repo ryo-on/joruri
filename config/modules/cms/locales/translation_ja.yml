@@ -55,12 +55,18 @@ ja:
         state: "状態"
         content_id: "コンテンツ"
         model: "アイテム種別"
-        name: "ファイル名"
+        name: "ディレクトリ名"
         title: "タイトル"
         body: "本文"
         mobile_title: "携帯タイトル"
         mobile_body: "携帯本文"
       
+      cms/node/page:
+        name: "ファイル名"
+        
+      cms/node/sitemap:
+        name: "ファイル名"
+        
       cms/kana_dictionary:
         name: "名称"
         body: "辞書データ"

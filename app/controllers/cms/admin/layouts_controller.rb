@@ -2,9 +2,12 @@ class Cms::Admin::LayoutsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   include Sys::Controller::Scaffold::Publication
   
+  def pre_dispatch
+    return error_auth unless Core.user.has_auth?(:designer)
+  end
+  
   def index
     item = Cms::Layout.new.readable
-    item.conditions_to_navi
     item.page  params[:page], params[:limit]
     item.order params[:sort], 'name, id'
     @items = item.find(:all)
@@ -12,7 +15,7 @@ class Cms::Admin::LayoutsController < Cms::Controller::Admin::Base
   end
   
   def show
-    @item = Cms::Layout.new.find(params[:id])
+    @item = Cms::Layout.new.readable.find(params[:id])
     return error_auth unless @item.readable?
     
     _show @item

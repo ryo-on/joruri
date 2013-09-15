@@ -1,31 +1,37 @@
 module Cms::Model::Auth::Concept
   def readable
-    self.and("1", "=", "0") unless Core.user.has_priv?(:read, :item => Core.concept)
+    if Core.site
+      self.and :site_id, Core.site.id
+    else
+      self.and :site_id, 'IS', nil
+    end
+    
+    if Core.concept
+      self.and(0, 1) unless Core.user.has_priv?(:read, :item => Core.concept)
+      self.and :concept_id, Core.concept.id
+    else
+      self.and :concept_id, 'IS', nil
+    end
     return self
   end
   
-  def editable
-    self.and("1", "=", "0") unless Core.user.has_priv?(:update, :item => Core.concept)
-    return self
-  end
-
   def creatable?
-    return true if Core.user.has_auth?(:manager)
-    return Core.user.has_priv?(:create, :item => Core.concept)
+    return false unless Core.user.has_auth?(:designer)
+    return Core.user.has_priv?(:create, :item => concept(true))
   end
   
   def readable?
-    return true if Core.user.has_auth?(:manager)
-    return Core.user.has_priv?(:read, :item => concept)
+    return false unless Core.user.has_auth?(:designer)
+    return Core.user.has_priv?(:read, :item => concept(true))
   end
   
-#  def editable?
-#    return true if Core.user.has_auth?(:manager)
-#    return Core.user.has_priv?(:update, :item => concept)
-#  end
+  def editable?
+    return false unless Core.user.has_auth?(:designer)
+    return Core.user.has_priv?(:update, :item => concept(true))
+  end
 
-#  def deletable?
-#    return true if Core.user.has_auth?(:manager)
-#    return Core.user.has_priv?(:delete, :item => concept)
-#  end
+  def deletable?
+    return false unless Core.user.has_auth?(:designer)
+    return Core.user.has_priv?(:delete, :item => concept(true))
+  end
 end

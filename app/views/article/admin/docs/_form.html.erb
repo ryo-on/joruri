@@ -78,10 +78,9 @@ function onChangeEventCalendar(value) {
     <th>イベントカレンダー表示</th>
     <td><div class="fieldDatetime">
       <%= f.radio_buttons :event_state, @item.event_states, :class => 'status' %>
-      &nbsp; イベント日付 ： <%= f.text_field :event_date, :class => 'date eventDate' %>
-      <button type="button" id="event_date_bt" class="show_cal_bt"
-        onclick="showCalendar('event_date_bt', '<%= f.object_name %>_event_date', onChangeEventCalendar)"
-      ></button></div>
+      &nbsp; イベント日付 ：
+      <%= f.calendar_date_select :event_date, :class => 'date' %>
+      </div>
     </td>
   </tr>
 </table>

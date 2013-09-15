@@ -1,4 +1,6 @@
 module Sys::Model::Rel::Task
+  attr_accessor :in_tags
+  
   def self.included(mod)
     mod.has_many :tasks, :primary_key => 'unid', :foreign_key => 'unid', :class_name => 'Sys::Task',
       :dependent => :destroy
@@ -11,18 +13,36 @@ module Sys::Model::Rel::Task
   def find_task_by_name(name)
     return nil if tasks.size == 0
     tasks.each do |task|
-      return task.process_at if task.name == name
+      return task.process_at if task.name == name.to_s
     end
     return nil
   end
   
+  def in_tasks
+    unless val = read_attribute(:in_tasks)
+      val = {}
+      tasks.each {|task| val[task.name] = task.process_at.strftime('%Y-%m-%d %H:%m') if task.process_at }
+      write_attribute(:in_tasks, val)
+    end
+    read_attribute(:in_tasks)
+  end
+  
+  def in_tasks=(values)
+    _values = {}
+    if values.class == Hash || values.class == HashWithIndifferentAccess
+      values.each {|key, val| _values[key] = val unless val.blank? }
+    end
+    @tasks = _values
+  end
+  
   def save_tasks
-    return true  unless _tasks
     return false unless unid
-    return false if @_sent_save_tasks
-    @_sent_save_tasks = true
+    return true unless @tasks
     
-    _tasks.each do |k, date|
+    values = @tasks
+    @tasks = nil
+    
+    values.each do |k, date|
       name  = k.to_s
       
       if date == ''

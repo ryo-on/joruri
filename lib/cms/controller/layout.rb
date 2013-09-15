@@ -16,6 +16,8 @@ module Cms::Controller::Layout
       opt    = routes.recognize_optimized(node, env)
       ctl    = opt[:controller]
       act    = opt[:action]
+      
+      opt[:authenticity_token] = params[:authenticity_token] if params[:authenticity_token]
       body   = render_component_as_string :controller => ctl, :action => act, :params => opt
     rescue => e
     end

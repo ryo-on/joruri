@@ -7,7 +7,7 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
 
   def pre_dispatch
     return error_auth unless @content = Cms::Content.find(params[:content])
-    return error_auth unless Core.user.has_priv?(:read, :item => @content)
+    return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
     default_url_options :content => @content
     
     return redirect_to(request.env['PATH_INFO']) if params[:reset]
@@ -47,8 +47,6 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
   end
 
   def create
-    return error_auth unless Core.user.has_priv?(:create, :item => @content)
-    
     @item = Article::Doc.new(params[:item])
     @item.content_id = @content.id
     @item.state      = params[:commit_recognize] ? 'recognize' : 'draft'

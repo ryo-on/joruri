@@ -18,7 +18,8 @@ class Article::Admin::Tool::DocsController < Cms::Controller::Admin::Base
         if item.rebuild(render_public_as_string(item.public_uri, item.content.site))
           results[0] += 1
         else
-          raise item.error.full_messages
+          raise item.errors.full_messages if item.errors.size > 0
+          raise 'Error'
         end
       rescue => e
         results[1] += 1

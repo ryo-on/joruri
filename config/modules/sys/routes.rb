@@ -31,8 +31,22 @@ ActionController::Routing::Routes.draw do |map|
     ns.resources :groups,
       :controller  => "admin/groups",
       :path_prefix => "/_admin/#{mod}/:parent"
-    ns.resources :roles,
-      :controller  => "admin/roles",
+    ns.resources :export_groups,
+      :controller  => "admin/groups/export",
+      :path_prefix => "/_admin/#{mod}",
+      :collection => [:export]
+    ns.resources :import_groups,
+      :controller  => "admin/groups/import",
+      :path_prefix => "/_admin/#{mod}",
+      :collection => [:import]
+    #ns.resources :roles,
+    #  :controller  => "admin/roles",
+    #  :path_prefix => "/_admin/#{mod}/:parent"
+    ns.resources :role_names,
+      :controller  => "admin/role_names",
+      :path_prefix => "/_admin/#{mod}"
+    ns.resources :object_privileges,
+      :controller  => "admin/object_privileges",
       :path_prefix => "/_admin/#{mod}/:parent"
     ns.resources :inline_files,
       :controller  => "admin/inline/files",

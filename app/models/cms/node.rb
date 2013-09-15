@@ -6,12 +6,10 @@ class Cms::Node < ActiveRecord::Base
   include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
   include Sys::Model::Rel::Publication
-  include Cms::Model::Rel::Inquiry
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
   include Cms::Model::Rel::Content
   include Cms::Model::Auth::Concept
-  include Cms::Model::Navi
   
   belongs_to :status,   :foreign_key => :state,      :class_name => 'Sys::Base::Status'
   belongs_to :layout,   :foreign_key => :layout_id,  :class_name => 'Cms::Layout'

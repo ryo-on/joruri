@@ -68,6 +68,10 @@ module Sys::Model::Rel::Recognition
   end
 
 private
+  def validate_recognizers
+    errors.add "承認者", :empty if in_recognizer_ids.blank?
+  end
+  
   def save_recognition
     return true unless in_recognizer_ids
     return false unless unid

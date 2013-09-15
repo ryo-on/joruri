@@ -1,7 +1,21 @@
 class Cms::Admin::Node::BaseController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   
-  def pre_dispatch
+  before_filter :pre_dispatch_node
+  
+  @@_models = {}
+  
+  def self.set_model(model)
+    @@_models[self] = model
+  end
+  
+  def model
+    @@_models[self.class] ? @@_models[self.class] : Cms::Node
+  end
+  
+  def pre_dispatch_node
+    return error_auth unless Core.user.has_auth?(:designer)
+    
     id      = params[:parent] == '0' ? Core.site.node_id : params[:parent]
     @parent = Cms::Node.new.find(id)
   end
@@ -11,8 +25,7 @@ class Cms::Admin::Node::BaseController < Cms::Controller::Admin::Base
   end
   
   def show
-    @item = Cms::Node.new.find(params[:id])
-    return error_auth unless @item.readable?
+    @item = model.new.find(params[:id])
     _show @item
   end
 
@@ -25,7 +38,7 @@ class Cms::Admin::Node::BaseController < Cms::Controller::Admin::Base
   end
   
   def update
-    @item = Cms::Node.new.find(params[:id])
+    @item = model.new.find(params[:id])
     @item.attributes = params[:item]
     
     _update @item do
@@ -36,7 +49,7 @@ class Cms::Admin::Node::BaseController < Cms::Controller::Admin::Base
   end
   
   def destroy
-    @item = Cms::Node.new.find(params[:id])
+    @item = model.new.find(params[:id])
     _destroy @item do
       respond_to do |format|
         format.html { return redirect_to(cms_nodes_path) }

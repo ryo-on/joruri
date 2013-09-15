@@ -1,10 +1,13 @@
 <table class="show">
   <tr>
+    <th><%= @item.locale(:state) %></th>
+    <td><%=h @item.status.name %></td>
+  </tr><tr>
     <th><%= @item.locale(:group_id) %></th>
     <td><%= safe{@item.group.name} %></td>
   </tr><tr>
-    <th><%= @item.locale(:state) %></th>
-    <td><%=h @item.status.name %></td>
+    <th><%= @item.locale(:account) %></th>
+    <td><%=h @item.account %></td>
   </tr><tr>
     <th><%= @item.locale(:name) %></th>
     <td><%=h @item.name %></td>
@@ -17,6 +20,9 @@
   </tr><tr>
     <th><%= @item.locale(:auth_no) %></th>
     <td><%=h @item.auth_name %></td>
+  </tr><tr>
+    <th><%= @item.locale(:role_name) %></th>
+    <td><%=h @item.role_names.collect{|r| r.title}.join('，') %></td>
   </tr>
 </table>
 
@@ -26,9 +32,6 @@
   <tr>
     <th><%= @item.locale(:ldap) %></th>
     <td><%=h @item.ldap_label %></td>
-  </tr><tr>
-    <th><%= @item.locale(:account) %></th>
-    <td><%=h @item.account %></td>
   </tr><tr>
     <th><%= @item.locale(:password) %></th>
     <td><%=h @item.password %></td>

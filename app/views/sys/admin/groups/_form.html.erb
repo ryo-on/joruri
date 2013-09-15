@@ -19,6 +19,9 @@
   </tr><tr>
     <th><%= @item.locale(:ldap) %></th>
     <td><%= f.radio_buttons :ldap, @item.ldap_states, :class => 'status' %></td>
+  </tr><tr>
+    <th><%= @item.locale(:sort_no) %></th>
+    <td><%= f.text_field :sort_no, :class => 'number' %></td>
   </tr>
 </table>
 

@@ -9,7 +9,8 @@
     <div><%= link_to :up, url_for(:parent => @parent.parent_id) if @parent.level_no > 1 %></div>
     <% for item in @groups %>
     <%= link_to :show, url_for(:action => :show, :id => item) %>
-      <%= link_to h(item.name), url_for(:action => :index, :parent => item) %><br />
+    <%= link_to h(item.name), url_for(:action => :index, :parent => item) %>
+    <span class="remark"><%= item.sort_no %></span><br />
     <% end %>
   </div>
   

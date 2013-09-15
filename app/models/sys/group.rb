@@ -3,6 +3,7 @@ class Sys::Group < ActiveRecord::Base
   include Sys::Model::Base
   include Sys::Model::Base::Config
   include Sys::Model::Tree
+  include Sys::Model::Auth::Manager
   
   belongs_to :status    , :foreign_key => :state    , :class_name => 'Sys::Base::Status'
   belongs_to :web_status, :foreign_key => :web_state, :class_name => 'Sys::Base::Status'

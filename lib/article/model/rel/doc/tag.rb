@@ -8,8 +8,6 @@ module Article::Model::Rel::Doc::Tag
     mod.after_save :save_tags
   end
   
-  attr_accessor :_tags
-  
   def find_tag_by_name(name)
     return nil if tags.size == 0
     tags.each do |tag|

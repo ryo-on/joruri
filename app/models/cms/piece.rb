@@ -9,7 +9,6 @@ class Cms::Piece < ActiveRecord::Base
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
   include Cms::Model::Rel::Content
-  include Cms::Model::Navi
   include Cms::Model::Auth::Concept
 
 

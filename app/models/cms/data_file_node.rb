@@ -7,7 +7,6 @@ class Cms::DataFileNode < ActiveRecord::Base
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
   include Cms::Model::Auth::Concept
-  include Cms::Model::Navi
   
   has_many :files, :foreign_key => :node_id, :class_name => 'Cms::DataFile', :primary_key => :id
   

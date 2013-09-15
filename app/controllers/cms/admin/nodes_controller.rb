@@ -3,20 +3,20 @@ class Cms::Admin::NodesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
   def pre_dispatch
+    return error_auth unless Core.user.has_auth?(:designer)
+    
     id      = params[:parent] == '0' ? Core.site.node_id : params[:parent]
     @parent = Cms::Node.new.find(id)
   end
 
   def index
     item = Cms::Node.new#.readable
-    item.conditions_to_concept unless Core.user.has_auth?(:manager)
     item.and :parent_id, @parent.id
     item.and :directory, 1
     item.order params[:sort], 'name, id'
     @dirs = item.find(:all)
     
     item = Cms::Node.new#.readable
-    item.conditions_to_concept unless Core.user.has_auth?(:manager)
     item.and :parent_id, @parent.id
     item.and :directory, 0
     item.order params[:sort], 'name, id'

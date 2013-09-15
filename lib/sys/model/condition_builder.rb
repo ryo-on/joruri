@@ -31,11 +31,13 @@ module Sys::Model::ConditionBuilder
   
   def and_keywords(words, *columns)
     cond = Condition.new
-    words.to_s.split(/[ 　]+/).each_with_index do |w, i|
-      break if i >= 10
-      columns.each do |col|
-        qw = connection.quote_string(w).gsub(/([_%])/, '\\\\\1')
-        cond.and col, 'LIKE', "%#{qw}%"
+    columns.each do |col|
+      cond.or do |c|
+        words.to_s.split(/[ 　]+/).each_with_index do |w, i|
+          break if i >= 10
+          qw = connection.quote_string(w).gsub(/([_%])/, '\\\\\1')
+          c.and col, 'LIKE', "%#{qw}%"
+        end
       end
     end
     self.and cond

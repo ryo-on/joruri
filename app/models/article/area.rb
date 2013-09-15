@@ -4,10 +4,12 @@ class Article::Area < ActiveRecord::Base
   include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
   include Sys::Model::Base::Page
+  include Cms::Model::Auth::Content
   
-  belongs_to :status,  :foreign_key => :state,      :class_name => 'Sys::Base::Status'
-  belongs_to :parent,  :foreign_key => :parent_id,  :class_name => "#{self}"
-  belongs_to :layout,  :foreign_key => :layout_id,  :class_name => "Cms::Layout"
+  belongs_to :status ,  :foreign_key => :state,      :class_name => 'Sys::Base::Status'
+  belongs_to :parent ,  :foreign_key => :parent_id,  :class_name => "#{self}"
+  belongs_to :content,  :foreign_key => :content_id, :class_name => 'Cms::Content'
+  belongs_to :layout ,  :foreign_key => :layout_id,  :class_name => "Cms::Layout"
   
   has_many   :children, :foreign_key => :parent_id , :class_name => "#{self}",
     :order => :name, :dependent => :destroy

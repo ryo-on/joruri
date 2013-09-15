@@ -3,12 +3,15 @@ class Cms::Admin::Data::FileNodesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Publication
 
   def pre_dispatch
+    return error_auth unless Core.user.has_auth?(:designer)
+  end
+  
+  def pre_dispatch
     @parent = params[:parent] || '0'
   end
 
   def index
     item = Cms::DataFileNode.new.readable
-    item.conditions_to_navi
     item.page  params[:page], params[:limit]
     item.order params[:sort], 'name, id'
     @items = item.find(:all)
@@ -16,8 +19,7 @@ class Cms::Admin::Data::FileNodesController < Cms::Controller::Admin::Base
   end
 
   def show
-    item = Cms::DataFileNode.new
-    item.conditions_to_navi
+    item = Cms::DataFileNode.new.readable
     @item = item.find(params[:id])
     return error_auth unless @item.readable?
 
@@ -45,15 +47,5 @@ class Cms::Admin::Data::FileNodesController < Cms::Controller::Admin::Base
   def destroy
     @item = Cms::DataFileNode.new.find(params[:id])
     _destroy @item
-  end
-
-  def download
-    item = Cms::DataFileNode.new
-    item.conditions_to_navi
-    item.and :id, params[:id]
-    return error_auth unless @file = item.find(:first)
-
-    skip_layout
-    send_file @file.upload_path, :type => @file.mime_type, :filename => @file.name, :disposition => 'inline'
   end
 end

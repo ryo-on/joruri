@@ -11,8 +11,7 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
     item = Sys::Group.new.readable
     item.and :parent_id, @parent.id
     #item.page  params[:page], params[:limit]
-    item.order params[:sort], :id
-    @groups = item.find(:all)
+    @groups = item.find(:all, :order => 'sort_no, code, id')
     
     item = Sys::User.new.readable
     item.join :groups

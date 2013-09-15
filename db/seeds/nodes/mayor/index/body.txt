@@ -9,6 +9,6 @@
 <p>近年、少子高齢化や国際化、情報化の進展、環境問題、さらには、教育やIT革命などへの迅速かつ的確な対応が求められております。また、あらゆる分野で変革が進んでおり、地方自治体におきましても地方分権が進められようとしております。</p>
 <p>こうした大きく変化する時代にあって、私は、市政を推進するに当たり、常に市民の立場に立った市政、市民の手によって進められる市民のための政治という民主主義の基本姿勢を堅持しつつ、市民の皆様方と手を携えて住民福祉の安定向上、ジョールリ市の繁栄を築き上げて参りたいと考えておりますので、今後とも市政発展のため、なお一層のご理解とご協力を賜りますようお願い申し上げます。</p>
 <p>&nbsp;</p>
-<p><a class="iconFile iconPdf" href="/_common/themes/joruri/mayor/images/dammy.pdf" target="_blank">ダミーＰＤＦ(15.4KBytes)</a></p>
+<p><a class="iconFile iconPdf" href="/_common/themes/joruri/mayor/images/dummy.pdf" target="_blank">ダミーＰＤＦ(15.4KBytes)</a></p>
 </div>
 </div>

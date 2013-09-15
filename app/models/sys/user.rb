@@ -3,10 +3,17 @@ require 'digest/sha1'
 class Sys::User < ActiveRecord::Base
   include Sys::Model::Base
   include Sys::Model::Base::Config
+  include Sys::Model::Rel::RoleName
+  include Sys::Model::Auth::Manager
 
-  belongs_to :status,     :foreign_key => :state,    :class_name => 'Sys::Base::Status'
-  has_many   :group_rels, :foreign_key => :user_id,  :class_name => 'Sys::UsersGroup'  , :primary_key => :id
-  has_and_belongs_to_many :groups, :class_name => 'Sys::Group', :join_table => 'sys_users_groups'
+  belongs_to :status,     :foreign_key => :state,
+    :class_name => 'Sys::Base::Status'
+  has_many   :group_rels, :foreign_key => :user_id,
+    :class_name => 'Sys::UsersGroup'  , :primary_key => :id
+  has_and_belongs_to_many :groups,
+    :class_name => 'Sys::Group', :join_table => 'sys_users_groups'
+  has_and_belongs_to_many :role_names, :association_foreign_key => :role_id,
+    :class_name => 'Sys::RoleName', :join_table => 'sys_users_roles'
   
   attr_accessor :group, :group_id
   
@@ -107,7 +114,7 @@ class Sys::User < ActiveRecord::Base
     Sys::UsersGroup.delete_all(:user_id => id)
     return true
   end
-
+  
   def search(params)
     params.each do |n, v|
       next if v.to_s == ''

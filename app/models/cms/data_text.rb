@@ -6,7 +6,6 @@ class Cms::DataText < ActiveRecord::Base
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
   include Cms::Model::Auth::Concept
-  include Cms::Model::Navi
   
   belongs_to :status,  :foreign_key => :state,      :class_name => 'Sys::Base::Status'
   belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'

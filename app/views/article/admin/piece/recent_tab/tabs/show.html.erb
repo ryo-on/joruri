@@ -19,7 +19,7 @@
           <td><%= @item.condition_name %></td>
         </tr><tr>
           <td>組織</td>
-          <td><% @item.unit_items.each do |i| %><%= i.name %> &nbsp;<% end %></td>
+          <td><% @item.unit_items.each do |i| %><%= i.title %><br /><% end %></td>
         </tr><tr>
           <td>分野</td>
           <td><% @item.category_items.each do |i| %><%= i.title %> &nbsp;<% end %></td>

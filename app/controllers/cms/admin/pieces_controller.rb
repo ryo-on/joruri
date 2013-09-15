@@ -2,10 +2,12 @@
 class Cms::Admin::PiecesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   
+  def pre_dispatch
+    return error_auth unless Core.user.has_auth?(:designer)
+  end
+  
   def index
     item = Cms::Piece.new.readable
-    item.conditions_to_navi
-    #item.site_is Site
     item.page  params[:page], params[:limit]
     item.order params[:sort], 'name, id'
     @items = item.find(:all)
@@ -15,7 +17,7 @@ class Cms::Admin::PiecesController < Cms::Controller::Admin::Base
   def show
     exit
   end
-
+  
   def new
     @item = Cms::Piece.new({
       :concept_id => Core.concept(:id),

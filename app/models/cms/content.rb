@@ -7,7 +7,6 @@ class Cms::Content < ActiveRecord::Base
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
   include Cms::Model::Auth::Concept
-  include Cms::Model::Navi
 
   validates_presence_of :state, :model, :name
 
@@ -18,10 +17,5 @@ class Cms::Content < ActiveRecord::Base
   def node_is(node)
     node = Cms::Node.find(:first, :conditions => {:id => node}) if node.class != Cms::Node
     self.and :id, node.content_id if node
-  end
-
-  def creatable?
-    return false unless Core.user.has_auth?(:designer)
-    super
   end
 end

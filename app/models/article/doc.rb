@@ -17,6 +17,8 @@ class Article::Doc < ActiveRecord::Base
   include Article::Model::Rel::Doc::Category
   include Article::Model::Rel::Doc::Attribute
   include Article::Model::Rel::Doc::Area
+  include Cms::Model::Auth::Concept
+  include Sys::Model::Auth::EditableGroup
 
   belongs_to :content,        :foreign_key => :content_id,        :class_name => 'Article::Content::Doc'
   belongs_to :status,         :foreign_key => :state,             :class_name => 'Sys::Base::Status'
@@ -40,6 +42,8 @@ class Article::Doc < ActiveRecord::Base
     :if => %Q(state == "recognize")
   validate :validate_inquiry,
     :if => %Q(state == "recognize")
+  validate :validate_recognizers,
+    :if => %Q(state == "recognize")
   
   before_save :check_digit
   
@@ -52,7 +56,7 @@ class Article::Doc < ActiveRecord::Base
   end
   
   def states
-    [['承認待ち','recognize'], ['下書き保存','draft']]
+    [['下書き保存','draft'], ['承認待ち','recognize']]
   end
 
   def notice_states

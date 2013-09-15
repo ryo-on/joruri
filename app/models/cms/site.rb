@@ -4,6 +4,7 @@ class Cms::Site < ActiveRecord::Base
   include Sys::Model::Base::Page
   include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
+  include Sys::Model::Auth::Manager
   
   belongs_to :status,  :foreign_key => :state,      :class_name => 'Sys::Base::Status'
   

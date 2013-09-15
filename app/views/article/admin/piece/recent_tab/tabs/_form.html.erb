@@ -26,8 +26,8 @@ areas      = Article::Area.root_items(:content_id => @content.id)
         </tr><tr>
           <td>組織</td>
           <td>
-            <%= f.select_with_tree "unit[0]", units, :label => :title, :order => :code,   :include_blank => blank %> &nbsp;
-            <%= f.select_with_tree "unit[1]", units, :label => :title, :order => :code,   :include_blank => blank %> &nbsp;
+            <%= f.select_with_tree "unit[0]", units, :label => :title, :order => :code,   :include_blank => blank %><br />
+            <%= f.select_with_tree "unit[1]", units, :label => :title, :order => :code,   :include_blank => blank %><br />
             <%= f.select_with_tree "unit[2]", units, :label => :title, :order => :code,   :include_blank => blank %></td>
         </tr><tr>
           <td>分野</td>

@@ -33,7 +33,7 @@ module Cms::Model::Rel::Inquiry
   def validate_inquiry
     if @inquiry && @inquiry['state'] == 'visible'
       errors.add "連絡先（課）", :empty if @inquiry['group_id'].blank?
-      errors.add "連絡先（室・担当）", :empty if @inquiry['charge'].blank?
+      #errors.add "連絡先（室・担当）", :empty if @inquiry['charge'].blank?
       errors.add "連絡先（電話番号）", :empty if @inquiry['tel'].blank?
       errors.add "連絡先（メールアドレス）", :empty if @inquiry['email'].blank?
       errors.add "連絡先（電話番号）", :onebyte_characters if @inquiry['tel'].to_s !~/^[ -~｡-ﾟ]*$/

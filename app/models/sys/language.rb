@@ -2,6 +2,7 @@
 class Sys::Language < ActiveRecord::Base
   include Sys::Model::Base
   include Sys::Model::Base::Config
+  include Sys::Model::Auth::Manager
   
   belongs_to :status,  :foreign_key => :state,      :class_name => 'Sys::Base::Status'
   
