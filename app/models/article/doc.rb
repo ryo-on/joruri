@@ -28,6 +28,8 @@ class Article::Doc < ActiveRecord::Base
   belongs_to :event_status,   :foreign_key => :event_state,       :class_name => 'Sys::Base::Status'
   belongs_to :language,       :foreign_key => :language_id,       :class_name => 'Sys::Language'
 
+  attr_accessor :link_checker
+  
   validates_presence_of :title
   
   validates_presence_of :state, :recent_state, :list_state, :language_id,
@@ -44,6 +46,8 @@ class Article::Doc < ActiveRecord::Base
     :if => %Q(state == "recognize")
   validate :validate_recognizers,
     :if => %Q(state == "recognize")
+  validate :validate_links,
+    :if => %Q(link_checker)
   
   before_save :check_digit
   before_save :modify_attributes
@@ -53,6 +57,12 @@ class Article::Doc < ActiveRecord::Base
       if chars = Util::String.search_platform_dependent_characters(send(attr))
         errors.add attr, :platform_dependent_characters, :chars => chars
       end
+    end
+  end
+  
+  def validate_links
+    unless @link_checker.check_link(body)
+      errors.add_to_base "リンクチェックの結果を確認してください。"
     end
   end
   

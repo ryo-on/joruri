@@ -76,10 +76,10 @@ ActiveRecord::Schema.define(:version => 0) do
     t.date     "event_date"
     t.string   "name"
     t.text     "title"
-    t.text     "head",          :limit => 16777215
-    t.text     "body",          :limit => 16777215
+    t.text     "head",          :limit => 2147483647
+    t.text     "body",          :limit => 2147483647
     t.text     "mobile_title"
-    t.text     "mobile_body",   :limit => 16777215
+    t.text     "mobile_body",   :limit => 2147483647
   end
 
   add_index "article_docs", ["content_id", "published_at", "event_date"], :name => "content_id"
@@ -130,13 +130,13 @@ ActiveRecord::Schema.define(:version => 0) do
   create_table "cms_contents", :force => true do |t|
     t.integer  "unid"
     t.integer  "concept_id"
-    t.integer  "site_id",                            :null => false
+    t.integer  "site_id",                              :null => false
     t.string   "state",          :limit => 15
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "model"
     t.string   "name"
-    t.text     "xml_properties", :limit => 16777215
+    t.text     "xml_properties", :limit => 2147483647
   end
 
   create_table "cms_data_file_nodes", :force => true do |t|
@@ -182,7 +182,7 @@ ActiveRecord::Schema.define(:version => 0) do
     t.datetime "published_at"
     t.string   "name"
     t.text     "title"
-    t.text     "body",         :limit => 16777215
+    t.text     "body",         :limit => 2147483647
   end
 
   create_table "cms_inquiries", :force => true do |t|
@@ -202,16 +202,16 @@ ActiveRecord::Schema.define(:version => 0) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name"
-    t.text     "body",        :limit => 16777215
-    t.text     "ipadic_body", :limit => 16777215
-    t.text     "unidic_body", :limit => 16777215
+    t.text     "body",        :limit => 2147483647
+    t.text     "ipadic_body", :limit => 2147483647
+    t.text     "unidic_body", :limit => 2147483647
   end
 
   create_table "cms_layouts", :force => true do |t|
     t.integer  "unid"
     t.integer  "concept_id"
     t.integer  "template_id"
-    t.integer  "site_id",                               :null => false
+    t.integer  "site_id",                                 :null => false
     t.string   "state",             :limit => 15
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -219,12 +219,12 @@ ActiveRecord::Schema.define(:version => 0) do
     t.datetime "published_at"
     t.string   "name"
     t.text     "title"
-    t.text     "head",              :limit => 16777215
-    t.text     "body",              :limit => 16777215
-    t.text     "stylesheet",        :limit => 16777215
+    t.text     "head",              :limit => 2147483647
+    t.text     "body",              :limit => 2147483647
+    t.text     "stylesheet",        :limit => 2147483647
     t.text     "mobile_head"
-    t.text     "mobile_body",       :limit => 16777215
-    t.text     "mobile_stylesheet", :limit => 16777215
+    t.text     "mobile_body",       :limit => 2147483647
+    t.text     "mobile_stylesheet", :limit => 2147483647
   end
 
   create_table "cms_maps", :force => true do |t|
@@ -270,9 +270,9 @@ ActiveRecord::Schema.define(:version => 0) do
     t.integer  "layout_id"
     t.string   "name"
     t.text     "title"
-    t.text     "body",          :limit => 16777215
+    t.text     "body",          :limit => 2147483647
     t.text     "mobile_title"
-    t.text     "mobile_body",   :limit => 16777215
+    t.text     "mobile_body",   :limit => 2147483647
   end
 
   add_index "cms_nodes", ["parent_id", "name"], :name => "parent_id"
@@ -280,7 +280,7 @@ ActiveRecord::Schema.define(:version => 0) do
   create_table "cms_pieces", :force => true do |t|
     t.integer  "unid"
     t.integer  "concept_id"
-    t.integer  "site_id",                            :null => false
+    t.integer  "site_id",                              :null => false
     t.string   "state",          :limit => 15
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -290,9 +290,10 @@ ActiveRecord::Schema.define(:version => 0) do
     t.string   "model"
     t.string   "name"
     t.text     "title"
-    t.text     "head",           :limit => 16777215
-    t.text     "body",           :limit => 16777215
-    t.text     "xml_properties", :limit => 16777215
+    t.string   "view_title"
+    t.text     "head",           :limit => 2147483647
+    t.text     "body",           :limit => 2147483647
+    t.text     "xml_properties", :limit => 2147483647
   end
 
   add_index "cms_pieces", ["concept_id", "name", "state"], :name => "concept_id"
@@ -320,8 +321,60 @@ ActiveRecord::Schema.define(:version => 0) do
     t.text     "uri"
     t.integer  "regular"
     t.string   "result"
-    t.text     "content",    :limit => 16777215
+    t.text     "content",    :limit => 2147483647
   end
+
+  create_table "enquete_answer_columns", :force => true do |t|
+    t.integer "answer_id"
+    t.integer "form_id"
+    t.integer "column_id"
+    t.text    "value",     :limit => 2147483647
+  end
+
+  add_index "enquete_answer_columns", ["answer_id", "form_id", "column_id"], :name => "answer_id"
+
+  create_table "enquete_answers", :force => true do |t|
+    t.integer  "content_id"
+    t.integer  "form_id"
+    t.string   "state",      :limit => 15
+    t.datetime "created_at"
+    t.string   "ipaddr"
+    t.text     "user_agent"
+  end
+
+  add_index "enquete_answers", ["content_id", "form_id"], :name => "content_id"
+
+  create_table "enquete_form_columns", :force => true do |t|
+    t.integer  "unid"
+    t.integer  "form_id"
+    t.string   "state",        :limit => 15
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "sort_no"
+    t.text     "name"
+    t.text     "body"
+    t.string   "column_type"
+    t.string   "column_style"
+    t.integer  "required"
+    t.text     "options",      :limit => 2147483647
+  end
+
+  add_index "enquete_form_columns", ["form_id", "sort_no"], :name => "form_id"
+
+  create_table "enquete_forms", :force => true do |t|
+    t.integer  "unid"
+    t.integer  "content_id"
+    t.string   "state",      :limit => 15
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "sort_no"
+    t.text     "name"
+    t.text     "body",       :limit => 2147483647
+    t.text     "summary"
+    t.text     "sent_body",  :limit => 2147483647
+  end
+
+  add_index "enquete_forms", ["content_id", "sort_no"], :name => "content_id"
 
   create_table "sys_creators", :force => true do |t|
     t.datetime "created_at"

@@ -8,6 +8,41 @@
  margin: 10px 10px;
  color: #080;
 }
+#noticeExplanation {
+ width: 600px;
+ border: 2px solid #4bf;
+ margin: 15px 0px;
+}
+#noticeExplanation h2 {
+ margin: 0px !important;
+ padding: 5px 10px !important;
+ background-color: #06b !important;
+ color: #fff !important;
+}
+#noticeExplanation p {
+ padding: 5px 10px;
+ color: #333;
+ font-weight: bold;
+}
+#noticeExplanation ul {
+ padding: 0px 0px 10px 0px;
+ list-style-type: square;
+}
+#noticeExplanation ul li {
+ margin-left: 30px;
+ padding-left: 0px;
+ font-size: 12px;
+}
+#noticeExplanation ul li .success {
+  color: #06f;
+}
+#noticeExplanation ul li .failed {
+  color: #e00;
+}
+#noticeExplanation .checkbox {
+  margin: 0px 10px 5px 10px;
+  text-align: right;
+}
 
 /* Error.
 ----------------------------------------------- */
@@ -42,42 +77,6 @@
  margin-left: 30px;
  padding-left: 0px;
  font-size: 12px;
-}
-
-/* Checker.
------------------------------------------------ */
-#checkerMessage {
-  width: 500px;
-  margin: 15px 0px;
-  border: 2px solid #0b0;
-}
-#checkerMessage h2 {
- padding: 5px 10px;
- background-color: #0a0;
- color: #fff;
- font-size: 100%;
-}
-#checkerMessage p {
- padding: 5px 10px;
- color: #333;
- font-weight: bold;
-}
-#checkerMessage ul {
- padding: 0px 0px 10px 0px;
- list-style-type: square;
-}
-#checkerMessage li {
- margin-left: 30px;
- padding-left: 0px;
- font-size: 12px;
-}
-#checkerMessage li .ok {
-  color: #00d;
-  font-weight: bold;
-}
-#checkerMessage li .ng {
-  color: #f00;
-  font-weight: bold;
 }
 
 /* Pagination.

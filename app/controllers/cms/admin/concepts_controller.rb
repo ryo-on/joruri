@@ -52,6 +52,10 @@ class Cms::Admin::ConceptsController < Cms::Controller::Admin::Base
     @item.attributes = params[:item]
     @item.parent_id  = 0 unless @item.parent_id
     @item.level_no   = @parent.level_no + 1
+    
+    parent = Cms::Concept.find_by_id(@item.parent_id)
+    @item.level_no = (parent ? parent.level_no + 1 : 1)
+    
     _update @item
   end
   

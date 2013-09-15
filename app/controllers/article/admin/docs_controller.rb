@@ -51,12 +51,32 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
       return redirect_to url_for(:action => :new, :_tmp => Util::Sequencer.next_id(:tmp, :md5 => true))
     end
   end
-
+  
+  def link_check
+    @checker = Sys::Lib::Form::Checker.new
+    if params[:link_check] == "1"
+      @checker.check_link @item.body
+      return render :action => :new
+    end
+    
+    if @item.state == 'recognize'
+      @item.link_checker = @checker if params[:link_check] != "0"
+    end
+  end
+  
   def create
     @item = Article::Doc.new(params[:item])
     @item.content_id = @content.id
     @item.state      = params[:commit_recognize] ? 'recognize' : 'draft'
-
+    
+    @checker = Sys::Lib::Form::Checker.new
+    if params[:link_check] == "1"
+      @checker.check_link @item.body
+      return render :action => :new
+    elsif @item.state == 'recognize'
+      @item.link_checker = @checker if params[:link_check] != "0"
+    end
+    
     _create @item do
       @item.fix_tmp_files(params[:_tmp])
       if @item.state == 'recognize'
@@ -72,6 +92,14 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
     @item.attributes = params[:item]
     @item.state      = params[:commit_recognize] ? 'recognize' : 'draft'
 
+    @checker = Sys::Lib::Form::Checker.new
+    if params[:link_check] == "1"
+      @checker.check_link @item.body
+      return render :action => :edit
+    elsif @item.state == 'recognize'
+      @item.link_checker = @checker if params[:link_check] != "0"
+    end
+    
     _update(@item) do
       if @item.state == 'recognize'
         send_recognition_request_mail(@item)

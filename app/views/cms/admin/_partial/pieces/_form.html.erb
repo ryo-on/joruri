@@ -18,6 +18,9 @@
   </tr><tr>
     <th><%=h @item.locale(:title) %></th>
     <td><%= f.text_field :title, :class => 'name' %></td>
+  </tr><tr>
+    <th><%=h @item.locale(:view_title) %></th>
+    <td><%= f.text_field :view_title, :class => 'name' %></td>
   </tr>
 <% if defined?(container) && container != :tr %>
 </table>

@@ -11,7 +11,7 @@
 ----------------------------------------------- */
 #commonBanner h1 {
   float: left;
-  width: 30%;
+  width: 29%;
   height: 70px;
 }
 #commonBanner h1 a {
@@ -28,6 +28,11 @@
 ----------------------------------------------- */
 #mayor {
   margin-bottom: 5px;
+}
+#mayor .pieceHeader {
+  color: #ffffff;
+  font-size: 120%;
+  font-weight: bold;
 }
 #mayor .pieceBody {
   padding: 5px;
@@ -55,6 +60,10 @@
 ----------------------------------------------- */
 #ereaMap {
   border: 1px solid #006058;
+}
+#menu #ereaMap .pieceHeader {
+  padding: 0px;
+  background-image: none;
 }
 #ereaMap .pieceBody {
   padding: 5px;

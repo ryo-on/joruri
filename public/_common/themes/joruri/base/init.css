@@ -34,15 +34,11 @@ input, textarea, select, option {
   font-family: Osaka, "MS PGothic", sans-serif;
 }
 input[type=checkbox], input[type=radio] {
-  float: left;
-  clear: left;
-  margin: 4px 4px 0px 4px;
+  margin-right: 4px;
 }
 html[xmlns] label {
   display: -moz-inline-box;
   display: inline-block;
-  clear: left;
-  margin: 4px 0px 0px 0px;
 }
 table {
   border-collapse: collapse;

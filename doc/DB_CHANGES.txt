@@ -1,8 +1,63 @@
+1.0.8
+  ALTER TABLE `cms_pieces` ADD `view_title` VARCHAR( 255 ) NULL AFTER `title`;
+  CREATE TABLE `enquete_answers` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `content_id` int(11) DEFAULT NULL,
+    `form_id` int(11) DEFAULT NULL,
+    `state` varchar(15) DEFAULT NULL,
+    `created_at` datetime DEFAULT NULL,
+    `ipaddr` varchar(255) DEFAULT NULL,
+    `user_agent` text,
+    PRIMARY KEY (`id`),
+    KEY `content_id` (`content_id`,`form_id`)
+  );
+  CREATE TABLE `enquete_answer_columns` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `answer_id` int(11) DEFAULT NULL,
+    `form_id` int(11) DEFAULT NULL,
+    `column_id` int(11) DEFAULT NULL,
+    `value` longtext,
+    PRIMARY KEY (`id`),
+    KEY `answer_id` (`answer_id`,`form_id`,`column_id`)
+  );
+  CREATE TABLE `enquete_forms` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `unid` int(11) DEFAULT NULL,
+    `content_id` int(11) DEFAULT NULL,
+    `state` varchar(15) DEFAULT NULL,
+    `created_at` datetime DEFAULT NULL,
+    `updated_at` datetime DEFAULT NULL,
+    `sort_no` int(11) DEFAULT NULL,
+    `name` text,
+    `body` longtext,
+    `summary` text,
+    `sent_body` longtext,
+    PRIMARY KEY (`id`),
+    KEY `content_id` (`content_id`,`sort_no`)
+  );
+  CREATE TABLE `enquete_form_columns` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `unid` int(11) DEFAULT NULL,
+    `form_id` int(11) DEFAULT NULL,
+    `state` varchar(15) DEFAULT NULL,
+    `created_at` datetime DEFAULT NULL,
+    `updated_at` datetime DEFAULT NULL,
+    `sort_no` int(11) DEFAULT NULL,
+    `name` text,
+    `body` text,
+    `column_type` varchar(255) DEFAULT NULL,
+    `column_style` varchar(255) DEFAULT NULL,
+    `required` int(11) DEFAULT NULL,
+    `options` longtext,
+    PRIMARY KEY (`id`),
+    KEY `form_id` (`form_id`,`sort_no`)
+  );
+
 1.0.7
-  * ALTER TABLE `article_docs` ADD `agent_state` VARCHAR( 15 ) NULL AFTER `state`;
+  ALTER TABLE `article_docs` ADD `agent_state` VARCHAR( 15 ) NULL AFTER `state`;
 
 1.0.6
-  * CREATE TABLE `sys_ldap_synchros` (
+  CREATE TABLE `sys_ldap_synchros` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `parent_id` int(11) DEFAULT NULL,
     `created_at` datetime DEFAULT NULL,
@@ -19,8 +74,8 @@
   );
 
 1.0.3
-  * ALTER TABLE `cms_nodes` ADD `mobile_title` TEXT NULL AFTER `body`;
-  * ALTER TABLE `cms_nodes` ADD `mobile_body` LONGTEXT NULL AFTER `mobile_title`;
+  ALTER TABLE `cms_nodes` ADD `mobile_title` TEXT NULL AFTER `body`;
+  ALTER TABLE `cms_nodes` ADD `mobile_body` LONGTEXT NULL AFTER `mobile_title`;
 
 1.0.2
-  * ALTER TABLE `cms_data_texts` ADD `site_id` INTEGER NULL AFTER `unid`;
+  ALTER TABLE `cms_data_texts` ADD `site_id` INTEGER NULL AFTER `unid`;

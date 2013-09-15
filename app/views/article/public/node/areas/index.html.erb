@@ -13,7 +13,7 @@
 </table>
 
 <% if (children = item.public_children).size > 0 %><table class="city">
-  <% children.each do |c| %><tr class="<%= cycle '', 'cycle' %>">
+  <% children.each do |c| %><tr class="<%= cycle '', 'cycle', :name => :cycle %>">
     <td class="name"><%= c.title  %></td>
     <td class="page"><%=link_to h('地域ページへ'), "#{c.name}/"  %></td>
     <td class="zipCode"><%= c.zip_code %></td>
@@ -21,7 +21,7 @@
     <td class="tel"><%= c.tel %></td>
     <td class="formal"><%= link_to('公式ページへ', c.site_uri) if !c.site_uri.blank? %></td>
   </tr><% end %>
-</table><% end %>
+</table><% reset_cycle(:cycle) %><% end %>
 
 <div class="pageTop"><a href="#container">ページの先頭へ戻る</a></div>
 <% end %>

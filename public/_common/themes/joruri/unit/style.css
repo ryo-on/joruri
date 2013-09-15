@@ -7,15 +7,6 @@
    category
 ========================================================= */
 
-/* side-link
------------------------------------------------ */
-#unitList .pieceHeader {
-  height: 25px;
-  background-image: url(./images/tl-kakuka.gif);
-  background-position: left top;
-  background-repeat: no-repeat;
-}
-
 /* shinchaku-ichiran
 ----------------------------------------------- */
 .contentArticleUnit .latest {

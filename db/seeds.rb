@@ -3,6 +3,14 @@
 ## ---------------------------------------------------------
 ## methods
 
+def truncate_table(table)
+  ActiveRecord::Base.connection.execute "TRUNCATE TABLE #{table}"
+end
+
+def load_seed(name)
+  load "#{Rails.root}/db/seeds/#{name}.rb"
+end
+
 def file(path)
   file = "#{Rails.root}/db/seeds/#{path}.txt"
   FileTest.exist?(file) ? File.new(file).read.force_encoding('utf-8') : nil
@@ -11,45 +19,38 @@ end
 ## ---------------------------------------------------------
 ## truncate tables
 
-conn = ActiveRecord::Base.connection
-conn.execute "TRUNCATE TABLE `article_areas"
-conn.execute "TRUNCATE TABLE `article_attributes"
-conn.execute "TRUNCATE TABLE `article_categories"
-conn.execute "TRUNCATE TABLE `article_docs"
-conn.execute "TRUNCATE TABLE `article_sections"
-conn.execute "TRUNCATE TABLE `article_tags"
-conn.execute "TRUNCATE TABLE `cms_concepts"
-conn.execute "TRUNCATE TABLE `cms_contents"
-conn.execute "TRUNCATE TABLE `cms_data_files"
-conn.execute "TRUNCATE TABLE `cms_data_file_nodes"
-conn.execute "TRUNCATE TABLE `cms_data_texts"
-conn.execute "TRUNCATE TABLE `cms_inquiries"
-conn.execute "TRUNCATE TABLE `cms_kana_dictionaries"
-conn.execute "TRUNCATE TABLE `cms_layouts"
-conn.execute "TRUNCATE TABLE `cms_maps"
-conn.execute "TRUNCATE TABLE `cms_nodes"
-conn.execute "TRUNCATE TABLE `cms_pieces"
-conn.execute "TRUNCATE TABLE `cms_sites"
-conn.execute "TRUNCATE TABLE `cms_talk_tasks"
-conn.execute "TRUNCATE TABLE `schema_migrations"
-conn.execute "TRUNCATE TABLE `sys_creators"
-conn.execute "TRUNCATE TABLE `sys_editable_groups"
-conn.execute "TRUNCATE TABLE `sys_files"
-conn.execute "TRUNCATE TABLE `sys_groups"
-conn.execute "TRUNCATE TABLE `sys_languages"
-conn.execute "TRUNCATE TABLE `sys_ldap_synchros"
-conn.execute "TRUNCATE TABLE `sys_maintenances"
-conn.execute "TRUNCATE TABLE `sys_messages"
-conn.execute "TRUNCATE TABLE `sys_object_privileges"
-conn.execute "TRUNCATE TABLE `sys_publishers"
-conn.execute "TRUNCATE TABLE `sys_recognitions"
-conn.execute "TRUNCATE TABLE `sys_role_names"
-conn.execute "TRUNCATE TABLE `sys_sequences"
-conn.execute "TRUNCATE TABLE `sys_tasks"
-conn.execute "TRUNCATE TABLE `sys_unids"
-conn.execute "TRUNCATE TABLE `sys_users"
-conn.execute "TRUNCATE TABLE `sys_users_groups"
-conn.execute "TRUNCATE TABLE `sys_users_roles"
+truncate_table "cms_concepts"
+truncate_table "cms_contents"
+truncate_table "cms_data_files"
+truncate_table "cms_data_file_nodes"
+truncate_table "cms_data_texts"
+truncate_table "cms_inquiries"
+truncate_table "cms_kana_dictionaries"
+truncate_table "cms_layouts"
+truncate_table "cms_maps"
+truncate_table "cms_nodes"
+truncate_table "cms_pieces"
+truncate_table "cms_sites"
+truncate_table "cms_talk_tasks"
+truncate_table "schema_migrations"
+truncate_table "sys_creators"
+truncate_table "sys_editable_groups"
+truncate_table "sys_files"
+truncate_table "sys_groups"
+truncate_table "sys_languages"
+truncate_table "sys_ldap_synchros"
+truncate_table "sys_maintenances"
+truncate_table "sys_messages"
+truncate_table "sys_object_privileges"
+truncate_table "sys_publishers"
+truncate_table "sys_recognitions"
+truncate_table "sys_role_names"
+truncate_table "sys_sequences"
+truncate_table "sys_tasks"
+truncate_table "sys_unids"
+truncate_table "sys_users"
+truncate_table "sys_users_groups"
+truncate_table "sys_users_roles"
 
 ## ---------------------------------------------------------
 ## load config
@@ -144,28 +145,32 @@ site = Cms::Site.create :state => 'public', :name => site_title, :full_uri => co
 ## ---------------------------------------------------------
 ## cms/concepts
 
-def create(site, parent, level_no, sort_no, name)
-  Cms::Concept.create :site_id => site.id, :parent_id => (parent ? parent.id : 0),
-    :level_no => level_no, :sort_no => sort_no, :state => 'public', :name => name
+def create_cms_concept(params)
+  params[:site_id]   ||= 1
+  params[:parent_id] ||= 1
+  params[:state]     ||= 'public'
+  if params[:parent_id] == 0
+    params[:level_no] = 1
+  else
+    parent = Cms::Concept.find_by_id(params[:parent_id])
+    params[:level_no] = parent.level_no + 1
+  end
+  Cms::Concept.create(params)
 end
 
-c_site   = create site, nil   , 1, 1  , 'ジョールリ市'
-c_top    = create site, c_site, 2, 10 , 'トップページ'
-c_mayor  = create site, c_site, 2, 30 , '市長室'
-c_unit   = create site, c_site, 2, 100, '組織'
-c_cate   = create site, c_site, 2, 200, '分野'
-c_attr   = create site, c_site, 2, 300, '属性'
-c_area   = create site, c_site, 2, 400, '地域'
+c_site  = create_cms_concept :parent_id => 0, :sort_no => 1, :name => 'ジョールリ市'
+c_top   = create_cms_concept :sort_no => 10 , :name => 'トップページ'
+c_mayor = create_cms_concept :sort_no => 30 , :name => '市長室'
 
 ## ---------------------------------------------------------
 ## cms/contents
 
-def create(site, concept, model, name)
-  Cms::Content.create :site_id => site.id, :concept_id => concept.id, :state => 'public',
-    :model => model, :name => name
+def create_cms_content(params)
+  params[:site_id]    ||= 1
+  params[:concept_id] ||= 1
+  params[:state]      ||= 'public'
+  Cms::Content.create(params)
 end
-
-doc = create site, c_site, 'Article::Doc', 'ホームページ記事'
 
 ## ---------------------------------------------------------
 ## sys/roles
@@ -179,281 +184,109 @@ Sys::UsersRole.create :user_id => u4.id, :role_id => r.id
 ## ---------------------------------------------------------
 ## cms/layouts
 
-def create(site, concept, name, title)
-  Cms::Layout.create :site_id => site.id, :concept_id => concept.id, :state => 'public',
-    :name => name, :title => title,
-    :head => file("layouts/#{name}/head"), :body => file("layouts/#{name}/body"),
-    :mobile_head => file("layouts/#{name}/m_head"), :mobile_body => file("layouts/#{name}/m_body")
+def create_cms_layout(params)
+  params[:site_id]     ||= 1
+  params[:concept_id]  ||= 1
+  params[:state]       ||= 'public'
+  params[:head]        ||= file("layouts/#{params[:name]}/head")
+  params[:body]        ||= file("layouts/#{params[:name]}/body")
+  params[:mobile_head] ||= file("layouts/#{params[:name]}/m_head")
+  params[:mobile_body] ||= file("layouts/#{params[:name]}/m_body")
+  Cms::Layout.create(params)
 end
 
-l_top      = create site, c_top  , 'top'                 , 'トップページ'
-l_event    = create site, c_site , 'event'               , 'イベント'
-l_doc      = create site, c_site , 'doc'                 , '記事ページ'
-l_recent   = create site, c_site , 'recent'              , '新着記事'
-l_tag      = create site, c_site , 'tag'                 , 'タグ検索'
-l_map      = create site, c_site , 'sitemap'             , 'サイトマップ'
-l_unit_top = create site, c_unit , 'unit-top'            , '組織TOP'
-l_unit     = create site, c_unit , 'unit'                , '組織'
-l_cate_top = create site, c_cate , 'category-top'        , '分野TOP'
-l_cate     = create site, c_cate , 'category'            , '分野'
-l_attr_top = create site, c_attr , 'attribute-top'       , '属性TOP'
-l_attr     = create site, c_attr , 'attribute'           , '属性'
-l_area_top = create site, c_area , 'area-top'            , '地域TOP'
-l_area     = create site, c_area , 'area'                , '地域'
-l_mayor    = create site, c_mayor, 'mayor'               , '市長の部屋'
-l_page     = create site, c_site,  'page'                , '詳細ページ'
+l_top   = create_cms_layout :concept_id => c_top.id  , :name => 'top'    , :title => 'トップページ'
+l_map   = create_cms_layout :concept_id => c_site.id , :name => 'sitemap', :title => 'サイトマップ'
+l_mayor = create_cms_layout :concept_id => c_mayor.id, :name => 'mayor'  , :title => '市長の部屋'
+l_page  = create_cms_layout :concept_id => c_site.id , :name => 'page'   , :title => '詳細ページ'
 
 ## ---------------------------------------------------------
 ## cms/pieces
 
-def create(site, concept, content, model, name, title)
-  Cms::Piece.create :site_id => site.id, :concept_id => concept.id, :state => 'public',
-    :content_id => (content ? content.id : nil), :model => model,
-    :name => name, :title => title, :body => file("pieces/#{name}/body"), :xml_properties =>file("pieces/#{name}/xml_properties")
+def create_cms_piece(params)
+  params[:site_id]        ||= 1
+  params[:concept_id]     ||= 1
+  params[:state]          ||= 'public'
+  params[:body]           ||= file("pieces/#{params[:name]}/body")
+  params[:xml_properties] ||= file("pieces/#{params[:name]}/xml_properties")
+  Cms::Piece.create(params)
 end
 
-create site, c_site , nil, 'Cms::Free'         , 'ad-lower'             , '広告（下部）'
-create site, c_site , nil, 'Cms::Free'         , 'ad-upper'             , '広告（右上部）'
-create site, c_site , nil, 'Cms::Free'         , 'address'              , '住所'
-create site, c_site , nil, 'Cms::PageTitle'    , 'page-title'           , 'ページタイトル'
-create site, c_site , nil, 'Cms::BreadCrumb'   , 'bread-crumbs'         , 'パンくず'
-create site, c_site , nil, 'Cms::Free'         , 'global-navi'          , 'グローバルナビ'
-create site, c_site , nil, 'Cms::Free'         , 'footer-navi'          , 'フッターナビ'
-create site, c_site , nil, 'Cms::Free'         , 'common-banner'        , 'サイトバナー'
-create site, c_site , nil, 'Cms::Free'         , 'common-header'        , 'ふりがな・よみあげヘッダー'
-create site, c_site , nil, 'Cms::Free'         , 'recent-docs-title'    , '新着情報タイトル'
-create site, c_site , nil, 'Cms::Free'         , 'attract-information'  , '注目情報'
-create site, c_site , nil, 'Cms::Free'         , 'relation-link'        , '関連リンク'
-create site, c_site , doc, 'Article::Unit'     , 'unit-list'            , '組織一覧'
-create site, c_site , doc, 'Article::Category' , 'category-list'        , '分野一覧'
-create site, c_site , doc, 'Article::Attribute', 'attribute-list'       , '属性一覧'
-create site, c_site , doc, 'Article::Area'     , 'area-list'            , '地域一覧'
-create site, c_site , doc, 'Article::Calendar' , 'calendar'             , 'カレンダー'
-create site, c_site , doc, 'Article::RecentDoc', 'recent-docs'          , '新着記事'
-create site, c_top  , nil, 'Cms::Free'         , 'about'                , 'ジョールリ市の紹介'
-create site, c_top  , nil, 'Cms::Free'         , 'application'          , '申請書ダウンロード'
-create site, c_top  , nil, 'Cms::Free'         , 'area-information'     , '地域情報'
-create site, c_top  , nil, 'Cms::Free'         , 'basic-information'    , '基本情報'
-create site, c_top  , nil, 'Cms::Free'         , 'common-banner-top'    , 'サイトバナー（トップ）'
-create site, c_top  , nil, 'Cms::Free'         , 'mayor'                , '市長室'
-create site, c_top  , nil, 'Cms::Free'         , 'qr-code'              , 'QRコード'
-create site, c_top  , nil, 'Cms::Free'         , 'photo'                , 'トップ写真'
-create site, c_top  , nil, 'Cms::Free'         , 'useful-information'   , 'お役立ち情報'
-create site, c_top  , nil, 'Cms::Free'         , 'topic'                , 'トピック'
-create site, c_top  , nil, 'Cms::Free'         , 'category'             , 'カテゴリ'
-create site, c_top  , doc, 'Article::RecentTab', 'doc-tab'              , '新着タブ'
-create site, c_area , nil, 'Cms::Free'         , 'area-map'             , '地域マップ'
-create site, c_mayor, nil, 'Cms::Free'         , 'mayor-side'           , '市長室サイドメニュー'
-create site, c_mayor, nil, 'Cms::Free'         , 'mayor'                , '市長室'
-create site, c_mayor, nil, 'Cms::Free'         , 'mayor-title'          , '市長室タイトル'
-create site, c_site , nil, 'Cms::Free'         , 'mobile-common-header' , 'モバイル：ヘッダー画像'
-create site, c_site , nil, 'Cms::Free'         , 'mobile-copyright'     , 'モバイル：コピーライト'
-create site, c_top  , nil, 'Cms::Free'         , 'mobile-address'       , 'モバイル：住所'
-create site, c_top  , nil, 'Cms::Free'         , 'mobile-category-list' , 'モバイル：トップ分野一覧'
-create site, c_top  , nil, 'Cms::Free'         , 'mobile-footer-navi'   , 'モバイル：フッターナビ'
-create site, c_top  , nil, 'Cms::Free'         , 'mobile-mayor'         , 'モバイル：ようこそ市長室へ'
-create site, c_top  , nil, 'Cms::Free'         , 'mobile-menu-navi'     , 'モバイル：ナビ'
-create site, c_top  , nil, 'Cms::Free'         , 'mobile-pickup'        , 'モバイル：ピックアップ'
-create site, c_top  , nil, 'Cms::Free'         , 'mobile-recommend-site', 'モバイル：おすすめサイト'
-create site, c_top  , nil, 'Cms::Free'         , 'mobile-search'        , 'モバイル：サイト内検索'
-create site, c_site,  nil, 'Cms::Free'         , 'mobile-back-navi'     , 'モバイル：バックナビ'
-create site, c_site,  nil, 'Cms::Free'         , 'mobile-mayor-navi'    , 'モバイル：市長室'
+[ [ c_site.id , 'Cms::Free'      , 'ad-lower'             , '広告（下部）' ],
+  [ c_site.id , 'Cms::Free'      , 'ad-upper'             , '広告（右上部）' ],
+  [ c_site.id , 'Cms::Free'      , 'address'              , '住所' ],
+  [ c_site.id , 'Cms::PageTitle' , 'page-title'           , 'ページタイトル' ],
+  [ c_site.id , 'Cms::BreadCrumb', 'bread-crumbs'         , 'パンくず' ],
+  [ c_site.id , 'Cms::Free'      , 'global-navi'          , 'グローバルナビ' ],
+  [ c_site.id , 'Cms::Free'      , 'footer-navi'          , 'フッターナビ' ],
+  [ c_site.id , 'Cms::Free'      , 'common-banner'        , 'サイトバナー' ],
+  [ c_site.id , 'Cms::Free'      , 'common-header'        , 'ふりがな・よみあげヘッダー' ],
+  [ c_site.id , 'Cms::Free'      , 'recent-docs-title'    , '新着情報タイトル' ],
+  [ c_site.id , 'Cms::Free'      , 'attract-information'  , '注目情報' ],
+  [ c_site.id , 'Cms::Free'      , 'relation-link'        , '関連リンク' ],
+  [ c_top.id  , 'Cms::Free'      , 'about'                , 'ジョールリ市の紹介' ],
+  [ c_top.id  , 'Cms::Free'      , 'application'          , '申請書ダウンロード' ],
+  [ c_top.id  , 'Cms::Free'      , 'area-information'     , '地域情報' ],
+  [ c_top.id  , 'Cms::Free'      , 'basic-information'    , '基本情報' ],
+  [ c_top.id  , 'Cms::Free'      , 'common-banner-top'    , 'サイトバナー（トップ）' ],
+  [ c_top.id  , 'Cms::Free'      , 'mayor'                , '市長室' ],
+  [ c_top.id  , 'Cms::Free'      , 'qr-code'              , 'QRコード' ],
+  [ c_top.id  , 'Cms::Free'      , 'photo'                , 'トップ写真' ],
+  [ c_top.id  , 'Cms::Free'      , 'useful-information'   , 'お役立ち情報' ],
+  [ c_top.id  , 'Cms::Free'      , 'topic'                , 'トピック' ],
+  [ c_top.id  , 'Cms::Free'      , 'category'             , 'カテゴリ' ],
+  [ c_top.id  , 'Cms::Free'      , 'inquiry'              , 'お問い合わせバナー' ],
+  [ c_mayor.id, 'Cms::Free'      , 'mayor-side'           , '市長室サイドメニュー' ],
+  [ c_mayor.id, 'Cms::Free'      , 'mayor'                , '市長室' ],
+  [ c_mayor.id, 'Cms::Free'      , 'mayor-title'          , '市長室タイトル' ],
+  [ c_site.id , 'Cms::Free'      , 'mobile-common-header' , 'モバイル：ヘッダー画像' ],
+  [ c_site.id , 'Cms::Free'      , 'mobile-copyright'     , 'モバイル：コピーライト' ],
+  [ c_top.id  , 'Cms::Free'      , 'mobile-address'       , 'モバイル：住所' ],
+  [ c_top.id  , 'Cms::Free'      , 'mobile-category-list' , 'モバイル：トップ分野一覧' ],
+  [ c_top.id  , 'Cms::Free'      , 'mobile-footer-navi'   , 'モバイル：フッターナビ' ],
+  [ c_top.id  , 'Cms::Free'      , 'mobile-mayor'         , 'モバイル：ようこそ市長室へ' ],
+  [ c_top.id  , 'Cms::Free'      , 'mobile-menu-navi'     , 'モバイル：ナビ' ],
+  [ c_top.id  , 'Cms::Free'      , 'mobile-pickup'        , 'モバイル：ピックアップ' ],
+  [ c_top.id  , 'Cms::Free'      , 'mobile-recommend-site', 'モバイル：おすすめサイト' ],
+  [ c_top.id  , 'Cms::Free'      , 'mobile-search'        , 'モバイル：サイト内検索' ],
+  [ c_site.id , 'Cms::Free'      , 'mobile-back-navi'     , 'モバイル：バックナビ' ],
+  [ c_site.id , 'Cms::Free'      , 'mobile-mayor-navi'    , 'モバイル：市長室' ],
+].each do |c|
+  create_cms_piece :concept_id => c[0], :model => c[1], :name => c[2], :title => c[3]
+end
 
 ## ---------------------------------------------------------
 ## cms/nodes
 
-def create(site, parent, concept, layout, content, directory, model, name, title, body = nil)
-  Cms::Node.create :site_id => site.id, :parent_id => (parent == 0 ? 0 : parent.id),
-    :concept_id => (concept ? concept.id : nil), :layout_id => layout.id,
-    :content_id => (content ? content.id : nil), :state => 'public',
-    :published_at => Time.now, :route_id => (parent == 0 ? 0 : parent.id),
-    :directory => directory, :model => model,
-    :name => name, :title => title, :body => body
+def create_cms_node(params)
+  params[:site_id]        ||= 1
+  params[:concept_id]     ||= 1
+  params[:parent_id]      ||= 1
+  params[:state]          ||= 'public'
+  params[:route_id]       ||= params[:parent_id]
+  params[:directory]      ||= (params[:name] =~ /\./ ? 0 : 1)
+  params[:published_at]   ||= Time.now
+  Cms::Node.create(params)
 end
 
-r = create site, 0, c_site  , l_top     , doc, 1, 'Cms::Directory'    , '/'          , site_title
-    create site, r, c_top   , l_top     , doc, 0, 'Cms::Page'         , 'index.html' , site_title
-    create site, r, c_site  , l_doc     , doc, 1, 'Article::Doc'      , 'docs'       , '記事'
-    create site, r, c_site  , l_recent  , doc, 1, 'Article::RecentDoc', 'shinchaku'  , '新着情報'
-    create site, r, c_site  , l_event   , doc, 1, 'Article::EventDoc' , 'event'      , 'イベントカレンダー'
-    create site, r, c_site  , l_tag     , doc, 1, 'Article::TagDoc'   , 'tag'        , 'タグ検索'
-    create site, r, c_unit  , l_unit_top, doc, 1, 'Article::Unit'     , 'soshiki'    , '組織'
-    create site, r, c_cate  , l_cate_top, doc, 1, 'Article::Category' , 'bunya'      , '分野'
-    create site, r, c_attr  , l_attr_top, doc, 1, 'Article::Attribute', 'zokusei'    , '属性'
-    create site, r, c_area  , l_area_top, doc, 1, 'Article::Area'     , 'chiiki'     , '地域'
-    create site, r, c_site  , l_page    , nil, 0, 'Cms::Page'         , 'mobile.html','ジョールリ市携帯サイトのご紹介', file("nodes/pages/mobile/body")
-p = create site, r, c_site  , l_map     , nil, 1, 'Cms::Directory'    , 'sitemap'    , 'サイトマップ'
-    create site, p, c_site  , l_map     , nil, 0, 'Cms::Sitemap'      , 'index.html' , 'サイトマップ'
-m = create site, r, c_mayor , l_mayor   , nil, 1, 'Cms::Directory'    , 'mayor'      , '市長室'
-    create site, m, c_mayor , l_mayor   , nil, 0, 'Cms::Page'         , 'index.html' , '市長のご挨拶'  , file("nodes/mayor/index/body")
-p = create site, m, c_mayor , l_mayor   , nil, 1, 'Cms::Directory'    , 'profile'    , 'プロフィール'
-    create site, p, c_mayor , l_mayor   , nil, 0, 'Cms::Page'         , 'index.html' , 'プロフィール'  , file("nodes/mayor/dummy/body")
-p = create site, m, c_mayor , l_mayor   , nil, 1, 'Cms::Directory'    , 'activity'   , '市長へのメール'
-    create site, p, c_mayor , l_mayor   , nil, 0, 'Cms::Page'         , 'index.html' , '市長へのメール', file("nodes/mayor/dummy/body")
+create_cms_node :parent_id => 0, :layout_id => l_top.id , :model => 'Cms::Directory', :name => '/'          , :title => site_title
+create_cms_node :parent_id => 1, :layout_id => l_top.id , :model => 'Cms::Page'     , :name => 'index.html' , :title => site_title, :concept_id => c_top.id
+create_cms_node :parent_id => 1, :layout_id => l_page.id, :model => 'Cms::Page'     , :name => 'mobile.html', :title => 'ジョールリ市携帯サイトのご紹介', :body => file("nodes/pages/mobile/body")
+
+p = create_cms_node :layout_id => l_map.id, :model => 'Cms::Directory', :name => 'sitemap'   , :title => 'サイトマップ'
+    create_cms_node :layout_id => l_map.id, :model => 'Cms::Sitemap'  , :name => 'index.html', :title => 'サイトマップ',
+      :parent_id => p.id 
+
+m = create_cms_node :concept_id => c_mayor.id, :layout_id => l_mayor.id, :model => 'Cms::Directory', :name => 'mayor'     , :title => '市長室'
+    create_cms_node :concept_id => c_mayor.id, :layout_id => l_mayor.id, :model => 'Cms::Page'     , :name => 'index.html', :title => '市長のご挨拶', :body => file("nodes/mayor/index/body"),
+      :parent_id => m.id 
+p = create_cms_node :parent_id => m.id, :concept_id => c_mayor.id, :layout_id => l_mayor.id, :model => 'Cms::Directory', :name => 'profile'   , :title => 'プロフィール'
+    create_cms_node :parent_id => p.id, :concept_id => c_mayor.id, :layout_id => l_mayor.id, :model => 'Cms::Page'     , :name => 'index.html', :title => 'プロフィール', :body => file("nodes/mayor/dummy/body")
+p = create_cms_node :parent_id => m.id, :concept_id => c_mayor.id, :layout_id => l_mayor.id, :model => 'Cms::Directory', :name => 'activity'  , :title => '市長へのメール'
+    create_cms_node :parent_id => p.id, :concept_id => c_mayor.id, :layout_id => l_mayor.id, :model => 'Cms::Page'     , :name => 'index.html', :title => '市長へのメール', :body => file("nodes/mayor/dummy/body")
 
 ## ---------------------------------------------------------
-## article/units
+## other modules
 
-Article::Unit.update_all({:web_state => 'public', :layout_id => l_unit.id}, ["parent_id > 0"])
-
-## ---------------------------------------------------------
-## article/categories
-
-def create(parent, level_no, sort_no, layout, content, name, title)
-  Article::Category.create :parent_id => (parent == 0 ? 0 : parent.id),
-    :level_no => level_no, :sort_no => sort_no, :state => 'public',
-    :layout_id => layout.id, :content_id => content.id, :name => name, :title => title
-end
-
-p = create 0, 1, 1 , l_cate, doc, 'kurashi'          , 'くらし'
-    create p, 2, 1 , l_cate, doc, 'shohiseikatsu'    , '消費生活'
-    create p, 2, 2 , l_cate, doc, 'shakaikoken'      , '社会貢献・NPO'
-    create p, 2, 3 , l_cate, doc, 'bohan'            , '防犯・安全'
-    create p, 2, 4 , l_cate, doc, 'sumai'            , 'すまい'
-    create p, 2, 5 , l_cate, doc, 'jinken'           , '人権・男女共同参画'
-    create p, 2, 6 , l_cate, doc, 'kankyo'           , '環境'
-    create p, 2, 7 , l_cate, doc, 'zei'              , '税'
-    create p, 2, 8 , l_cate, doc, 'kosodate'         , '子育て'
-    create p, 2, 9 , l_cate, doc, 'dobutsu'          , '動物・ペット'
-    create p, 2, 10, l_cate, doc, 'recycle'          , 'リサイクル・廃棄物'
-p = create 0, 1, 2 , l_cate, doc, 'fukushi'          , '健康・福祉'
-    create p, 2, 1 , l_cate, doc, 'kenkou'           , '健康'
-    create p, 2, 2 , l_cate, doc, 'iryo'             , '医療'
-    create p, 2, 3 , l_cate, doc, 'koreisha'         , '高齢者・介護'
-    create p, 2, 4 , l_cate, doc, 'chikifukushi'     , '地域福祉'
-    create p, 2, 5 , l_cate, doc, 'shogaifukushi'    , '障害福祉'
-p = create 0, 1, 3 , l_cate, doc, 'kyoikubunka'      , '教育・文化'
-    create p, 2, 1 , l_cate, doc, 'kyoiku'           , '教育'
-    create p, 2, 2 , l_cate, doc, 'bunka'            , '文化・スポーツ'
-    create p, 2, 3 , l_cate, doc, 'seishonen'        , '青少年'
-    create p, 2, 4 , l_cate, doc, 'shogaigakushu'    , '障害学習'
-    create p, 2, 5 , l_cate, doc, 'gakko'            , '学校・文化施設'
-    create p, 2, 6 , l_cate, doc, 'kokusaikoryu'     , '国際交流'
-p = create 0, 1, 4 , l_cate, doc, 'kanko'            , '観光・魅力'
-    create p, 2, 1 , l_cate, doc, 'event'            , '観光・イベント'
-    create p, 2, 2 , l_cate, doc, 'meisho'           , '名所・景観'
-    create p, 2, 3 , l_cate, doc, 'bussanhin'        , '物産品'
-    create p, 2, 4 , l_cate, doc, 'taikenspot'       , '体験スポット'
-p = create 0, 1, 5 , l_cate, doc, 'sangyoshigoto'    , '産業・しごと'
-    create p, 2, 1 , l_cate, doc, 'shigoto'          , '産業・しごと'
-    create p, 2, 2 , l_cate, doc, 'koyo'             , '雇用・労働'
-    create p, 2, 3 , l_cate, doc, 'shogyo'           , '商業・サービス業'
-    create p, 2, 4 , l_cate, doc, 'kigyoshien'       , '企業支援・企業立地'
-    create p, 2, 5 , l_cate, doc, 'shigen'           , '資源・エネルギー'
-    create p, 2, 6 , l_cate, doc, 'johotsushin'      , '情報通信・研究開発・科学技術'
-    create p, 2, 7 , l_cate, doc, 'kenchiku'         , '建築・土木'
-    create p, 2, 8 , l_cate, doc, 'shikaku'          , '資格・免許・研修'
-    create p, 2, 9 , l_cate, doc, 'sangyo'           , '産業'
-    create p, 2, 10, l_cate, doc, 'kigyo'            , '起業'
-    create p, 2, 11, l_cate, doc, 'ujiturn'          , 'UJIターン'
-    create p, 2, 12, l_cate, doc, 'chikikeizai'      , '地域経済'
-p = create 0, 1, 6 , l_cate, doc, 'gyoseimachizukuri', '行政・まちづくり'
-    create p, 2, 1 , l_cate, doc, 'gyosei'           , '行政・まちづくり'
-    create p, 2, 2 , l_cate, doc, 'koho'             , '広報・公聴'
-    create p, 2, 3 , l_cate, doc, 'gyoseikaikaku'    , '行政改革'
-    create p, 2, 4 , l_cate, doc, 'zaisei'           , '財政・宝くじ'
-    create p, 2, 5 , l_cate, doc, 'shingikai'        , '審議会'
-    create p, 2, 6 , l_cate, doc, 'tokei'            , '統計・監査'
-    create p, 2, 7 , l_cate, doc, 'jorei'            , '条例・規則'
-    create p, 2, 8 , l_cate, doc, 'soshiki'          , '組織'
-    create p, 2, 9 , l_cate, doc, 'jinji'            , '人事・採用'
-    create p, 2, 10, l_cate, doc, 'nyusatsu'         , '入札・調達'
-    create p, 2, 11, l_cate, doc, 'machizukuri'      , 'まちづくり・都市計画'
-    create p, 2, 12, l_cate, doc, 'doro'             , '道路・施設'
-    create p, 2, 13, l_cate, doc, 'kasen'            , '河川・砂防'
-    create p, 2, 14, l_cate, doc, 'kuko'             , '空港・港湾'
-    create p, 2, 15, l_cate, doc, 'denki'            , '電気・水道'
-    create p, 2, 16, l_cate, doc, 'ikem'             , '意見・募集'
-    create p, 2, 17, l_cate, doc, 'johokokai'        , '情報公開・個人情報保護'
-    create p, 2, 18, l_cate, doc, 'johoka'           , '情報化'
-    create p, 2, 19, l_cate, doc, 'shinsei'          , '申請・届出・行政サービス'
-    create p, 2, 20, l_cate, doc, 'kokyojigyo'       , '公共事業・公営企業'
-p = create 0, 1, 7 , l_cate, doc, 'bosaigai'         , '防災'
-    create p, 2, 1 , l_cate, doc, 'bosai'            , '防災'
-    create p, 2, 2 , l_cate, doc, 'saigai'           , '災害'
-    create p, 2, 3 , l_cate, doc, 'kishojoho'        , '気象情報'
-    create p, 2, 4 , l_cate, doc, 'kotsu'            , '交通'
-    create p, 2, 5 , l_cate, doc, 'shokunoanzen'     , '食の安全'
-
-## ---------------------------------------------------------
-## article/attributes
-
-def create(sort_no, layout, content, name, title)
-  Article::Attribute.create(:sort_no => sort_no, :layout_id => layout.id, :content_id => content.id,
-    :state => 'public', :name => name, :title => title)
-end
-
-create 1, l_attr, doc, 'nyusatsu'     , '入札・調達・売却・契約'
-create 2, l_attr, doc, 'saiyo'        , '採用情報'
-create 3, l_attr, doc, 'shikakushiken', '各種資格試験'
-create 4, l_attr, doc, 'bosyu'        , '募集（コンクール、委員等）'
-create 5, l_attr, doc, 'event'        , 'イベント情報'
-create 6, l_attr, doc, 'kyoka'        , '許可・認可・届出・申請'
-
-## ---------------------------------------------------------
-## article/areas
-
-def create(parent, level_no, sort_no, layout, content, name, title)
-  Article::Area.create(:parent_id => (parent == 0 ? 0 : parent.id), :level_no => level_no, :sort_no => sort_no,
-    :layout_id => layout.id, :content_id => content.id, :state => 'public',
-    :name => name, :title => title)
-end
-
-p = create 0, 1, 1, l_area, doc, 'north'       , '北区'
-    create p, 2, 1, l_area, doc, 'yokomecho'   , '横目町'
-    create p, 2, 2, l_area, doc, 'wakaotokocho', '若男町'
-p = create 0, 1, 2, l_area, doc, 'west'        , '西区'
-    create p, 2, 1, l_area, doc, 'sankokucho'  , '三曲町'
-    create p, 2, 2, l_area, doc, 'dogushicho'  , '胴串町'
-p = create 0, 1, 3, l_area, doc, 'east'        , '東区'
-    create p, 2, 1, l_area, doc, 'tachiyakucho', '立役町'
-    create p, 2, 2, l_area, doc, 'nashiwaricho', '梨割町'
-p = create 0, 1, 4, l_area, doc, 'south'       , '南区'
-    create p, 2, 1, l_area, doc, 'hikitamacho' , '引玉町'
-    create p, 2, 2, l_area, doc, 'besshicho'   , '別師町'
-
-## ---------------------------------------------------------
-## article/docs
-
-def create(content_id, category_ids, attribute_ids, area_ids, rel_doc_ids, event_state, event_date, title, body = file('docs/002/body'))
-  Article::Doc.create(:content_id => content_id, :state => 'public',
-    :recognized_at => Core.now, :published_at => Core.now, :language_id => 1,
-    :category_ids => category_ids, :attribute_ids => attribute_ids, :area_ids => area_ids, :rel_doc_ids => rel_doc_ids,
-    :recent_state => 'visible', :list_state => 'visible', :event_state => event_state, :event_date => event_date,
-    :title => title, :body => body)
-end
-
-## cms/inquiries
-@in_inquiry = {:state => 'visible', :group_id => 2, :tel => '(000)-000-0000', :email => 'info@joruri.org'}
-def create_inquiry(unid)
-  item = Cms::Inquiry.find_or_initialize_by_id(unid)
-  item.attributes = @in_inquiry
-  item.save
-end
-
-## article/docs ##サンプル記事
-
-d = create doc.id, 5 , 2  , 11 , nil, 'hidden' , nil       ,'ジョールリ市ホームページを公開しました。', file('docs/001/body')
-    create_inquiry(d.unid)
-d = create doc.id, 66, nil, nil, nil  , 'hidden' , nil     ,'サンプル記事　災害'
-    create_inquiry(d.unid)
-d1= create doc.id, 27, 5  , 3  , nil  , 'visible', Core.now,'サンプル記事　観光'
-    create_inquiry(d1.unid)
-d = create doc.id, 40, 1  , nil,d1.id ,'hidden' , nil      ,'サンプル記事　関連記事'
-    create_inquiry(d.unid)
-d = create doc.id, 21, 5  , 8  , nil , 'visible', Core.now ,'サンプル記事　イベント'
-    create_inquiry(d.unid)
-d = create doc.id, 58, 2  , nil, nil  , 'hidden' , nil     ,'サンプル記事　採用情報'
-    create_inquiry(d.unid)
-d = create doc.id, 65, 1  , nil, nil  , 'hidden' , nil     ,'サンプル記事　防災'
-    create_inquiry(d.unid)
-d = create doc.id, 37, 1  , nil, nil  , 'hidden' , nil     ,'サンプル記事　入札'
-    create_inquiry(d.unid)
-    Article::Tag.create :unid => d.unid, :name => 0, :word => '入札'
-d = create doc.id, 14, 1  , 6  , nil  , 'hidden' , nil     ,'サンプル記事　関連ワード'
-    create_inquiry(d.unid)
-    Article::Tag.create :unid => d.unid, :name => 0, :word => '入札'
-d = create doc.id, 3, 4, 12, nil, 'hidden', nil,'サンプル記事　地図'
-    create_inquiry(d.unid)
-    Cms::Map.create :unid => d.unid, :name => '1', :map_lat=> '34.07367062652467', :map_lng => '134.5530366897583',
-    :map_zoom =>'15', :point1_name => 'ジョールリ市', :point1_lat => '34.0720505', :point1_lng => '134.552594'
+load_seed :article
+load_seed :enquete

@@ -24,6 +24,16 @@ function onChangeEventCalendar(value) {
   }
 }
 
+// リンクチェック
+function linkCheck() {
+  var f = $('itemForm');
+  var m = document.createElement('input');
+  m.setAttribute('type', 'hidden');
+  m.setAttribute('name', 'link_check');
+  m.setAttribute('value', '1');
+  f.appendChild(m);
+  f.submit();
+}
 //]]>
 </script>
 
@@ -49,6 +59,9 @@ function onChangeEventCalendar(value) {
     <th colspan="4">内容</th></tr><tr>
     <td colspan="4" class="mceEditor">
       <%= f.text_area :body, :class => 'body mceEditor' %>
+      <div class="lowerMenu">
+        <a href="#nul" onclick="return linkCheck();">リンクチェック</a>
+      </div>
     </td>
   </tr>
 </table>

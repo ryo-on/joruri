@@ -10,8 +10,9 @@ class Sys::Controller::Admin::Base < ApplicationController
     
     @@current_user = false
     if authenticate
-      Core.user  = current_user
-      Core.user_group = current_user.groups[0]
+      Core.user          = current_user
+      Core.user.password = Util::String::Crypt.decrypt(session[PASSWD_KEY])
+      Core.user_group    = current_user.groups[0]
     end
     return true
   end

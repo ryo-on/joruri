@@ -134,6 +134,19 @@ table.show input.dateTime {
 table.show td.mceEditor {
   padding: 0px;
 }
+table.show td.mceEditor .lowerMenu {
+  padding: 5px 10px;
+}
+table.show td.mceEditor .lowerMenu a {
+  display: inline-block;
+  width: 120px;
+  padding: 0px;
+  border: 1px solid #bbb;
+  background-image: url(images/bg-link_check.jpg);
+  line-height: 23px;
+  text-align: center;
+  text-decoration: none;
+}
 table.show td textarea.body {
   width: 99%;
   height: 300px;
@@ -157,7 +170,7 @@ table.show td textarea.head {
 }
 .crudTree .tree {
   float: left;
-  width: 35%;
+  width: 28%;
   margin: 0px 0px 0px 0px;
   border: 1px solid #ccc;
 }
@@ -183,7 +196,7 @@ table.show td textarea.head {
 .crudTree .content {
   x_margin-left: 360px;
   float: right;
-  width: 64%;
+  width: 71%;
 }
 .crudTree .content p {
 }

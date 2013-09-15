@@ -17,7 +17,7 @@ class Cms::Node < ActiveRecord::Base
   has_many   :children, :foreign_key => :parent_id,  :class_name => 'Cms::Node',
     :order => :name, :dependent => :destroy
   
-  validates_presence_of :state, :model, :name, :title
+  validates_presence_of :parent_id, :state, :model, :name, :title
   
   def states
     [['公開','public'],['非公開','closed']]

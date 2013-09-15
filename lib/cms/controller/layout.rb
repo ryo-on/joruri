@@ -22,7 +22,6 @@ module Cms::Controller::Layout
     rescue => e
     end
     
-    dump body
     Core.set_mode(mode) #restore
     
     error = Page.error
@@ -76,16 +75,7 @@ module Cms::Controller::Layout
         if data =~ /^<html/ && Rails.env.to_s == 'production'
           # component error
         else
-          if data.strip != '' && item.model != 'Cms::Free'
-            data = %Q(<div#{Page.current_piece.css_attributes}>\n) +
-              %Q(<div class="pieceContainer">\n) +
-              %Q(<div class="pieceHeader"></div>\n) +
-              %Q(<div class="pieceBody">#{data}</div>\n) +
-              %Q(<div class="pieceFooter"></div>\n) +
-              %Q(</div>\n) +
-              %Q(<!-- end .piece --></div>\n)
-          end
-          body.gsub!("[[piece/#{name}]]", data)
+          body.gsub!("[[piece/#{name}]]", piece_container_html(item, data))
         end
       rescue => e
         #
@@ -163,5 +153,20 @@ module Cms::Controller::Layout
     
     ## render the true layout
     render :text => body.force_encoding('utf-8'), :layout => 'layouts/public/base'
+  end
+  
+  def piece_container_html(piece, body)
+    return "" if body.blank?
+    
+    title = piece.view_title
+    return body if piece.model == 'Cms::Free' && title.blank?
+    
+    html  = %Q(<div#{piece.css_attributes}>\n)
+    html += %Q(<div class="pieceContainer">\n)
+    html += %Q(<div class="pieceHeader"><h2>#{title}</h2></div>\n) if !title.blank?
+    html += %Q(<div class="pieceBody">#{body}</div>\n)
+    html += %Q(</div>\n)
+    html += %Q(<!-- end .piece --></div>\n)
+    html
   end
 end

@@ -1,10 +1,10 @@
 <%
 
-route_selector = f.select_with_tree(
-  :route_id,
-  [Core.site.root_node],
-  :label => :title, :order => :name,
-  :include_blank => true)
+parent_selector = f.select_with_tree(:parent_id, [Core.site.root_node],
+  :label => :title, :order => :name, :include_blank => true)
+
+route_selector = f.select_with_tree(:route_id, [Core.site.root_node],
+  :label => :title, :order => :name, :include_blank => true)
 
 %><% if defined?(container) && container != :tr %>
 <table class="show">
@@ -20,6 +20,9 @@ route_selector = f.select_with_tree(
   </tr><tr>
     <th><%= item.locale(:model) %></th>
     <td><%= item.model_name(:short) %></td>
+  </tr><tr>
+    <th><%= item.locale(:parent_id) %></th>
+    <td><%= parent_selector %></td>
   </tr><tr>
     <th><%= item.locale(:route_id) %></th>
     <td><%= route_selector %></td>

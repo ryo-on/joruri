@@ -43,12 +43,14 @@ ja:
         content_id: "コンテンツ"
         name: "ピースID"
         title: "ピース名"
+        view_title: "表示タイトル"
         head: "ヘッダー"
         body: "本文"
         state_no: "状態"
         sort_no: "並び順"
       
       cms/node:
+        parent_id: "親ディレクトリ"
         concept_id: "コンセプト"
         route_id: "パンくず"
         layout_id:  "レイアウト"

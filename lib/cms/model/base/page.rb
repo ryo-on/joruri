@@ -18,8 +18,4 @@ module Cms::Model::Base::Page
   def public?
     return state == 'public' && published_at
   end
-
-#  def bread_crumbs(crumbs, options = {})
-#    return crumbs
-#  end
 end

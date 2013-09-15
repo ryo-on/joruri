@@ -7,15 +7,6 @@
    category
 ========================================================= */
 
-/* side-link
------------------------------------------------ */
-#areaList .pieceHeader {
-  height: 25px;
-  background-image: url(./images/tl-chiiki.gif);
-  background-repeat: no-repeat;
-  background-position: left top;
-}
-
 /* shinchaku-ichiran
 ----------------------------------------------- */
 .contentArticleArea .latest {

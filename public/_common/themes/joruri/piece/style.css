@@ -6,6 +6,7 @@
 /* accessibility-tool
 ----------------------------------------------- */
 #commonHeader {
+  width: 100%;
   height: auto;
   background-color: #ececec;
   font-size: 12px;
@@ -228,7 +229,7 @@ a#navigationTalk,x:-moz-broken {
 }
 
 
-/* ���p�ē�
+/* riyouannai
 ---------------------- */
 a.riyou {
   display: inline-block;
@@ -276,7 +277,7 @@ a.riyou,x:-moz-broken {
 }
 #commonBanner .logo {
   float: left;
-  width: 30%;
+  width: 29%;
   height: 70px;
 }
 #commonBanner .logo a {
@@ -513,7 +514,8 @@ html:first-child #globalNavi a.bosai {
 #calendar .pieceContainer {
   width: 100%;
 }
-#calendar .pieceHeader {
+#menu #calendar .pieceHeader,
+#links #calendar .pieceHeader {
   height: 8px;
   margin: 0px;
   padding: 0px;
@@ -709,76 +711,20 @@ h1 {
   background-image: url(./images/ic-list.gif);
   background-position: left 5px;
   background-repeat: no-repeat;
-
 }
-#attractInformation .pieceHeader {
-  height: 25px;
-  background-image: url(./images/tl-chuumoku.gif);
+#menu .pieceHeader,
+#links .pieceHeader {
+  padding: 0px 5px 0px 10px;
+  background-image: url(./images/tl-side.gif);
   background-position: left top;
-  background-repeat: no-repeat;
-  text-indent:-9999px;
-  overflow: hidden;
+  background-repeat: repeat-y;
+  line-height: 25px;
 }
-#relationLink .pieceHeader {
-  height: 25px;
-  background-image: url(./images/tl-kanren.gif);
-  background-position: left top;
-  background-repeat: no-repeat;
-  text-indent:-9999px;
-  overflow:hidden;
+#menu .pieceHeader h2,
+#links .pieceHeader h2 {
+  color: #ffffff;
+  font-weight: bold;
 }
-#about .pieceHeader {
-  height: 25px;
-  background-image: url(./images/tl-joruricity.gif);
-  background-position: left top;
-  background-repeat: no-repeat;
-  text-indent:-9999px;
-  overflow:hidden;
-}
-#basicInformation .pieceHeader {
-  height: 25px;
-  background-image: url(./images/tl-kihon.gif);
-  background-position: left top;
-  background-repeat: no-repeat;
-  text-indent:-9999px;
-  overflow:hidden;
-}
-#usefulInformation .pieceHeader {
-  height: 25px;
-  background-image: url(./images/tl-oyakudachi.gif);
-  background-position: left top;
-  background-repeat: no-repeat;
-  text-indent:-9999px;
-  overflow:hidden;
-}
-#mayor .pieceHeader {
-  height: 25px;
-  background-image: url(./images/tl-shicyou.gif);
-  background-position: left top;
-  background-repeat: no-repeat;
-  text-indent:-9999px;
-  overflow:hidden;
-}
-#areaInformation .pieceHeader {
-  height: 25px;
-  background-image: url(./images/tl-chiikij.gif);
-  background-position: left top;
-  background-repeat: no-repeat;
-  text-indent:-9999px;
-  overflow:hidden;
-}
-#relationInformation .pieceHeader {
-  height: 25px;
-  background-image: url(./images/tl-kanrenj.gif);
-  background-position: left top;
-  background-repeat: no-repeat;
-  text-indent:-9999px;
-  overflow:hidden;
-}
-
-
-
-
 
 /* Doc Tabs
 --------------------------------------------------------- */
@@ -839,6 +785,7 @@ h1 {
 ------------------------------------- */
 #docTab .wrapper {
   clear: both;
+  width: 100%;
   margin: 0px;
   border: 1px solid #cccccc;
 }

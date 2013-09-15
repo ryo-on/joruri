@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Cms::Concept < ActiveRecord::Base
   include Sys::Model::Base
   include Sys::Model::Rel::Unid
@@ -7,16 +8,28 @@ class Cms::Concept < ActiveRecord::Base
   include Sys::Model::Base::Page
   include Sys::Model::Auth::Manager
   
-  belongs_to :status  , :foreign_key => :state     , :class_name => 'Sys::Base::Status'
-  
-  has_many   :children, :foreign_key => :parent_id , :class_name => 'Cms::Concept',
-    :order => :name, :dependent => :destroy
-  has_many   :layouts , :foreign_key => :concept_id, :class_name => 'Cms::Layout',
-    :order => :name, :dependent => :destroy
-  has_many   :pieces  , :foreign_key => :concept_id, :class_name => 'Cms::Piece',
-    :order => :name, :dependent => :destroy
+  belongs_to :status, :foreign_key => :state,
+    :class_name => 'Sys::Base::Status'
+  has_many :children, :foreign_key => :parent_id, :order => :name,
+    :class_name => 'Cms::Concept', :dependent => :destroy
+  has_many :layouts , :foreign_key => :concept_id, :order => :name,
+    :class_name => 'Cms::Layout', :dependent => :destroy
+  has_many :pieces  , :foreign_key => :concept_id, :order => :name,
+    :class_name => 'Cms::Piece', :dependent => :destroy
+  has_many :contents , :foreign_key => :concept_id,
+    :class_name => 'Cms::Content', :dependent => :destroy
+  has_many :data_files , :foreign_key => :concept_id,
+    :class_name => 'Cms::DataFile', :dependent => :destroy
+  has_many :data_file_nodes , :foreign_key => :concept_id,
+    :class_name => 'Cms::DataFileNode', :dependent => :destroy
   
   validates_presence_of :site_id, :state, :level_no, :name
+  
+  def validate
+    if id != nil && id == parent_id
+      errors.add :parent_id, "を正しく入力してください。"
+    end
+  end
   
   def readable_children
     item = Cms::Concept.new

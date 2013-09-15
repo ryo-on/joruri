@@ -22,6 +22,7 @@ function initTinyMCE(originalSettings) {
     theme_advanced_resizing: true,
     
     // Joruri original settings.
+    extended_valid_elements : "iframe[src|width|height|name|align|id|style]",
     theme_advanced_path: false,
     theme_advanced_font_sizes: "最大=large,大=medium,中=small,小=x-small",//最小=xx-small
     theme_advanced_blockformats: "h2,h3,h4",

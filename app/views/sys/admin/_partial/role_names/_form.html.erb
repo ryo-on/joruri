@@ -31,14 +31,7 @@ function moveSelectOptions(form, src, dst, max) {
   dst = $(dst).options;
   
   if (max) {
-    var num = dst.length;
-    for(var i = 0 ; i < src.length; i++) {
-      if (src[i].selected && src[i].value) num += 1;
-    }
-    if (num > max) {
-      alert("承認者は設定は5人以内で入力してください。");
-      return false;
-    }
+    ;
   }
     
   for (var i = 0 ; i < src.length; i++) {

@@ -7,15 +7,6 @@
    category
 ========================================================= */
 
-/* side-link
------------------------------------------------ */
-#categoryList .pieceHeader {
-  height: 25px;
-  background-image: url(./images/tl-bunya.gif);
-  background-position: left top;
-  background-repeat: no-repeat;
-}
-
 /* Bunya Ichiran
 ----------------------------------------------- */
 .categoryKurashi,
