@@ -23,7 +23,8 @@ module FormHelper
       :edit      => '編集する',
       :update    => '更新する',
       :change    => '変更する',
-      :delete    => '削除する'
+      :delete    => '削除する',
+      :make      => '作成する'
     }[name]
   end
 

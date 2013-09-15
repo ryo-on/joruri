@@ -9,8 +9,11 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
     return error_auth unless @content = Cms::Content.find(params[:content])
     return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
     default_url_options :content => @content
-    
     return redirect_to(request.env['PATH_INFO']) if params[:reset]
+    
+    if rcg = Article::Model::Content::Config.find(:recognition_type, @content)
+      @recognition_type = rcg.value
+    end
   end
 
   def index
@@ -27,6 +30,9 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
   def show
     @item = Article::Doc.new.find(params[:id])
     #return error_auth unless @item.readable?
+    
+    @item.recognition.type = @recognition_type if @item.recognition
+    
     _show @item
   end
 
@@ -78,7 +84,14 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
 
   def recognize(item)
     _recognize(item) do
-      send_recognition_success_mail(@item) if @item.state == 'recognized'
+      if @item.state == 'recognized'
+        send_recognition_success_mail(@item)
+      elsif @recognition_type == 'with_admin'
+        if item.recognition.recognized_all?(false)
+          users = Sys::User.find_managers
+          send_recognition_request_mail(@item, users)
+        end
+      end
     end
   end
   
@@ -88,7 +101,7 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
   end
 
 protected
-  def send_recognition_request_mail(item)
+  def send_recognition_request_mail(item, users = nil)
     mail_fr = Core.user.email
     mail_to = nil
     subject = "#{item.content.name}（#{item.content.site.name}）：承認依頼メール"
@@ -101,9 +114,8 @@ protected
       "２．次のリンクから承認を実施\n" +
       "　#{url_for(:action => :show, :id => item)}\n"
     
-    item.recognizers.each do |user|
-      send_mail(mail_fr, user.email, subject, message)
-    end
+    users ||= item.recognizers
+    users.each {|user| send_mail(mail_fr, user.email, subject, message) }
   end
 
   def send_recognition_success_mail(item)

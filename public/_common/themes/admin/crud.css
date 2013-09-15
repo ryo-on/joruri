@@ -98,17 +98,29 @@ div.submitters input {
   width: 120px;
 }
 table.show input.id {
-  width: 320px;
+  width: 240px;
   ime-mode: disabled;
 }
 table.show input.name {
-  width: 320px;
+  width: 240px;
+}
+table.show input.nameEn {
+  width: 240px;
+  ime-mode: disabled;
 }
 table.show input.title {
   width: 600px;
 }
 table.show input.number {
   width: 100px;
+  ime-mode: disabled;
+}
+table.show input.email {
+  width: 400px;
+  ime-mode: disabled;
+}
+table.show input.url {
+  width: 400px;
   ime-mode: disabled;
 }
 table.show input.date {

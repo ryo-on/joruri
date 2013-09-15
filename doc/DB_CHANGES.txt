@@ -1,3 +1,23 @@
+1.0.6
+  * CREATE TABLE `sys_ldap_synchros` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `parent_id` int(11) DEFAULT NULL,
+    `created_at` datetime DEFAULT NULL,
+    `updated_at` datetime DEFAULT NULL,
+    `version` varchar(10) DEFAULT NULL,
+    `entry_type` varchar(15) DEFAULT NULL,
+    `code` varchar(255) DEFAULT NULL,
+    `sort_no` int(11) DEFAULT NULL,
+    `name` varchar(255) DEFAULT NULL,
+    `name_en` varchar(255) DEFAULT NULL,
+    `email` varchar(255) DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    KEY `version` (`version`,`parent_id`,`entry_type`)
+  );
+  
 1.0.3
-  * ALTER TABLE `cms_nodes` ADD `mobile_body` LONGTEXT NULL AFTER `body`;
   * ALTER TABLE `cms_nodes` ADD `mobile_title` TEXT NULL AFTER `body`;
+  * ALTER TABLE `cms_nodes` ADD `mobile_body` LONGTEXT NULL AFTER `mobile_title`;
+
+1.0.2
+  * ALTER TABLE `cms_data_texts` ADD `site_id` INTEGER NULL AFTER `unid`;

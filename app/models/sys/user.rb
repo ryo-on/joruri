@@ -15,9 +15,13 @@ class Sys::User < ActiveRecord::Base
   has_and_belongs_to_many :role_names, :association_foreign_key => :role_id,
     :class_name => 'Sys::RoleName', :join_table => 'sys_users_roles'
   
-  attr_accessor :group, :group_id
+  attr_accessor :in_group_id
+  #attr_accessor :group, :group_id, :in_group_id
   
-  validates_presence_of :state, :ldap, :name
+  validates_presence_of :state, :account, :name, :ldap
+  validates_uniqueness_of :account
+  
+  after_save :save_group, :if => %Q(@_in_group_id_changed)
 
   def readable
     self
@@ -66,13 +70,25 @@ class Sys::User < ActiveRecord::Base
     case name; when nil; end
   end
   
-  def group
-    Sys::Group.find_by_id(group_id)
+  def group(load = nil)
+    return @group if @group && load
+    @group = groups(load).size == 0 ? nil : groups[0]
   end
   
-  def group_id
-    return @group_id if @group_id
-    groups.size == 0 ? nil : groups[0].id
+  def group_id(load = nil)
+    (g = group(load)) ? g.id : nil
+  end
+  
+  def in_group_id
+    if read_attribute(:in_group_id).nil?
+      write_attribute(:in_group_id, (group ? group.id : nil))
+    end
+    read_attribute(:in_group_id)
+  end
+  
+  def in_group_id=(value)
+    @_in_group_id_changed = true
+    write_attribute(:in_group_id, value.to_s)
   end
   
   def has_auth?(name)
@@ -122,16 +138,34 @@ class Sys::User < ActiveRecord::Base
       case n
       when 's_id'
         self.and :id, v
+      when 's_state'
+        self.and 'sys_users.state', v
+      when 's_account'
+        self.and 'sys_users.account', 'LIKE', "%#{v.gsub(/([%_])/, '\\\\\1')}%"
       when 's_name'
-        self.and :name, 'LIKE', "%#{v.gsub(/([%_])/, '\\\\\1')}%"
+        self.and 'sys_users.name', 'LIKE', "%#{v.gsub(/([%_])/, '\\\\\1')}%"
       when 's_email'
-        self.and :email, 'LIKE', "%#{v.gsub(/([%_])/, '\\\\\1')}%"
+        self.and 'sys_users.email', 'LIKE', "%#{v.gsub(/([%_])/, '\\\\\1')}%"
+      when 's_group_id'
+        if v == 'no_group'
+          self.join 'LEFT OUTER JOIN sys_users_groups ON sys_users_groups.user_id = sys_users.id' +
+            ' LEFT OUTER JOIN sys_groups ON sys_users_groups.group_id = sys_groups.id'
+          self.and 'sys_groups.id',  'IS', nil
+        else
+          self.join :groups
+          self.and 'sys_groups.id', v
+        end
       end
     end if params.size != 0
 
     return self
   end
 
+  def self.find_managers
+    cond = {:state => 'enabled', :auth_no => 5}
+    self.find(:all, :conditions => cond, :order => :id)
+  end
+  
   ## -----------------------------------
   ## Authenticates
 
@@ -140,13 +174,14 @@ class Sys::User < ActiveRecord::Base
     in_password = Util::String::Crypt.decrypt(in_password) if encrypted
     
     user = nil
-    self.new.enabled.find(:all, :conditions => {:account => in_account}).each do |u|
+    self.find(:all, :conditions => {:account => in_account, :state => 'enabled'}).each do |u|
       if u.ldap == 1
         ## LDAP Auth
         next unless ou1 = u.groups[0]
         next unless ou2 = ou1.parent
         dn = "uid=#{u.account},ou=#{ou1.ou_name},ou=#{ou2.ou_name},#{Core.ldap.base}"
         next unless Core.ldap.bind(dn, in_password)
+        u.password = in_password
       else
         ## DB Auth
         next if in_password != u.password || u.password.to_s == ''
@@ -181,5 +216,29 @@ class Sys::User < ActiveRecord::Base
 protected
   def password_required?
     password.blank?
+  end
+  
+  def save_group
+    exists = (group_rels.size > 0)
+    
+    group_rels.each_with_index do |rel, idx|
+      if idx == 0 && !in_group_id.blank?
+        if rel.group_id != in_group_id
+          rel.group_id = in_group_id
+          rel.save
+        end
+      else
+        rel.destroy
+      end
+    end
+    
+    if !exists && !in_group_id.blank?
+      rel = Sys::UsersGroup.create({
+        :user_id  => id,
+        :group_id => in_group_id
+      })
+    end
+    
+    return true
   end
 end

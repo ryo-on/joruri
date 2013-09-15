@@ -1,10 +1,15 @@
 # encoding: utf-8
 class Sys::Lib::Ldap::Group < Sys::Lib::Ldap::Entry
+  cattr_accessor :primary, :filter
+  
+  @@primary = "ou"
+  @@filter  = "(objectClass=top)(objectClass=organizationalUnit)(!(ou=Groups))(!(ou=People))(!(ou=Special*))"
+  
   ## Initializer.
   def initialize(connection, attributes = {})
     super
-    @primary = "ou"
-    @filter  = "(objectClass=top)(objectClass=organizationalUnit)(!(ou=Groups))(!(ou=People))(!(ou=Special*))"
+    @primary = @@primary
+    @filter  = @@filter
   end
   
   ## Attribute: ou
@@ -16,14 +21,16 @@ class Sys::Lib::Ldap::Group < Sys::Lib::Ldap::Entry
   def code
     return nil unless ou
     return ou unless ou =~ /^[0-9a-zA-Z]+[^0-9a-zA-Z]/
-    return ou.gsub(/^([0-9a-zA-Z]+)(.*)/, '\1')
+    #return ou.gsub(/^([0-9a-zA-Z]+)(.*)/, '\1')
+    return ou.gsub(/^([0-9a-zA-Z]+?[0-9]+)(.*)/, '\1')
   end
   
   ## Attribute: name
   def name
     return nil unless ou
     return ou unless ou =~ /^[0-9a-zA-Z]+[^0-9a-zA-Z]/
-    return ou.gsub(/^([0-9a-zA-Z]+)(.*)/, '\2')
+    #return ou.gsub(/^([0-9a-zA-Z]+)(.*)/, '\2')
+    return ou.gsub(/^([0-9a-zA-Z]+?[0-9]+)(.*)/, '\2')
   end
   
   ## Attribute: name(english)

@@ -157,11 +157,11 @@ a#navigationRuby,x:-moz-any-link {
 a#navigationRuby,x:-moz-broken {
   padding-top: 0px;
 }
-a#navigationRuby:hover {
-  background-image: url(./images/bg-furigana02.gif)
-}
 a#navigationRuby.rubyOn {
   background-image: url(./images/bg-furigana-on.gif);
+}
+a#navigationRuby.rubyOff:hover {
+  background-image: url(./images/bg-furigana02.gif)
 }
 
 /* yomiage
@@ -228,7 +228,7 @@ a#navigationTalk,x:-moz-broken {
 }
 
 
-/* —˜—pˆÄ“à
+/* ï¿½ï¿½ï¿½pï¿½Ä“ï¿½
 ---------------------- */
 a.riyou {
   display: inline-block;
@@ -774,4 +774,129 @@ h1 {
   background-repeat: no-repeat;
   text-indent:-9999px;
   overflow:hidden;
+}
+
+
+
+
+
+/* Doc Tabs
+--------------------------------------------------------- */
+#docTab {
+  margin-bottom: 15px;
+}
+
+
+/* tabs
+------------------------------------- */
+#docTab .tabs {
+  width: 100%;
+}
+#docTab .tabs a {
+  display: inline-block;
+  float: left;
+  width: 15%; 
+  line-height: 24px;
+  margin-right: 3px;
+  padding: 0px 3px;
+  background-image: url(./images/bg-tab1.gif);
+  color: #333333;
+  border: 1px solid #cccccc;
+  border-bottom: none;
+  text-align: center;
+  white-space: nowrap;
+  font-weight: bold;
+  text-decoration: none;
+}
+#docTab .tabs:after {  
+  content: ".";  
+  display: block;  
+  visibility: hidden;  
+  height: 0.1px;  
+  font-size: 0.1em;  
+  line-height: 0;  
+  clear: both;  
+}
+#docTab .tabs a.bosai {
+  background-image: url(./images/bg-tab2.gif);
+  color: #cc0000;
+}
+
+#docTab .tabs a:hover {
+  background-position: 0px -100px;
+  color: #333333;
+}
+#docTab .tabs a.bosai:hover {
+  background-position: 0px -100px;
+  color: #cc0000;
+}
+#docTab .tabs a.current {
+  background-position: 0px -200px;
+  color: #ffffff;
+}
+
+/* content
+------------------------------------- */
+#docTab .wrapper {
+  clear: both;
+  margin: 0px;
+  border: 1px solid #cccccc;
+}
+#docTab .content {
+  clear: both;
+  height: auto !important;
+  padding: 10px 0px;
+}
+#docTab .content ul {
+  padding: 0px 20px 0px 15px;
+}
+#docTab .content li {
+  margin: 0px;
+  padding: 0px 0px 0px 10px;
+  background-image: url(./images/ic-list-shinchaku.gif);
+  background-position: left 7px;
+  background-repeat: no-repeat;
+  line-height: 1.5;
+}
+
+/* links
+------------------------------------- */
+#docTab .links {
+}
+#docTab .links .feed {
+  position: absolute;
+  float: left;
+  margin-top: 10px;
+}
+ #docTab .links .feed a {
+  display: -moz-inline-box;
+  display: inline-block;
+} 
+ #docTab .links .feed a.rss {
+  width: 40px;
+  height: 0px;
+  margin-left: 15px;
+  padding-top: 13px;
+  background-image: url(./images/bt-rss.gif);
+  background-repeat: no-repeat;
+  overflow: hidden;
+  vertical-align: middle;
+} 
+#docTab .links .feed a.atom {
+  width: 45px;
+  height: 0px;
+  margin-left: 5px;
+  padding-top: 13px;
+  background-image: url(./images/bt-atom.gif);
+  background-repeat: no-repeat;
+  overflow: hidden;
+  vertical-align: middle;
+}
+#docTab .links .more {
+  text-align: right;
+  padding: 10px 20px 10px 10px;
+}
+#docTab .links .more a {
+  overflow: hidden;
+  padding-top: 10px; 
 }

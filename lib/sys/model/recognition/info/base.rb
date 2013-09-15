@@ -1,5 +1,5 @@
 # encoding: utf-8
-class Sys::Recognition::Info < Sys::Model::XmlRecord::Base
+class Sys::Model::Recognition::Info::Base < Sys::Model::XmlRecord::Base
   set_model_name  "sys/recognition"
   set_node_xpath  "user"
   set_column_name :info_xml

@@ -18,7 +18,7 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
     item.and 'sys_groups.id', @parent
     #item.search params
     #item.page  params[:page], params[:limit]
-    item.order params[:sort], :id
+    item.order params[:sort], "LPAD(account, 15, '0')"
     @users = item.find(:all)
   end
   

@@ -61,6 +61,7 @@ class Sys::Admin::Groups::ExportController < Cms::Controller::Admin::Base
       csv << [:account, :state, :name, :name_en, :email, :auth_no, :password, :ldap, :ldap_version,
         :group_code]
       Sys::User.find(:all, :order => :id).each do |user|
+        next unless user.groups[0]
         row = []
         row << user.account
         row << user.state

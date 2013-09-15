@@ -40,15 +40,13 @@ module Sys::Model::Rel::Recognition
   def recognizable
     join_creator
     join_recognition
-
     cond = Condition.new do |c|
-      c.or 'sys_recognitions.recognizer_ids', 'REGEXP', "(^| )#{Core.user.id}( |$)"
       c.or "sys_recognitions.user_id", Core.user.id
+      c.or 'sys_recognitions.recognizer_ids', 'REGEXP', "(^| )#{Core.user.id}( |$)"
     end
     self.and cond
     self.and "#{self.class.table_name}.state", 'recognize'
-    
-    return self
+    self
   end
 
   def recognizable?(user = nil)
@@ -59,6 +57,7 @@ module Sys::Model::Rel::Recognition
   def recognize(user)
     return false unless recognition
     rs = recognition.recognize(user)
+    
     if state == 'recognize' && recognition.recognized_all?
       sql = "UPDATE #{self.class.table_name} SET state = 'recognized', recognized_at = 'Core.now' WHERE id = #{id}"
       self.state = 'recognized'

@@ -1,7 +1,22 @@
+# encoding: utf-8
 class Sys::Recognition < ActiveRecord::Base
   include Sys::Model::Base
-
+  
   belongs_to :user,  :foreign_key => :user_id,  :class_name => 'Sys::User'
+  
+  attr_accessor :type
+  
+  def type=(type)
+    if type.to_s == 'with_admin'
+      self.extend(Sys::Model::Recognition::WithAdmin)
+    end
+  end
+  
+  def info(user_id = nil)
+    info = nil
+    info = Sys::Model::Recognition::Info::Base.find(user_id, self) if user_id
+    info ||= Sys::Model::Recognition::Info::Base.new(self)
+  end
   
   def reset_info
     self.info_xml = nil
@@ -17,13 +32,21 @@ class Sys::Recognition < ActiveRecord::Base
   
   def recognizers
     return @_recognizers if @_recognizers
-    users = [] 
+    users = []
     recognizer_ids.to_s.split(' ').uniq.each do |id|
       if u = Sys::User.find_by_id(id)
         users << u
       end
     end
     @_recognizers = users
+  end
+  
+  def recognizable?(user)
+    info = info(user.id)
+    return false if info.id.blank?
+    return false if info.id.to_s != user.id.to_s
+    return false if !info.recognized_at.blank?
+    return true
   end
   
   def recognize(user)
@@ -36,14 +59,6 @@ class Sys::Recognition < ActiveRecord::Base
     info.save
   end
   
-  def recognizable?(user)
-    info = info(user.id)
-    return false if info.id.blank?
-    return false if info.id.to_s != user.id.to_s
-    return false if !info.recognized_at.blank?
-    return true
-  end
-  
   def recognized_all?
     rs = true
     info(:all).each do |i|
@@ -52,9 +67,12 @@ class Sys::Recognition < ActiveRecord::Base
     return true
   end
   
-  def info(user_id = nil)
-    info = nil
-    info = Sys::Recognition::Info.find(user_id, self) if user_id
-    info ||= Sys::Recognition::Info.new(self)
+  def to_a
+    list = []
+    recognizers.each do |user|
+      date = info(user.id).recognized_at
+      list << { :user => user, :recognized_at => (date.blank? ? nil : date) }
+    end
+    list
   end
 end

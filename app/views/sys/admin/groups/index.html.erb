@@ -21,15 +21,15 @@
   
   <tr>
     <th style="width: 60px; text-align: center;">詳細</th>
-    <th style="width: 60px; text-align: right;">ユーザID</th>
+    <th style="width: 30%;">ユーザID</th>
     <th style="width: ;">氏名</th>
     <th style="width: 60px; text-align: center;">状態</th>
   </tr>
   
   <% for item in @users %>
   <tr <%= cycle '', 'class="cycle"' %>>
-    <td style="text-align: center;"><%= link_to '詳細', sys_user_url(@parent, item) %></td>
-    <td style="text-align: right;"><%=h item.id %></td>
+    <td style="text-align: center;"><%= link_to '詳細', sys_group_user_path(@parent, item) %></td>
+    <td><%=h item.account %></td>
     <td><%=h item.name %></td>
     <td style="text-align: center;"><%= safe{item.status.name} %></td>
   </tr>

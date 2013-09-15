@@ -25,11 +25,18 @@ ActionController::Routing::Routes.draw do |map|
     ns.resources :ldap_users,
       :controller  => "admin/ldap_users",
       :path_prefix => "/_admin/#{mod}/:parent"
+    ns.resources :ldap_synchros,
+      :controller  => "admin/ldap_synchros",
+      :path_prefix => "/_admin/#{mod}",
+      :member      => [:synchronize]
     ns.resources :users,
       :controller  => "admin/users",
-      :path_prefix => "/_admin/#{mod}/:parent"
+      :path_prefix => "/_admin/#{mod}"
     ns.resources :groups,
       :controller  => "admin/groups",
+      :path_prefix => "/_admin/#{mod}/:parent"
+    ns.resources :group_users,
+      :controller  => "admin/group_users",
       :path_prefix => "/_admin/#{mod}/:parent"
     ns.resources :export_groups,
       :controller  => "admin/groups/export",
@@ -39,9 +46,9 @@ ActionController::Routing::Routes.draw do |map|
       :controller  => "admin/groups/import",
       :path_prefix => "/_admin/#{mod}",
       :collection => [:import]
-    #ns.resources :roles,
-    #  :controller  => "admin/roles",
-    #  :path_prefix => "/_admin/#{mod}/:parent"
+#    ns.resources :roles,
+#      :controller  => "admin/roles",
+#      :path_prefix => "/_admin/#{mod}/:parent"
     ns.resources :role_names,
       :controller  => "admin/role_names",
       :path_prefix => "/_admin/#{mod}"

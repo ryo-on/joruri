@@ -4,7 +4,7 @@
 <div class="logo"><a href="/">ジョールリ市</a></div>
 <div class="menu">
 <div class="upperMenu">
-<a class="keitai" href="#"><img src="/_common/themes/joruri/piece/images/bt-mobile.gif" alt="携帯サイト" title="携帯サイト" /></a>
+<a class="keitai" href="/mobile.html"><img src="/_common/themes/joruri/piece/images/bt-mobile.gif" alt="携帯サイト" title="携帯サイト" /></a>
 </div>
 <div class="lowerMenu">
 <form action="http://www.google.com/search">

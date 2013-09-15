@@ -34,9 +34,11 @@
 
 [[piece/photo]]
 
-[[piece/recent-docs-title]]
+[[piece/doc-tab]]
 
-[[piece/recent-docs]]
+[[piece/topic]]
+
+[[piece/category]]
 
 </div>
 <!-- end #contentContainer --></div>

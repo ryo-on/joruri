@@ -5,18 +5,18 @@ class Sys::Admin::UsersController < Cms::Controller::Admin::Base
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:manager)
     return redirect_to(request.env['PATH_INFO']) if params[:reset]
-    
-    id      = params[:parent] == '0' ? 1 : params[:parent]
-    @parent = Sys::Group.new.find(id)
   end
   
   def index
-#    item = Sys::User.new.readable
-#    item.search params
-#    item.page  params[:page], params[:limit]
-#    item.order params[:sort], :id
-#    @items = item.find(:all)
-#    _index @items
+    @item = Sys::User.new # for search
+    @item.in_group_id = params[:s_group_id]
+    
+    item = Sys::User.new
+    item.search params
+    item.page  params[:page], params[:limit]
+    item.order params[:sort], "LPAD(account, 15, '0')"
+    @items = item.find(:all)
+    _index @items
   end
   
   def show
@@ -28,42 +28,25 @@ class Sys::Admin::UsersController < Cms::Controller::Admin::Base
 
   def new
     @item = Sys::User.new({
-      :state      => 'enabled',
-      :ldap       => '0',
-      :auth_no    => 2,
-      :group_id   => @parent.id
+      :state       => 'enabled',
+      :ldap        => '0',
+      :auth_no     => 2
     })
   end
   
   def create
     @item = Sys::User.new(params[:item])
-    _create(@item, :location => sys_groups_path(@parent)) do
-      save_users_group(@item, params[:item][:group_id])
-    end
+    _create(@item)
   end
   
   def update
     @item = Sys::User.new.find(params[:id])
     @item.attributes = params[:item]
-    _update(@item, :location => sys_groups_path(@parent)) do
-      save_users_group(@item, params[:item][:group_id])
-    end
+    _update(@item)
   end
   
   def destroy
     @item = Sys::User.new.find(params[:id])
-    _destroy(@item, :location => sys_groups_path(@parent))
-  end
-  
-  def save_users_group(item, group_id)
-    return true unless group_id
-    unless ug = item.group_rels[0]
-      ug = Sys::UsersGroup.new({:user_id => item.id})
-    end
-    if ug.group_id != group_id
-      ug.group_id = group_id
-      ug.save
-    end
-    return true
+    _destroy(@item)
   end
 end

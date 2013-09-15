@@ -380,6 +380,21 @@ ActiveRecord::Schema.define(:version => 0) do
     t.text     "title"
   end
 
+  create_table "sys_ldap_synchros", :force => true do |t|
+    t.integer  "parent_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "version",    :limit => 10
+    t.string   "entry_type", :limit => 15
+    t.string   "code"
+    t.integer  "sort_no"
+    t.string   "name"
+    t.string   "name_en"
+    t.string   "email"
+  end
+
+  add_index "sys_ldap_synchros", ["version", "parent_id", "entry_type"], :name => "version"
+
   create_table "sys_maintenances", :force => true do |t|
     t.integer  "unid"
     t.string   "state",        :limit => 15

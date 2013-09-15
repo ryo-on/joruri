@@ -54,7 +54,10 @@ module Cms::Controller::Layout
     concepts = Cms::Lib::Layout.inhertited_concepts
     
     ## layout
-    unless Page.layout = Cms::Lib::Layout.inhertited_layout
+    if layout = Cms::Lib::Layout.inhertited_layout
+      Page.layout    = layout.clone
+      Page.layout.id = layout.id
+    else
       Page.layout = Cms::Layout.new
       return render :text => content_data, :layout => 'layouts/public/base'
     end

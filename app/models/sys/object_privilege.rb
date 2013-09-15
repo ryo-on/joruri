@@ -10,9 +10,6 @@ class Sys::ObjectPrivilege < ActiveRecord::Base
   validates_presence_of :role_id, :item_unid
   validates_presence_of :action, :if => %Q(in_actions.blank?)
   
-  before_save :set_action, :if => %Q(action.blank? && in_actions)
-  before_save :save_actions, :if => %Q(in_actions && in_actions != false)
-  
   attr_accessor :in_actions
   
   def in_actions
@@ -23,6 +20,7 @@ class Sys::ObjectPrivilege < ActiveRecord::Base
   end
   
   def in_actions=(values)
+    @_in_actions_changed = true
     _values = []
     if values.class == Hash || values.class == HashWithIndifferentAccess
       values.each {|key, val| _values << key unless val.blank? }
@@ -64,9 +62,10 @@ class Sys::ObjectPrivilege < ActiveRecord::Base
     names
   end
   
-  def set_action
-    self.action = in_actions[0]
-    return true
+  def save
+    return super unless @_in_actions_changed
+    return false unless valid?
+    save_actions
   end
   
   def destroy_actions
@@ -78,13 +77,12 @@ protected
   def save_actions
     values = in_actions.clone
     
-    cond = {:role_id => role_id, :item_unid => self.item_unid_was}
+    cond = {:role_id => role_id, :item_unid => (self.item_unid_was || self.item_unid)}
     old_privileges = self.class.find(:all, :conditions => cond, :order => :action)
     old_privileges.each do |priv|
       if values.index(priv.action)
         if item_unid != priv.item_unid
           priv.item_unid = item_unid
-          priv.in_actions = false
           priv.save
         end
       else
@@ -97,8 +95,7 @@ protected
       Sys::ObjectPrivilege.new({
         :role_id    => role_id,
         :item_unid  => item_unid,
-        :action     => value,
-        :in_actions => false
+        :action     => value
       }).save
     end
     

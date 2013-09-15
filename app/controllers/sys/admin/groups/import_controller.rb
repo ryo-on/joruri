@@ -103,39 +103,14 @@ class Sys::Admin::Groups::ImportController < Cms::Controller::Admin::Base
       user.name_en      = data[:name_en]
       user.password     = data[:password]
       user.email        = data[:email]
+      user.in_group_id  = group.id if group.id != user.group_id
       
-      status        = 0
-      group_changed = nil
-
-      unless user.new_record?
-        status        = 1
-        group_changed = true unless user.groups[0].code == group.code
-      end
-
-      if user.changed?
-        if user.save
-          @results[status] += 1
-        else
-          @results[2] += 1
-          next
-        end
-      end
-
-      save_users_group(user, group.id)
-      @results[1] += 1 if group_changed
-
+      next unless user.changed?
+      
+      status = user.new_record? ? 0 : 1
+      status = 2 unless user.save
+      
+      @results[status] += 1
     end
-  end
-
-  def save_users_group(item, group_id)
-    return true unless group_id
-    unless ug = item.group_rels[0]
-      ug = Sys::UsersGroup.new({:user_id => item.id})
-    end
-    if ug.group_id != group_id
-      ug.group_id = group_id
-      ug.save
-    end
-    return true
   end
 end

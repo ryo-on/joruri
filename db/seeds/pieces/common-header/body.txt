@@ -37,7 +37,7 @@ new Navigation({
 <a href="#" id="navigationTalk" name="navigationTalk" title="よみあげる">よみあげる</a>
 <span id="navigationTalkPlayer"></span>
 
-<a href="/use.html" class="riyou" title="ご利用案内">ご利用案内</a>
+<a href="#" class="riyou" title="ご利用案内">ご利用案内</a>
 
 
 </div>

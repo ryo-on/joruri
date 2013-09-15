@@ -1,9 +1,6 @@
 <table class="show">
   <tr>
-    <th><%= @item.locale(:state) %></th>
-    <td><%=h @item.status.name %></td>
-  </tr><tr>
-    <th><%= @item.locale(:group_id) %></th>
+    <th><%= @item.locale(:in_group_id) %></th>
     <td><%= safe{@item.group.name} %></td>
   </tr><tr>
     <th><%= @item.locale(:account) %></th>
@@ -17,6 +14,9 @@
   </tr><tr>
     <th><%= @item.locale(:email) %></th>
     <td><%=h @item.email %></td>
+  </tr><tr>
+    <th><%= @item.locale(:state) %></th>
+    <td><%=h @item.status.name %></td>
   </tr><tr>
     <th><%= @item.locale(:auth_no) %></th>
     <td><%=h @item.auth_name %></td>

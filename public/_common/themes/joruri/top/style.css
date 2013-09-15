@@ -97,7 +97,7 @@
 
 /* RSS Atom
 ----------------------------------------------- */
-.feed {
+#recentDocs .feed {
   float: right;
   position: relative;
   top: -27px;
@@ -105,7 +105,7 @@
   height: 13px;
   background-color: transparent;
 }
-.feed a.feedRss {
+#recentDocs .feed a.feedRss {
   display: inline-block;
   width: 40px;
   height: 13px;
@@ -114,7 +114,7 @@
   text-indent: 50px;
   overflow: hidden;
 }
-.feed a.feedAtom {
+#recentDocs .feed a.feedAtom {
   display: inline-block;
   width: 40px;
   height: 13px;
@@ -125,12 +125,12 @@
 }
 
 /* For firefox2 */
-.feed a.feedAtom,y:-moz-any-link,
-.feed a.feedRss,x:-moz-any-link {
+#recentDocs .feed a.feedAtom,y:-moz-any-link,
+#recentDocs .feed a.feedRss,x:-moz-any-link {
   display: -moz-inline-box;
   padding-top: 13px;
 }
-.links {
+#recentDocs .links {
   text-align: right;
 }
 
@@ -174,3 +174,132 @@
   overflow: hidden;
 }
 
+/* category Ichiran
+----------------------------------------------- */
+#ArticleCategory {
+  clear: both;
+}
+#ArticleCategory .pieceHeader {
+  margin-bottom: 10px;
+  background-image: url(./images/bg-shinchaku-repeat.gif);
+  background-position: left top;
+  background-repeat: repeat-x;
+}
+#ArticleCategory .pieceHeader h2 {
+  height: 30px;
+  background-image: url(./images/tl-bunyabetsu.gif);
+  background-position: left top;
+  background-repeat: no-repeat;
+  text-indent: -9999px;
+  overflow: hidden;
+}
+.categoryKurashi,
+.categoryFukushi,
+.categoryKyoikubunka,
+.categoryKanko,
+.categorySangyoshigoto,
+.categoryGyoseimachizukuri,
+.categoryBosaigai {
+  float: left;
+  width: 100%;
+  margin-bottom: 5px;
+  padding: 10px 0px;
+  background-color: #e3f5ff;
+  line-height: 1.5;
+}
+.categoryBosaigai {
+  background-color: #fbe7eb;
+}
+#ArticleCategory .category h2 {
+  float: left;
+  padding-left: 60px;
+  line-height: 50px;
+}
+#ArticleCategory .categoryKurashi h2 {
+  background-image: url(./images/ic-kurashi.gif);
+  background-position: 10px center;
+  background-repeat: no-repeat;
+}
+#ArticleCategory .categoryFukushi h2 {
+  background-image: url(./images/ic-fukushi.gif);
+  background-position: 10px center;
+  background-repeat: no-repeat;
+}
+#ArticleCategory .categoryKyoikubunka h2 {
+  background-image: url(./images/ic-kyoiku.gif);
+  background-position: 10px center;
+  background-repeat: no-repeat;
+}
+#ArticleCategory .categoryKanko h2 {
+  background-image: url(./images/ic-kanko.gif);
+  background-position: 10px center;
+  background-repeat: no-repeat;
+}
+#ArticleCategory .categorySangyoshigoto h2 {
+  background-image: url(./images/ic-sangyou.gif);
+  background-position: 10px center;
+  background-repeat: no-repeat;
+}
+#ArticleCategory .categoryGyoseimachizukuri h2 {
+  background-image: url(./images/ic-gyosei.gif);
+  background-position: 10px center;
+  background-repeat: no-repeat;
+}
+#ArticleCategory .categoryBosaigai h2 {
+  background-image: url(./images/ic-bosai.gif);
+  background-position: 10px center;
+  background-repeat: no-repeat;
+}
+#ArticleCategory .category .children {
+  margin: 0px 10px 0px 180px;
+}
+#ArticleCategory .category .children div {
+  display: inline; 
+  padding-right: 10px;
+}
+#ArticleCategory .categoryFukushi,
+#ArticleCategory .categoryKyoikubunka,
+#ArticleCategory .categoryKanko,
+#ArticleCategory .categorySangyoshigoto,
+#ArticleCategory .categoryGyoseimachizukuri,
+#ArticleCategory .categoryBosaigai {
+  clear: both;
+}
+
+/* topic
+----------------------------------------------- */
+#topic {
+  float: left;
+  width: 100%;
+  margin-bottom: 15px;
+}
+#topic .pieceHeader {
+  margin-bottom: 10px;
+  background-image: url(./images/bg-shinchaku-repeat.gif);
+  background-position: left top;
+  background-repeat: repeat-x;
+}
+#topic .pieceHeader h2 {
+  height: 30px;
+  background-image: url(./images/tl-shunnojoruri.gif);
+  background-position: left top;
+  background-repeat: no-repeat;
+  text-indent: -9999px;
+  overflow: hidden;
+}
+#topic img {
+  float: left;
+}
+#topic h3 {
+  margin-bottom: 5px;
+  padding-left: 180px;
+  color: #FF3366;
+  font-weight: bold;
+}
+#topic p {
+  padding-left: 180px;
+}
+#topic .next {
+  margin-top: 20px;
+  text-align: right;
+}

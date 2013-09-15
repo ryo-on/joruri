@@ -15,6 +15,7 @@ class Sys::Group < ActiveRecord::Base
     :join_table => 'sys_users_groups', :order => '(sys_users.id)'
   
   validates_presence_of :state, :level_no, :code, :name, :name_en, :ldap
+  validates_uniqueness_of :code
   
   before_destroy :before_destroy
   
@@ -52,7 +53,7 @@ class Sys::Group < ActiveRecord::Base
   end
   
   def ou_name
-    id.to_s + name
+    "#{code}#{name}"
   end
   
   def full_name
@@ -72,5 +73,4 @@ private
     end
     return true
   end
-  
 end

@@ -18,6 +18,9 @@ class Sys::Lib::Ldap
     self.host = params[:host]
     self.port = params[:port]
     self.base = params[:base]
+    
+    return nil if host.blank? || port.blank? || base.blank?
+    
     self.connection = self.class.connect(params)
   end
   

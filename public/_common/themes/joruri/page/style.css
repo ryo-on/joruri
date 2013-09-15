@@ -37,4 +37,9 @@
 .usefunction img {
   vertical-align: middle;
 }
-
+/* mobile
+----------------------------------------------- */
+.img-box1 {
+  float: left;
+  margin: 0px 30px 0px 0px;
+}

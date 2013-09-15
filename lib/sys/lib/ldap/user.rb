@@ -1,10 +1,15 @@
 # encoding: utf-8
 class Sys::Lib::Ldap::User < Sys::Lib::Ldap::Entry
+  cattr_accessor :primary, :filter
+  
+  @@primary = "uid"
+  @@filter  = "(&(objectClass=top)(objectClass=organizationalPerson))"
+  
   ## Initializer.
   def initialize(connection, attributes = {})
     super
-    @primary = "uid"
-    @filter  = "(&(objectClass=top)(objectClass=organizationalPerson))"
+    @primary = @@primary
+    @filter  = @@filter
   end
   
   ## Attribute: uid
@@ -17,7 +22,7 @@ class Sys::Lib::Ldap::User < Sys::Lib::Ldap::Entry
     get(:cn)
   end
   
-  ## Attribute: name(english)
+  ## Attribute: english name
   def name_en
     "#{get('sn;lang-en')} #{get('givenName;lang-en')}".strip
   end

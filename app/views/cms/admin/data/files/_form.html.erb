@@ -31,12 +31,12 @@ chFile += "$(item_title).value = $(item_file).value.replace(/\\\\/g, '/').replac
   </tr>
   <tr>
     <th style=""><%=@item.locale(:name) %><div class="note">※半角英数字のみ</div></th>
-    <td><%= f.text_field :name, :class => 'string name', :style => 'width: 400px;' %></td>
+    <td><%= f.text_field :name, :class => 'nameEn' %></td>
   </tr>
   <% end %>
   
   <tr>
     <th style=""><%=@item.locale(:title) %><div class="note">※日本語でわかりやすく</div></th>
-    <td><%= f.text_field :title, :class => 'string name', :style => 'width: 400px;' %></td>
+    <td><%= f.text_field :title, :class => 'name' %></td>
   </tr>
 </table>

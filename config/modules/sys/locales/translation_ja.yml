@@ -54,6 +54,7 @@ ja:
         remember_token: "トークン"
         remember_token_expires_at: "トークン有効期限"
         group_id: "グループ"
+        in_group_id: "グループ"
         role_name: "ロール権限"
       
       sys/role_name: 
