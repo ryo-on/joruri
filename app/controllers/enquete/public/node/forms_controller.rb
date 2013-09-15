@@ -51,9 +51,24 @@ class Enquete::Public::Node::FormsController < Cms::Controller::Public::Base
       return false
     end
     
-    ## sendmail
+    ## send mail to admin
     begin
       send_answer_mail(@item, answer)
+    rescue => e
+      error_log("メール送信失敗 #{e}")
+    end
+    
+    ## send mail to answer
+    answer_email = nil
+    answer.columns.each do |col|
+      if col.form_column.name =~ /^(メールアドレス|Email|E-mail)$/i
+        answer_email = col.value if !col.value.blank?
+      end
+    end
+    begin
+      if @content.setting_value(:auto_reply) == 'send'
+        send_answer_mail(@item, answer, answer_email) if !answer_email.blank?
+      end
     rescue => e
       error_log("メール送信失敗 #{e}")
     end
@@ -77,28 +92,43 @@ protected
     form
   end
   
-  def send_answer_mail(item, answer)
-    mail_fr = "cms@" + Page.site.full_uri.gsub(/^.*?\/\/(.*?)(:|\/).*/, '\\1')
-    mail_fr = mail_fr.gsub(/www\./, '')
-    mail_to = item.content.setting_value(:email)
+  def send_answer_mail(item, answer, answer_email = nil)
+    mail_fr = @content.setting_value(:from_email)
+    if mail_fr.blank?
+      mail_fr = "joruri@" + Page.site.full_uri.gsub(/^.*?\/\/(.*?)(:|\/).*/, '\\1')
+      mail_fr = mail_fr.gsub(/www\./, '')
+    end
+    
+    mail_to = answer_email || item.content.setting_value(:email)
     return false if mail_to.blank?
     
-    subject = "投稿：#{item.name}"
+    subject  = "#{item.name}（#{item.content.site.name}）："
+    subject += answer_email.blank? ? '投稿がありました' : '自動返信メール'
+    
+    upper_text = item.content.setting_value(:upper_reply_text).to_s
+    lower_text = item.content.setting_value(:lower_reply_text).to_s
     
     message = ""
+    message += upper_text + "\n" if !upper_text.blank?
+    
     message += "■フォーム名\n"
     message += "#{item.name}\n\n"
     message += "■回答日時\n"
     message += "#{answer.created_at.strftime('%Y-%m-%d %H:%M')}\n\n"
-    message += "■IPアドレス\n"
-    message += "#{answer.ipaddr}\n\n"
-    message += "■ユーザエージェント\n"
-    message += "#{answer.user_agent}\n\n"
+    
+    if answer_email.blank?
+      message += "■IPアドレス\n"
+      message += "#{answer.ipaddr}\n\n"
+      message += "■ユーザエージェント\n"
+      message += "#{answer.user_agent}\n\n"
+    end
     
     answer.columns.each do |col|
       message += "■#{col.form_column.name}\n"
       message += "#{col.value}\n\n"
     end
+    
+    message += lower_text if !lower_text.blank?
     
     send_mail(mail_fr, mail_to, subject, message)
   end

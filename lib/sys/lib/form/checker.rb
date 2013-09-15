@@ -5,13 +5,19 @@ class Sys::Lib::Form::Checker
   
   def check_link(text)
     @links ||= {}
-    text.scan(/href="([^"]+)"/i).each do |m|
-      uri = m[0]
-      uri = ::File.join(Core.site.full_uri, uri) if uri =~ /^\//
-      next if uri =~ /^(#|mailto:|javascript:)/i
-      next if uri !~ /^http:/i
-      uri = CGI::unescapeHTML(uri)
-      @links[uri] = uri_exists?(uri) unless @links.key?(uri)
+    begin
+      timeout(20) do
+        text.scan(/href="([^"]+)"/i).each do |m|
+          uri = m[0]
+          uri = ::File.join(Core.site.full_uri, uri) if uri =~ /^\//
+          next if uri =~ /^(#|mailto:|javascript:)/i
+          next if uri !~ /^http:/i
+          uri = CGI::unescapeHTML(uri)
+          @links[uri] = uri_exists?(uri) unless @links.key?(uri)
+        end
+      end
+    rescue TimeoutError
+      @links['Timeout(20sec)'] = false
     end
     return @links.index(false) ? false : true
   end

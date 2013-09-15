@@ -38,7 +38,7 @@
 }
 .contentArticleDoc .rels li {
   margin: 0;
-  padding-left: 8px;
+  padding-left: 10px;
   background-image: url(./images/ic-list-shinchaku.gif);
   background-repeat: no-repeat;
   background-position: left center;
@@ -165,3 +165,66 @@
   background-position: 0 7px;
   background-repeat: no-repeat;
 }
+
+/* =========================================================
+    tag search
+========================================================= */
+.contentArticleTags table {
+  margin: 20px auto;
+  width: 95%;
+}
+.contentArticleTags table th {
+  width: 35px;
+  padding-right: 5px;
+  vertical-align: middle;
+}
+.contentArticleTags td {
+  width: auto;
+}
+input#s_tag {
+  width: 95% !important;
+  height: 30px;
+}
+.contentArticleTags td.submitters {
+  width: 140px;
+}
+.contentArticleTags .hit {
+  height: 30px;
+  line-height: 30px;
+  padding-left: 10px;
+  background-color: #00349a;
+  color: #ffffff;
+}
+.contentArticleTags li {
+  border-bottom: 1px solid #CCCCCC;
+}
+.contentArticleTags li a {
+  display: block;
+  padding: 0 30px 0 15px;
+  height: 44px;
+  line-height: 44px;
+  overflow: hidden;
+  background-image: url("/_common/themes/joruri/smart/piece/images/ic-kiji.png");
+  background-position: 95% center;
+  background-repeat: no-repeat;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.contentArticleTags span.attributes {
+  display: none;
+}
+
+/* =========================================================
+    group-portal
+========================================================= */
+.dir-groupPortal .category h2 {
+      background-image: url("/_common/themes/joruri/smart/piece/images/ic-link.png");
+    background-position: 95% center;
+    background-repeat: no-repeat;
+    border-bottom: 1px solid #CCCCCC;
+    display: block;
+    height: 44px;
+    line-height: 44px;
+    padding: 0 30px 0 15px;
+}
+

@@ -194,11 +194,15 @@
 }
 #recentDocsTitle h2 {
   height: 30px;
+  line-height: 30px;
+  margin-bottom: 10px;
+  padding-left: 10px;
   background-image: url(./images/tl-shinchaku.gif);
   background-position: left top;
   background-repeat: no-repeat;
   font-size: 120%;
-  text-indent: -9999px;
+  font-weight: bold;
+  color: #ffffff;
 }
 /* RSS Atom
 ----------------------------------------------- */
@@ -249,10 +253,10 @@
     tag search
 ========================================================= */
 .contentArticleTags .search {
-  background-color: #e3f0fa;
-  border: 1px solid #dddddd;
   margin: 10px 0px;
   padding: 10px;
+  background-color: #e3f0fa;
+  border: 1px solid #dddddd;
 }
 .contentArticleTags .search td {
   padding: 0px 15px 0px 5px;
@@ -283,3 +287,4 @@
 .contentArticleTags ul {
   padding: 10px 5px 25px 5px;
 }
+

@@ -67,6 +67,11 @@ module Cms::FormHelper
     render :partial => 'cms/admin/_partial/pieces/view', :locals => locals
   end
 
+  def piece_base_menu(item, options = {})
+    locals = {:item => item}.merge(options)
+    render :partial => 'cms/admin/_partial/pieces/menu', :locals => locals
+  end
+  
   def inquiry_form(form)
     item = @template.instance_variable_get("@#{form.object_name}")
     locals = {:f => form, :item => item}

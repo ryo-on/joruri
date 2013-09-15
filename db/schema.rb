@@ -486,6 +486,54 @@ ActiveRecord::Schema.define(:version => 20110803122623) do
 
   add_index "enquete_forms", ["content_id", "sort_no"], :name => "content_id"
 
+  create_table "faq_categories", :force => true do |t|
+    t.integer  "unid"
+    t.integer  "parent_id",                :null => false
+    t.integer  "concept_id"
+    t.integer  "content_id"
+    t.string   "state",      :limit => 15
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "level_no",                 :null => false
+    t.integer  "sort_no"
+    t.integer  "layout_id"
+    t.string   "name"
+    t.text     "title"
+  end
+
+  create_table "faq_docs", :force => true do |t|
+    t.integer  "unid"
+    t.integer  "content_id"
+    t.string   "state",         :limit => 15
+    t.string   "agent_state",   :limit => 15
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "recognized_at"
+    t.datetime "published_at"
+    t.integer  "language_id"
+    t.string   "category_ids"
+    t.string   "rel_doc_ids"
+    t.text     "notice_state"
+    t.text     "recent_state"
+    t.string   "name"
+    t.text     "question"
+    t.text     "title"
+    t.text     "head",          :limit => 2147483647
+    t.text     "body",          :limit => 2147483647
+    t.text     "mobile_title"
+    t.text     "mobile_body",   :limit => 2147483647
+  end
+
+  add_index "faq_docs", ["content_id", "published_at"], :name => "content_id"
+
+  create_table "faq_tags", :force => true do |t|
+    t.integer  "unid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "name"
+    t.text     "word"
+  end
+
   create_table "newsletter_delivery_logs", :force => true do |t|
     t.integer  "unid"
     t.integer  "content_id"

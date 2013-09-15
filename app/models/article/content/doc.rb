@@ -56,14 +56,6 @@ class Article::Content::Doc < Cms::Content
     @event_node = item.find(:first, :order => :id)
   end
   
-  def event_node
-    return @event_node if @event_node
-    item = Cms::Node.new.public
-    item.and :content_id, id
-    item.and :model, 'Article::EventDoc'
-    @event_node = item.find(:first, :order => :id)
-  end
-  
   def tag_node
     return @tag_node if @tag_node
     item = Cms::Node.new.public

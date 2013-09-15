@@ -1,4 +1,4 @@
-## Joruri CMS 1.2.1 インストールマニュアル                  2012.3.22
+## Joruri CMS 1.2.2 インストールマニュアル                  2012.5.31
 
 **********************************************************************
  1 想定環境
@@ -51,35 +51,33 @@ iptablesを停止し、自動起動を無効にします。
   # /sbin/service iptables stop
   # /sbin/chkconfig iptables off
 
-======================================================================
- 2.3 パッケージのインストール
-======================================================================
-
-ソースのコンパイルに必要なパッケージをインストールします。
-
-既にインストールされているかを確認します。
-
-  # rpm -qa make gcc-c++ libxslt libxslt-devel libxml2-devel
-  
-なければインストールします。
-
-  # yum install -y make gcc-c++ libxslt libxslt-devel libxml2-devel
-
 **********************************************************************
  3 事前準備
 **********************************************************************
 
+必要なパッケージをインストールします。
+
+  # yum -y install \
+      wget make gcc-c++ \
+      libxslt libxslt-devel libxml2-devel \
+      libjpeg-devel libpng-devel \
+      librsvg2-devel ghostscript-devel \
+      curl-devel nkf openldap-devel \
+      shared-mime-info \
+      httpd httpd-devel \
+      mysql-server mysql-devel
+
 必要なパッケージをダウンロードします。
 
   # cd /usr/local/src/
-  # wget http://joruri.org/download/joruri-1.2.1.tar.gz
-  # wget http://image_magick.veidrodis.com/image_magick/ImageMagick-6.4.7-8.tar.gz
-  # wget http://core.ring.gr.jp/archives/lang/ruby/1.9/ruby-1.9.1-p378.tar.gz
-  # wget http://rubyforge.org/frs/download.php/60718/rubygems-1.3.5.tgz
-  # wget http://chasen.org/~taku/software/darts/src/darts-0.32.tar.gz
-  # wget "http://sourceforge.jp/frs/redir.php?m=jaist&f=%2Fchasen-legacy%2F32224%2Fchasen-2.4.4.tar.gz"
-  # wget "http://sourceforge.jp/frs/redir.php?m=iij&f=%2Fipadic%2F24435%2Fipadic-2.7.0.tar.gz"
-  # wget http://downloads.sourceforge.net/lame/lame-398-2.tar.gz
+  # wget http://joruri.org/download/joruri-1.2.2.tar.gz \
+      http://image_magick.veidrodis.com/image_magick/ImageMagick-6.4.7-8.tar.gz \
+      http://core.ring.gr.jp/archives/lang/ruby/1.9/ruby-1.9.1-p378.tar.gz \
+      http://rubyforge.org/frs/download.php/60718/rubygems-1.3.5.tgz \
+      http://chasen.org/~taku/software/darts/src/darts-0.32.tar.gz \
+      "http://sourceforge.jp/frs/redir.php?m=jaist&f=%2Fchasen-legacy%2F32224%2Fchasen-2.4.4.tar.gz" \
+      "http://sourceforge.jp/frs/redir.php?m=iij&f=%2Fipadic%2F24435%2Fipadic-2.7.0.tar.gz" \
+      http://downloads.sourceforge.net/lame/lame-398-2.tar.gz
 
 Joruriユーザを作成します。
 
@@ -89,16 +87,12 @@ Joruriユーザを作成します。
 Joruriソースコードを設置します。
 
   # mkdir /var/share
-  # tar xvzf joruri-1.2.1.tar.gz -C /var/share
+  # tar xvzf joruri-1.2.2.tar.gz -C /var/share
   # chown -R joruri:joruri /var/share/joruri
 
 **********************************************************************
  4 Apache のインストール
 **********************************************************************
-
-Apacheをインストールします。
-
-  # yum install -y httpd httpd-devel
 
 設定ファイルを編集します。
 
@@ -120,10 +114,6 @@ Apacheをインストールします。
  5 MySQL のインストール
 **********************************************************************
 
-MySQLをインストールします。
-
-  # yum install -y mysql-server mysql-devel
-
 文字エンコーディングの標準を UTF-8 に設定します。
 
   # vi /etc/my.cnf
@@ -143,21 +133,17 @@ MySQLを起動します。
 自動起動に設定します。
 
   # /sbin/chkconfig mysqld on
-  
+
 rootユーザのパスワードを設定します。
   # /usr/bin/mysqladmin -u root password "pass"
 
 joruriユーザを作成します。
-  # /usr/bin/mysql -u root -p \
-  #     -e "grant all on *.* to joruri@localhost IDENTIFIED BY 'pass'"
+  # /usr/bin/mysql -u root -ppass \
+      -e "grant all on *.* to joruri@localhost IDENTIFIED BY 'pass'"
 
 **********************************************************************
  6 ImageMagick のインストール
 **********************************************************************
-
-画像関連のパッケージをインストールします。
-
-  # yum -y install libjpeg-devel libpng-devel ghostscript-devel
 
 ImageMagickをインストールします。
 
@@ -196,7 +182,7 @@ RubyGemsをインストールします。
 
 Phusion Passengerをインストールします。
 
-  # gem install passenger -v 2.2.9
+  # gem install passenger --no-ri --no-rdoc -v 2.2.9
   # passenger-install-apache2-module
   
   ( 画面の内容を確認して Enterキーを押してください。 )
@@ -204,21 +190,21 @@ Phusion Passengerをインストールします。
 Apacheに設定を追加します。
 
   # cp /var/share/joruri/config/samples/passenger.conf \
-  #     /etc/httpd/conf.d/passenger.conf
+      /etc/httpd/conf.d/passenger.conf
 
 ======================================================================
  7.3 gemライブラリ のインストール
 ======================================================================
 
 Rails
-  # gem install rails --include-dependencies -v 2.3.5
+  # gem install rails --no-ri --no-rdoc --include-dependencies -v 2.3.5
 
 rake
-  # gem install rake -v 0.8.7
+  # gem install rake --no-ri --no-rdoc -v 0.8.7
   # gem uninstall rake -v "> 0.8.7"
 
 Mysql/Ruby
-  # gem install mysql -v 2.8.1
+  # gem install mysql --no-ri --no-rdoc -v 2.8.1
 
   ※補足
     MySQLをソースからインストールしている場合はコマンドが異なります。
@@ -226,25 +212,25 @@ Mysql/Ruby
     #     --with-mysql-config=/usr/local/mysql/bin/mysql_config
 
 Ruby/LDAP
-  # gem install ruby-ldap -v 0.9.10
+  # gem install ruby-ldap --no-ri --no-rdoc -v 0.9.10
 
 RMagick
-  # gem install rmagick -v 2.12.2
+  # gem install rmagick --no-ri --no-rdoc -v 2.12.2
 
 Zip/Ruby
-  # gem install zipruby -v 0.3.6
+  # gem install zipruby --no-ri --no-rdoc -v 0.3.6
 
 mime-types
-  # gem install mime-types -v 1.16
+  # gem install mime-types --no-ri --no-rdoc -v 1.16
 
 will_paginate
-  # gem install will_paginate -v 2.3.12
+  # gem install will_paginate --no-ri --no-rdoc -v 2.3.12
 
 PassiveRecord
-  # gem install passiverecord -v 0.2
+  # gem install passiverecord --no-ri --no-rdoc -v 0.2
 
 TamTam
-  # gem install tamtam -v 0.0.3
+  # gem install tamtam --no-ri --no-rdoc -v 0.0.3
 
 **********************************************************************
   8 Joruri のインストール
@@ -309,7 +295,7 @@ VirtualHost設定
 Apacheに設定を追加します。
   $ su -
   # ln -s /var/share/joruri/config/virtual-hosts/joruri.conf \
-  #     /etc/httpd/conf.d/
+      /etc/httpd/conf.d/
 
 Apache を再起動します。
   # /sbin/service httpd configtest
@@ -453,4 +439,3 @@ GalateaTalkをインストールします。
   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 **********************************************************************
-

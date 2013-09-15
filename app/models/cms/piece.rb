@@ -12,7 +12,7 @@ class Cms::Piece < ActiveRecord::Base
 
   belongs_to :status,   :foreign_key => :state,      :class_name => 'Sys::Base::Status'
   has_many   :settings, :foreign_key => :piece_id,   :class_name => 'Cms::PieceSetting',
-    :order => :sort_no
+    :order => :sort_no, :dependent => :destroy
 
   attr_accessor :in_settings
   
@@ -83,6 +83,34 @@ class Cms::Piece < ActiveRecord::Base
   def setting_value(name)
     st = settings.find(:first, :conditions => {:name => name.to_s})
     st ? st.value : nil
+  end
+  
+  def duplicate(rel_type = nil)
+    item = self.class.new(self.attributes)
+    item.id            = nil
+    item.unid          = nil
+    item.created_at    = nil
+    item.updated_at    = nil
+    item.recognized_at = nil
+    item.published_at  = nil
+    
+    if rel_type == nil
+      item.name          = nil
+      item.title         = item.title.gsub(/^(【複製】)*/, "【複製】")
+    end
+    
+    return false unless item.save(false)
+    
+    # piece_settings
+    settings.each do |setting|
+      dupe_setting = Cms::PieceSetting.new(setting.attributes)
+      dupe_setting.piece_id   = item.id
+      dupe_setting.created_at = nil
+      dupe_setting.updated_at = nil
+      dupe_setting.save(false)
+    end
+    
+    return item
   end
 
 protected

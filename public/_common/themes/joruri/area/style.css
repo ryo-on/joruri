@@ -18,11 +18,15 @@
 }
 .contentArticleArea .latest h2 {
   height: 30px;
+  line-height: 30px;
   margin-bottom: 10px;
+  padding-left: 10px;
   background-image: url(./images/tl-shinchaku.gif);
   background-repeat: no-repeat;
   background-position: left top;
-  text-indent: -9999px;
+  font-size: 120%;
+  font-weight: bold;
+  color: #ffffff;
 }
 .contentArticleArea ul {
   padding: 0px 5px;

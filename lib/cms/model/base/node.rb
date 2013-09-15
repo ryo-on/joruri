@@ -24,7 +24,7 @@ module Cms::Model::Base::Node
   
   def model_name(option = nil)
     name = Cms::Lib::Modules.model_name(:node, model)
-    return name.to_s.gsub(/^.*?\//, '') if option == :short
+    return name.to_s.gsub(/^(.*?\/).*?\//, '\\1') if option == :short
     name
   end
   

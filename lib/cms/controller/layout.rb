@@ -88,7 +88,7 @@ module Cms::Controller::Layout
       return render :text => Page.content, :layout => 'layouts/public/base'
     end
     
-    body = Page.layout.body_tag(request).clone.to_s
+    body = (Page.layout.body_tag(request) || '').clone.to_s
     
     ## render the piece
     Cms::Lib::Layout.find_design_pieces(body, concepts).each do |name, item|

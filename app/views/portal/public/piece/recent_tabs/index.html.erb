@@ -7,7 +7,7 @@ var feedTabs<%= Page.current_piece.id %> = new ArticleDocTabs('<%= Page.current_
 
 <div class="tabs">
   <% @tabs.each do |tab| %>
-  <a href="javascript: Tab/<%= tab[:name] %>" onkeypress="" class="<%= tab[:class] %>"
+  <a href="javascript: tab/<%= tab[:name] %>" onkeypress="" class="<%= tab[:class] %>"
     onclick="return feedTabs<%= Page.current_piece.id %>.show('<%=h tab[:name] %>')"><%= tab[:title] %></a><% end %>
 </div>
 

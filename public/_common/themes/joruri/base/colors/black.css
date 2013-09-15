@@ -81,6 +81,10 @@ h1 {
   background-color: #000000;
   border: 1px solid #ffffff;
 }
+#menu .pieceHeader, #links .pieceHeader {
+  border: 1px solid #ffffff;
+  background-image: none;
+}
 /* links style
 ----------------------------------------------- */
 #links ul {
@@ -114,9 +118,24 @@ h1 {
 .category {
   background-color: #000000;
 }
+.contentArticleCategory .latest {
+  background-image: none;
+}
+.contentArticleCategory .latest h2 {
+  border: 1px solid #ffffff;
+  background-image: none;
+}
 .contentArticleCategory h3 {
   border: 1px solid #ffffff;
   background-color: #000000;
+  color: #ffffff;
+}
+#ArticleCategory .pieceHeader {
+  background-image: none;
+}
+#ArticleCategory .pieceHeader h2 {
+  border: 1px solid #ffffff;
+  background-image: none;
   color: #ffffff;
 }
 
@@ -134,7 +153,13 @@ table.unit tr.cycle {
   background-color: #000000;
   color: #ffffff;
 }
-
+.contentArticleUnit .latest {
+  background-image: none;
+}
+.contentArticleUnit .latest h2 {
+  border: 1px solid #ffffff;
+  background-image: none;
+}
 .contentArticleUnit h3 {
   border: 1px solid #ffffff;
   background-color: #000000;
@@ -143,11 +168,16 @@ table.unit tr.cycle {
 
 /* attribute
 ----------------------------------------------- */
-#page-zokusei-index .attribute {
-  width: 48%;
-  border: 1px solid #ffffff;
+.attribute {
   background-color: #000000;
   color: #ffffff;
+}
+.contentArticleAttribute .latest {
+  background-image: none;
+}
+.contentArticleAttribute .latest h2 {
+  border: 1px solid #ffffff;
+  background-image: none;
 }
 .contentArticleAttribute h3 {
   border: 1px solid #ffffff;
@@ -166,6 +196,27 @@ table.ward td {
 table.city tr.cycle {
   background-color: #000000;
   color: #ffffff;
+}
+.contentArticleArea .latest {
+  background-image: none;
+}
+.contentArticleArea .latest h2 {
+  border: 1px solid #ffffff;
+  background-image: none;
+}
+.contentArticleArea h3 {
+  border: 1px solid #ffffff;
+  background-color: #000000;
+  color: #ffffff;
+}
+/* shinchaku portal
+----------------------------------------------- */
+#recentDocsTitle .pieceHeader {
+  background-image: none;
+}
+#recentDocsTitle h2 {
+  border: 1px solid #ffffff;
+  background-image: none;
 }
 /* calendar
 ----------------------------------------------- */
@@ -219,12 +270,14 @@ table.city tr.cycle {
 
 /* tag
 ----------------------------------------------- */
-.contentArticleTags .search {
+.contentArticleTags .search,
+.contentFaqTags .search {
   border: none;
   background-color: #000000;
   color: #ffffff;
 }
-.contentArticleTags .hit {
+.contentArticleTags .hit,
+.contentFaqTags .hit {
   border: 1px solid #ffffff;
   background-image: none;
   color: #ffffff;
@@ -249,6 +302,7 @@ ul.sitemap ul.level2 {
   background-color: #000000;
 }
 .contentTitle {
+
   background-color: #000000;
 }
 .contentTitle .contentTitleBody,
@@ -257,9 +311,26 @@ ul.sitemap ul.level2 {
   border: none;
   background-image: none;
 }
-
+/* topic
+----------------------------------------------- */
+#topic .pieceHeader {
+  background-image: none;
+}
+#topic .pieceHeader h2 {
+  border: 1px solid #ffffff;
+  background-image: none;
+  color: #ffffff;
+}
 /* lifeevent
 ----------------------------------------------- */
+#lifeEvent .pieceHeader {
+  background-image: none;
+}
+#lifeEvent .pieceHeader h2 {
+  border: 1px solid #ffffff;
+  background-image: none;
+  color: #ffffff;
+}
 #lifeEventSide {
   background-color: #000000;
 }
@@ -330,6 +401,7 @@ ul.sitemap ul.level2 {
   border: 1px solid #ffffff;
   background-color: #000000;
 }
+
 /* emergency
 ----------------------------------------------- */
 #emergency .pieceHeader,
@@ -407,4 +479,47 @@ border:2px solid #ffffff;
 }
 .contentBbsThreads .back a {
   background-color: #000000;
+}
+/* faq
+----------------------------------------------- */
+#faqRecentDocs .pieceHeader {
+  border: 1px solid #ffffff;
+  background-image: none;
+}
+.contentFaqDoc .body.answer, .contentFaqDoc .question,
+.contentFaqDoc .header {
+  background-color: #000000;
+}
+.contentFaqDoc .back a {
+  border: 1px solid #ffffff;
+  background-color: #000000;
+  color: #ffffff;
+}
+.contentFaqRecentDocs .date,
+.contentFaqDocs .date {
+  border: 1px solid #ffffff;
+  background-color: #000000;
+}
+.contentFaqCategory .category h2 {
+  border: 1px solid #ffffff;
+  background-color: #000000;
+}
+#recentFaqTitle .pieceHeader,
+#faqRecentDocs .pieceHeader {
+  border: 1px solid #ffffff;
+  background-image: none;
+}
+#recentFaqTitle h2,
+#faqRecentDocs .pieceHeader h2,
+.contentFaqCategory .latest {
+  background-image: none;
+}
+.contentFaqCategory .latest h2 {
+  border: 1px solid #ffffff;
+  background-image: none;
+}
+.contentFaqCategory .category h3 {
+  border: 1px solid #ffffff;
+  background-color: #000000;
+  color: #ffffff;
 }

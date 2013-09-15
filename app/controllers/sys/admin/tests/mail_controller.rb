@@ -9,8 +9,8 @@ class Sys::Admin::Tests::MailController < Cms::Controller::Admin::Base
     @errors = []
     
     @item = params[:item] || {}
-    @item[:from]    ||= "#{Core.user.name} <#{Core.user.email}>"
-    @item[:to]      ||= "#{Core.user.name} <#{Core.user.email}>"
+    @item[:from]    ||= "#{Core.user.email}"
+    @item[:to]      ||= "#{Core.user.email}"
     @item[:subject] ||= "テストメール"
     @item[:body]    ||= "メール送信の動作確認を行っています。"
     

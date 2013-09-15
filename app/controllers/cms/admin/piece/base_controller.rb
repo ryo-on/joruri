@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   
@@ -52,6 +53,22 @@ class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
     _destroy @item do
       respond_to do |format|
         format.html { return redirect_to(cms_pieces_path) }
+      end
+    end
+  end
+  
+  def duplicate(item)
+    if dupe_item = item.duplicate
+      flash[:notice] = '複製処理が完了しました。'
+      respond_to do |format|
+        format.html { redirect_to cms_pieces_path }
+        format.xml  { head :ok }
+      end
+    else
+      flash[:notice] = "複製処理に失敗しました。"
+      respond_to do |format|
+        format.html { redirect_to url_for(:action => :show) }
+        format.xml  { render :xml => item.errors, :status => :unprocessable_entity }
       end
     end
   end

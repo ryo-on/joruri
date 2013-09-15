@@ -109,10 +109,10 @@ private
     if og = Sys::Group.find(:first, :conditions => {:code => change.old_code, :name => change.old_name})
       unless g = Sys::Group.find(:first, :conditions => {:code => change.code, :name => change.name})
 
-        update_part = "code = '#{change.code}' "
-        update_part += ", parent_id = '#{temp.parent_id}'" if temp.entity_parent
+        update_part = "code = #{self.class.sanitize(change.code)} "
+        update_part += ", parent_id = #{self.class.sanitize(temp.parent_id)}" if temp.entity_parent
 
-        sql = "UPDATE #{Sys::Group.table_name} SET #{update_part} WHERE code = '#{change.old_code}'"
+        sql = "UPDATE #{Sys::Group.table_name} SET #{update_part} WHERE code = #{self.class.sanitize(change.old_code)}"
         Sys::Group.connection.execute(sql)
         g = Sys::Group.find(:first, :conditions => ["code = ? AND 0 = 0", change.code])
       end

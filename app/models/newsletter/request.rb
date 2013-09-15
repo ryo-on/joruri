@@ -20,9 +20,16 @@ class Newsletter::Request < ActiveRecord::Base
 
     # format
     if !_email.blank?
-      unless _email =~ /^(([A-Za-z0-9]+_+)|([A-Za-z0-9]+-+)|([A-Za-z0-9]+.+)|([A-Za-z0-9]+\++))*[A-Za-z0-9]+@((\w+-+)|(\w+.))*\w{1,63}.[a-zA-Z]{2,6}$/ix
-        errors.add_to_base "メールアドレス が正しくありません。"
+      _email_format_error = false
+      # domain
+      _email_format_error = true unless _email =~ /@((\w+-+)|(\w+\.))*\w{1,63}\.[a-zA-Z]{2,6}$/ix
+      # local-part
+      if _email =~ /^((\..*?)|(.*?\.\..*?)|(.*?\.))@/ix
+        _email_format_error = true
+      elsif !(_email =~ /^(([A-Za-z0-9]+_+)|([A-Za-z0-9]+-+)|([A-Za-z0-9]+\.+)|([A-Za-z0-9]+\++))*[A-Za-z0-9]+@/ix)
+        _email_format_error = true
       end
+      errors.add_to_base "メールアドレス が正しくありません。" if _email_format_error
     end
 
     # exist

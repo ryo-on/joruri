@@ -197,11 +197,15 @@
 }
 #ArticleCategory .pieceHeader h2 {
   height: 30px;
-  background-image: url(./images/tl-bunyabetsu.gif);
+  line-height: 30px;
+  margin-bottom: 10px;
+  padding-left: 10px;
+  background-image: url(./images/tl-shinchaku.gif);
   background-position: left top;
   background-repeat: no-repeat;
-  text-indent: -9999px;
-  overflow: hidden;
+  font-size: 120%;
+  font-weight: bold;
+  color: #ffffff;
 }
 .categoryKurashi,
 .categoryFukushi,
@@ -288,12 +292,16 @@
   background-repeat: repeat-x;
 }
 #lifeEvent .pieceHeader h2 {
-  overflow: hidden;
   height: 30px;
-  background-image: url(./images/tl-lifeevent.gif);
+  line-height: 30px;
+  margin-bottom: 10px;
+  padding-left: 10px;
+  background-image: url(./images/tl-shinchaku.gif);
   background-position: left top;
   background-repeat: no-repeat;
-  text-indent: -9999px;
+  font-size: 120%;
+  font-weight: bold;
+  color: #ffffff;
 }
 #lifeEvent ul {
   width: 100%;
@@ -405,11 +413,15 @@
 }
 #topic .pieceHeader h2 {
   height: 30px;
-  background-image: url(./images/tl-shunnojoruri.gif);
+  line-height: 30px;
+  margin-bottom: 10px;
+  padding-left: 10px;
+  background-image: url(./images/tl-shinchaku.gif);
   background-position: left top;
   background-repeat: no-repeat;
-  text-indent: -9999px;
-  overflow: hidden;
+  font-size: 120%;
+  font-weight: bold;
+  color: #ffffff;
 }
 #topic img {
   float: left;

@@ -1,3 +1,55 @@
+1.2.2
+  CREATE TABLE faq_categories (
+    id int(11) NOT NULL AUTO_INCREMENT,
+    unid int(11) DEFAULT NULL,
+    parent_id int(11) NOT NULL,
+    concept_id int(11) DEFAULT NULL,
+    content_id int(11) DEFAULT NULL,
+    state varchar(15) DEFAULT NULL,
+    created_at datetime DEFAULT NULL,
+    updated_at datetime DEFAULT NULL,
+    level_no int(11) NOT NULL,
+    sort_no int(11) DEFAULT NULL,
+    layout_id int(11) DEFAULT NULL,
+    `name` varchar(255) DEFAULT NULL,
+    title text,
+    PRIMARY KEY (id)
+  );
+  CREATE TABLE faq_docs (
+    id int(11) NOT NULL AUTO_INCREMENT,
+    unid int(11) DEFAULT NULL,
+    content_id int(11) DEFAULT NULL,
+    state varchar(15) DEFAULT NULL,
+    agent_state varchar(15) DEFAULT NULL,
+    created_at datetime DEFAULT NULL,
+    updated_at datetime DEFAULT NULL,
+    recognized_at datetime DEFAULT NULL,
+    published_at datetime DEFAULT NULL,
+    language_id int(11) DEFAULT NULL,
+    category_ids varchar(255) DEFAULT NULL,
+    rel_doc_ids varchar(255) DEFAULT NULL,
+    notice_state text,
+    recent_state text,
+    `name` varchar(255) DEFAULT NULL,
+    question text,
+    title text,
+    head longtext,
+    body longtext,
+    mobile_title text,
+    mobile_body longtext,
+    PRIMARY KEY (id),
+    KEY content_id (content_id,published_at)
+  );
+  CREATE TABLE faq_tags (
+    id int(11) NOT NULL AUTO_INCREMENT,
+    unid int(11) DEFAULT NULL,
+    created_at datetime DEFAULT NULL,
+    updated_at datetime DEFAULT NULL,
+    `name` varchar(255) DEFAULT NULL,
+    word text,
+    PRIMARY KEY (id)
+  );
+
 1.2.1
   CREATE TABLE sys_group_changes (
     id int(11) NOT NULL AUTO_INCREMENT,

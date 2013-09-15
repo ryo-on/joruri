@@ -70,6 +70,7 @@
     <th>イベントカレンダー表示</th>
     <td colspan="3">
       <%= safe{@item.event_status.name} %>
+      <% if @item.event_date %>&nbsp; イベント日付 ： <%= @item.event_date.strftime("%Y-%m-%d") %><% end %>
     </td>
   </tr>
 </table>

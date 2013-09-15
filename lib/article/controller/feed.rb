@@ -5,7 +5,7 @@ module Article::Controller::Feed
       @skip_layout = true
       @site_uri    = Page.site.full_uri
       @node_uri    = @site_uri.gsub(/\/$/, '') + Page.current_node.public_uri
-      @req_uri     = @site_uri.gsub(/\/$/, '') + Core.request_uri
+      @req_uri     = @site_uri.gsub(/\/$/, '') + Page.uri
       @feed_name   = "#{Page.title} | #{Page.site.name}"
 
       data = eval("to_#{params[:format]}(docs)")

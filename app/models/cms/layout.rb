@@ -209,4 +209,21 @@ class Cms::Layout < ActiveRecord::Base
     FileUtils.rmdir(::File.dirname(path)) rescue nil
     return true
   end
+  
+  def duplicate(rel_type = nil)
+    item = self.class.new(self.attributes)
+    item.id            = nil
+    item.unid          = nil
+    item.created_at    = nil
+    item.updated_at    = nil
+    item.recognized_at = nil
+    item.published_at  = nil
+    
+    if rel_type == nil
+      item.name          = nil
+      item.title         = item.title.gsub(/^(【複製】)*/, "【複製】")
+    end
+    
+    return item.save(false)
+  end
 end
