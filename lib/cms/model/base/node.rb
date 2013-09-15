@@ -14,7 +14,7 @@ module Cms::Model::Base::Node
   end
   
   def public?
-    return state == 'public' && published_at
+    return state == 'public' && !published_at.blank?
   end
   
   def content_name

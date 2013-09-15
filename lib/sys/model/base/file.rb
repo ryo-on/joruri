@@ -4,6 +4,7 @@ module Sys::Model::Base::File
     mod.validates_presence_of :file, :if => "@_skip_upload != true"
     mod.validates_presence_of :name, :title
     mod.validate :validate_file_name
+    mod.validate :validate_file_type
     mod.validate :validate_upload_file
     mod.after_save :upload_internal_file
     mod.after_destroy :remove_internal_file
@@ -11,7 +12,7 @@ module Sys::Model::Base::File
   
   @@_maxsize = 50# MegaBytes
   
-  attr_accessor :file
+  attr_accessor :file, :allowed_type
   
   def skip_upload(bool = true)
     @_skip_upload = bool
@@ -29,6 +30,32 @@ module Sys::Model::Base::File
       return false
     end
     self.title = self.name if title.blank?
+  end
+  
+  def validate_file_type
+    return true if allowed_type.blank?
+    
+    types = {}
+    allowed_type.to_s.split(/ *, */).each do |m|
+      m = ".#{m.gsub(/ /, '').downcase}"
+      types[m] = true if !m.blank?
+    end
+    
+    if !name.blank?
+      ext = ::File.extname(name.to_s).downcase
+      if types[ext] != true
+        errors.add_to_base "許可されていないファイルです。（#{allowed_type}）"
+        return
+      end
+    end
+    
+    if !file.blank? && !file.original_filename.blank?
+      ext = ::File.extname(file.original_filename.to_s).downcase
+      if types[ext] != true
+        errors.add_to_base "許可されていないファイルです。（#{allowed_type}）"
+        return
+      end
+    end
   end
   
   def validate_upload_file
@@ -188,7 +215,7 @@ module Sys::Model::Base::File
     return {:width => dst_w.ceil, :height => dst_h.ceil}
   end
   
-  def mobile_image(mobile)
+  def mobile_image(mobile, params = {})
     return nil unless mobile
     return nil if image_is != 1
     return nil if image_width <= 300 && image_height <= 400
@@ -197,7 +224,7 @@ module Sys::Model::Base::File
       require 'RMagick'
       #info = Magick::Image::Info.new
       size = reduced_size(:width => 300, :height => 400)
-      img  = Magick::Image.read(public_path).first
+      img  = Magick::Image.read(params[:path]).first
       img  = img.resize(size[:width], size[:height])
       
       case mobile

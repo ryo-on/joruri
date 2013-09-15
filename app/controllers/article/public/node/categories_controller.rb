@@ -6,7 +6,6 @@ class Article::Public::Node::CategoriesController < Cms::Controller::Public::Bas
     return http_error(404) unless @content = Page.current_node.content
     @docs_uri = @content.public_uri('Article::Doc')
     
-    @page  = params[:page]
     @limit = 50
     
     if params[:name]
@@ -24,6 +23,8 @@ class Article::Public::Node::CategoriesController < Cms::Controller::Public::Bas
   end
 
   def show
+    @page  = params[:page]
+    
     return show_feed if params[:file] == "feed"
     return http_error(404) unless params[:file] =~ /^(index|more)$/
     @more  = (params[:file] == 'more')
@@ -87,6 +88,8 @@ class Article::Public::Node::CategoriesController < Cms::Controller::Public::Bas
   end
   
   def show_attr
+    @page  = params[:page]
+    
     attr = Article::Unit.new.public
     attr.and :name_en, params[:attr]
     return http_error(404) unless @attr = attr.find(:first, :order => :sort_no)

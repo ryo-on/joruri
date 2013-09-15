@@ -11,13 +11,16 @@ class Sys::Admin::Tests::LinkCheckController < Cms::Controller::Admin::Base
     
     @item = params[:item] || {}
     
-    if request.post?
-      body = ''
-      @item[:body].split(/\r\n|\n|\r/m).each do |uri|
-        next if uri.blank?
-        body += %Q(<a href="#{uri}">#{uri}</a>\n)
-      end
-      @checker.check_link body
+    check_link if request.post?
+  end
+  
+protected
+  def check_link
+    body = ''
+    @item[:body].split(/\r\n|\n|\r/m).each do |uri|
+      next if uri.blank?
+      body += %Q(<a href="#{uri}">#{uri}</a>\n)
     end
+    @checker.check_link body
   end
 end

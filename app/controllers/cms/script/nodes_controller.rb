@@ -12,10 +12,12 @@ class Cms::Script::NodesController < Cms::Controller::Script::Publication
   def publish_node(node)
     return if @ids.key?(node.id)
     @ids[node.id] = 1
+    
+    return unless node.site
     last_name = nil
     
     cond = ["parent_id = ? AND name IS NOT NULL AND name != ''", node.id]
-    Cms::Node.new.find(:all, :select => :id, :conditions => cond, :order => "directory, name, state DESC, id").each do |v|
+    Cms::Node.new.find(:all, :select => :id, :conditions => cond, :order => "directory, name, id").each do |v|
       item = Cms::Node.find_by_id(v[:id])
       next unless item
       next if item.name.blank? || item.name == last_name
@@ -31,7 +33,8 @@ class Cms::Script::NodesController < Cms::Controller::Script::Publication
       ## page
       if item.model == 'Cms::Page'
         begin
-          publish_page(item, :uri => item.public_uri, :site => item.site, :path => item.public_path)
+          uri  = "#{item.public_uri}?node_id=#{item.id}"
+          publish_page(item, :uri => uri, :site => item.site, :path => item.public_path)
         rescue => e
           error_log(e)
         end

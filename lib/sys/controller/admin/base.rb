@@ -10,7 +10,8 @@ class Sys::Controller::Admin::Base < ApplicationController
     
     @@current_user = false
     if authenticate
-      crypt_pass  = Joruri.config.application["sys.crypt_pass"]
+      return false unless current_user
+      crypt_pass         = Joruri.config.application["sys.crypt_pass"]
       Core.user          = current_user
       Core.user.password = Util::String::Crypt.decrypt(session[PASSWD_KEY], crypt_pass)
       Core.user_group    = current_user.groups[0]

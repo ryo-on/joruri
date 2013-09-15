@@ -14,10 +14,13 @@
   <% if (a = c.children).size > 0 %><div style="margin-left: 2em;"><% a.each do |c2| %>
     <%= f.check_boxes "in_area_ids", [[c2.title, c2.id]] %>
     
-    <% if (a2 = c2.children).size > 0 %>
-    <div style="margin-left: 2em;"><% a2.each do |c3| %>
+    <% if (a2 = c2.children).size > 0 %><div style="margin-left: 2em;"><% a2.each do |c3| %>
       <%= f.check_boxes "in_area_ids", [[c3.title, c3.id]] %>
       
+      <% if (a3 = c3.children).size > 0 %><div style="margin-left: 2em;"><% a3.each do |c4| %>
+        <%= f.check_boxes "in_area_ids", [[c4.title, c4.id]] %>
+        
+      <% end %></div><% end %>
     <% end %></div><% end %>
   <% end %></div><% end %>
   

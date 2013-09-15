@@ -21,6 +21,10 @@ class Cms::Layout < ActiveRecord::Base
     [['公開','public']]
   end
   
+  def publishable? # TODO dummy
+    return true
+  end
+  
   def node_is(node)
     node = Cms::Node.find(:first, :conditions => {:id => node}) if node.class != Cms::Node
     self.and :id, node.inherited_layout.id if node
@@ -51,46 +55,57 @@ class Cms::Layout < ActiveRecord::Base
     return pieces
   end
   
-  def head_tag(mobile = nil)
+  def head_tag(request)
     tags = []
-    css =  stylesheet_path(mobile)
-    if FileTest.exist?(css)
-      css = stylesheet_uri(mobile)
-      tags << %Q(<link href="#{css}" media="all" rel="stylesheet" type="text/css" />)
+    
+    if uri = stylesheet_uri(request)
+      tags << %Q(<link href="#{uri}" media="all" rel="stylesheet" type="text/css" />)
     end
-    tags << (mobile ? mobile_head : head)
+    
+    if request.mobile? && !mobile_head.blank?
+      tags << mobile_head
+    elsif request.smart_phone? && !smart_phone_head.blank?
+      tags << smart_phone_head
+    else
+      tags << head.to_s
+    end
+    
     tags.delete('')
     tag = tags.join("\n")
-    tag = tag.gsub(/<link [^>]+>/i, '').gsub(/(\r\n|\n)+/, "\n") if mobile
+    tag = tag.gsub(/<link [^>]+>/i, '').gsub(/(\r\n|\n)+/, "\n") if request.mobile?
     tag
   end
   
-  def publishable? # TODO dummy
-    return true
+  def body_tag(request)
+    if request.mobile? && !mobile_body.blank?
+      mobile_body
+    elsif request.smart_phone? && !smart_phone_body.blank?
+      smart_phone_body
+    else
+      body
+    end
   end
   
-  def stylesheet_path(mobile = nil)
-    return mobile_stylesheet_path if mobile
+  def stylesheet_uri(request)
+    return nil unless id
+    dir = site.uri + '_layouts/' + Util::String::CheckDigit.check(format('%07d', id))
+    
+    if request.mobile? && !mobile_stylesheet.blank?
+      dir + '/mobile.css'
+    elsif request.smart_phone? && !smart_phone_stylesheet.blank?
+      dir + '/smart_phone.css'
+    else
+      dir + '/style.css' 
+    end
+  end
+  
+  def stylesheet_path
+    return nil unless id
     dir = Util::String::CheckDigit.check(format('%07d', id))
     dir = dir.gsub(/(\d\d)(\d\d)(\d\d)(\d\d)/, '\1/\2/\3/\4/\1\2\3\4')
-    site.public_path + '/_layouts/' + dir + '/style.css' 
-  end
-  
-  def mobile_stylesheet_path
-    dir = Util::String::CheckDigit.check(format('%07d', id))
-    dir = dir.gsub(/(\d\d)(\d\d)(\d\d)(\d\d)/, '\1/\2/\3/\4/\1\2\3\4')
-    site.public_path + '/_layouts/' + dir + '/mobile.css' 
-  end
-  
-  def stylesheet_uri(mobile = nil)
-    return mobile_stylesheet_uri if mobile
-    dir = Util::String::CheckDigit.check(format('%07d', id))
-    site.uri + '_layouts/' + dir + '/style.css' 
-  end
-  
-  def mobile_stylesheet_uri
-    dir = Util::String::CheckDigit.check(format('%07d', id))
-    site.uri + '_layouts/' + dir + '/mobile.css' 
+    dir = site.public_path + '/_layouts/' + dir
+    
+    return dir + '/style.css'
   end
   
   def public_path
@@ -169,23 +184,29 @@ class Cms::Layout < ActiveRecord::Base
   end
   
   def put_css_files
-    begin
-      path = stylesheet_path
-      data = stylesheet.to_s
-      Util::File.put(path, :data => data, :mkdir => true)
-      path = mobile_stylesheet_path
-      data = mobile_stylesheet.to_s
-      Util::File.put(path, :data => data, :mkdir => true)
-    rescue
-      return false
-    end
+    path = stylesheet_path
+    Util::File.put(path, :data => stylesheet.to_s, :mkdir => true)
+    
+    path = ::File.dirname(path) + '/mobile.css'
+    Util::File.put(path, :data => mobile_stylesheet.to_s, :mkdir => true)
+    
+    path = ::File.dirname(path) + '/smart_phone.css'
+    Util::File.put(path, :data => smart_phone_stylesheet.to_s, :mkdir => true)
+    
     return true
   end
   
   def remove_css_files
-    FileUtils.rm_f(stylesheet_path)
-    FileUtils.rm_f(mobile_stylesheet_path)
-    FileUtils.rmdir(::File.dirname(stylesheet_path)) rescue nil
+    path = stylesheet_path
+    FileUtils.rm_f(path)
+    
+    path = ::File.dirname(path) + '/mobile.css'
+    FileUtils.rm_f(path)
+    
+    path = ::File.dirname(path) + '/smart_phone.css'
+    FileUtils.rm_f(path)
+    
+    FileUtils.rmdir(::File.dirname(path)) rescue nil
     return true
   end
 end

@@ -1,3 +1,8 @@
+1.2.0
+  ALTER TABLE `cms_layouts` ADD `smart_phone_head` TEXT NULL;
+  ALTER TABLE `cms_layouts` ADD `smart_phone_body` LONGTEXT NULL;
+  ALTER TABLE `cms_layouts` ADD `smart_phone_stylesheet` LONGTEXT NULL; 
+
 1.1.9
   CREATE TABLE bbs_items (
     id int(11) NOT NULL AUTO_INCREMENT,

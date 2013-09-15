@@ -52,18 +52,6 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
     end
   end
   
-  def link_check
-    @checker = Sys::Lib::Form::Checker.new
-    if params[:link_check] == "1"
-      @checker.check_link @item.body
-      return render :action => :new
-    end
-    
-    if @item.state == 'recognize'
-      @item.link_checker = @checker if params[:link_check] != "0"
-    end
-  end
-  
   def create
     @item = Article::Doc.new(params[:item])
     @item.content_id = @content.id
@@ -76,7 +64,9 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
       @checker.check_link @item.body
       return render :action => :new
     elsif @item.state =~ /(recognize|public)/
-      @item.link_checker = @checker if params[:link_check] != "0"
+      if Joruri.config.application["sys.auto_link_check"] == true && params[:link_check] != "0"
+        @item.link_checker = @checker
+      end
     end
     
     _create @item do
@@ -98,7 +88,9 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
       @checker.check_link @item.body
       return render :action => :edit
     elsif @item.state =~ /(recognize|public)/
-      @item.link_checker = @checker if params[:link_check] != "0"
+      if Joruri.config.application["sys.auto_link_check"] == true && params[:link_check] != "0"
+        @item.link_checker = @checker
+      end
     end
     
     _update(@item) do
@@ -142,17 +134,36 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
     end
   end
   
+  def duplicate_for_replace(item)
+    if dupe_item = item.duplicate(:replace)
+      flash[:notice] = '複製処理が完了しました。'
+      respond_to do |format|
+        format.html { redirect_to url_for(:action => :index) }
+        format.xml  { head :ok }
+      end
+    else
+      flash[:notice] = "複製処理に失敗しました。"
+      respond_to do |format|
+        format.html { redirect_to url_for(:action => :show) }
+        format.xml  { render :xml => item.errors, :status => :unprocessable_entity }
+      end
+    end
+  end
+  
   def publish_ruby(item)
-    uri  = "#{item.public_uri}index.html.r"
+    uri  = item.public_uri
+    uri  = (uri =~ /\?/) ? uri.gsub(/\?/, 'index.html.r?') : "#{uri}index.html.r"
     path = "#{item.public_path}.r"
     item.publish_page(render_public_as_string(uri, :site => item.content.site), :path => path, :dependent => :ruby)
   end
   
   def publish(item)
+    item.public_uri = "#{item.public_uri}?doc_id=#{item.id}"
     _publish(item) { publish_ruby(item) }
   end
 
   def publish_by_update(item)
+    item.public_uri = "#{item.public_uri}?doc_id=#{item.id}"
     if item.publish(render_public_as_string(item.public_uri))
       publish_ruby(item)
       flash[:notice] = "公開処理が完了しました。"
@@ -168,7 +179,7 @@ protected
     subject = "#{item.content.name}（#{item.content.site.name}）：承認依頼メール"
     message = "#{Core.user.name}さんより「#{item.title}」についての承認依頼が届きました。\n" +
       "次の手順により，承認作業を行ってください。\n\n" +
-      "１．PC用記事のプレビューにより文書を確認\n#{item.preview_uri}\n\n" +
+      "１．PC用記事のプレビューにより文書を確認\n#{item.preview_uri(:params => {:doc_id => item.id})}\n\n" +
       "２．次のリンクから承認を実施\n" +
       "#{url_for(:action => :show, :id => item)}\n"
     

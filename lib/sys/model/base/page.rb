@@ -10,6 +10,6 @@ module Sys::Model::Base::Page
   end
   
   def public?
-    return state == 'public' && published_at
+    return state == 'public' && !published_at.blank?
   end
 end

@@ -101,8 +101,9 @@ private
     
     if request.format.to_s =~ /xml/i
       render :status => status, :xml => "<errors><error>#{message}</error></errors>"
+    else
+      render :status => status, :inline => html
     end
-    render :status => status, :inline => html
   end
   
 #  def rescue_exception(exception)

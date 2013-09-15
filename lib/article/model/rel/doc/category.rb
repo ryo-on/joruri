@@ -32,17 +32,23 @@ module Article::Model::Rel::Doc::Category
   def category_is(cate)
     return self if cate.blank?
     cate = [cate] unless cate.class == Array
-    cate.each do |c|
-      if c.level_no == 1
-        cate += c.public_children
+    ids  = []
+    
+    searcher = lambda do |_cate|
+      _cate.each do |_c|
+        next if _c.level_no > 4
+        next if ids.index(_c.id)
+        ids << _c.id
+        searcher.call(_c.public_children)
       end
     end
     
-    ids = cate.collect{|c| c.id}.uniq
+    searcher.call(cate)
+    ids = ids.uniq
+    
     if ids.size > 0
       self.and :category_ids, 'REGEXP', "(^| )(#{ids.join('|')})( |$)"
     end
     return self
   end
-
 end

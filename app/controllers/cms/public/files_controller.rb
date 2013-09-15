@@ -12,10 +12,10 @@ class Cms::Public::FilesController < ApplicationController
     path = item.public_path
     return http_error(404) unless FileTest.exist?(path)
     
-    if img = item.mobile_image(request.mobile)
-      return send_data(img.to_blob, :filename => item.name, :disposition => 'inline')
+    if img = item.mobile_image(request.mobile, :path => item.public_path)
+      return send_data(img.to_blob, :type => item.mime_type, :filename => item.name, :disposition => 'inline')
     end
     
-    return send_file(path, :filename => item.name, :disposition => 'inline')
+    return send_file(path, :type => item.mime_type, :filename => item.name, :disposition => 'inline')
   end
 end

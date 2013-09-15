@@ -30,6 +30,10 @@ ActionController::Routing::Routes.draw do |map|
     ns.resources :publish_docs,
       :controller  => "admin/docs/publish",
       :path_prefix => "/_admin/#{mod}/:content"
+    ns.resources :inline_files,
+      :controller  => "admin/doc/files",
+      :path_prefix => "/_admin/#{mod}/:content/doc/:parent",
+      :member => {:download => :get}
     
     ## content
     ns.resources :content_base,

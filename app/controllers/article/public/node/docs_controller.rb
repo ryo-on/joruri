@@ -39,26 +39,38 @@ class Article::Public::Node::DocsController < Cms::Controller::Public::Base
     doc.and :name, params[:name]
     return http_error(404) unless @item = doc.find(:first)
 
+    if Core.mode == 'preview' && params[:doc_id]
+      cond = {:id => params[:doc_id], :content_id => @item.content_id, :name => @item.name}
+      return http_error(404) unless @item = Article::Doc.find(:first, :conditions => cond)
+    end
+    
     Page.current_item = @item
     Page.title        = @item.title
-
+    
+    @body = @item.body
+    
     if request.mobile?
-      body = (@item.mobile_body.to_s == '' ? @item.body : @item.mobile_body)
-
-      related_sites = Page.site.related_sites(:include_self => true)
-
-      ## Converts the TABLE tags.
-      while body =~ /(.*)<table.*?<\/table>/im
-        body.gsub!(/(.*)<table.*?<\/table>/im, '\1')
+      if !@item.mobile_body.blank?
+        @body = @item.mobile_body
+        @body = ApplicationController.helpers.br(@body)
+      else
+        ;
       end
       
+      ## Converts the TABLE tags.
+      #while body =~ /(.*)<table.*?<\/table>/im
+      #  @body.gsub!(/(.*)<table.*?<\/table>/im, '\1')
+      #end
+      
       ## Converts the images.
-      body.gsub!(/<img.*?>/im) do |m|
-        '' #remove
-      end
-
+      #@body.gsub!(/<img.*?>/im) do |m|
+      #  '' #remove
+      #end
+      
+      related_sites = Page.site.related_sites(:include_self => true)
+      
       ## Converts the links.
-      body.gsub!(/<a .*?href=".*?".*?>.*?<\/a>/im) do |m|
+      @body.gsub!(/<a .*?href=".*?".*?>.*?<\/a>/im) do |m|
         uri   = m.gsub(/<a .*?href="(.*?)".*?>.*?<\/a>/im, '\1')
         label = m.sub(/(<a .*?href=".*?".*?>)(.*?)(<\/a>)/i, '\2')
 
@@ -67,15 +79,12 @@ class Article::Public::Node::DocsController < Cms::Controller::Public::Base
           size = label.gsub(/.*(\(.*?\))$/, '\1')
           ext  = label.gsub(/.*\.(.*?)\(.*?\)$/, '\1').to_s.upcase
           "#{ext}ファイル#{size}"
-
         elsif uri =~ /\.(pdf|doc|docx|xls|xlsx|jtd|jst)$/i
           ## other than html file
           label
-        
         elsif uri =~ /^(\/|\.\/|\.\.\/)/
           ## same site
           m
-
         else
           result = false
           related_sites.each do |site|
@@ -88,11 +97,15 @@ class Article::Public::Node::DocsController < Cms::Controller::Public::Base
       end
 
       ## Converts the phone number texts.
-      body.gsub!(/[\(]?(([0-9]{2}[-\(\)]+[0-9]{4})|([0-9]{3}[-\(\)]+[0-9]{3,4})|([0-9]{4}[-\(\)]+[0-9]{2}))[-\)]+[0-9]{4}/) do |m|
+      @body.gsub!(/[\(]?(([0-9]{2}[-\(\)]+[0-9]{4})|([0-9]{3}[-\(\)]+[0-9]{3,4})|([0-9]{4}[-\(\)]+[0-9]{2}))[-\)]+[0-9]{4}/) do |m|
         "<a href='tel:#{m.gsub(/\D/, '\1')}'>#{m}</a>"
       end
-
-      @item.mobile_body = body
+    end
+    
+    if Core.mode == 'preview' && !Core.publish
+      if params[:doc_id]
+        @body = @body.gsub(/(<img[^>]+src=".\/files\/.*?)(".*?>)/i, '\\1' + "?doc_id=#{params[:doc_id]}" + '\\2')
+      end
     end
   end
 end

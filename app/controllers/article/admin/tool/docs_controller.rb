@@ -18,10 +18,11 @@ class Article::Admin::Tool::DocsController < Cms::Controller::Admin::Base
     items.each do |c|
       item = c.class.find(c.id)
       begin
-        uri  = "#{item.public_uri}"
+        uri  = "#{item.public_uri}?doc_id=#{item.id}"
         path = item.public_path
         if item.rebuild(render_public_as_string(uri, :site => item.content.site), :path => path)
-          item.publish_page(render_public_as_string("#{uri}/index.html.r", :site => item.content.site),
+          uri = (uri =~ /\?/) ? uri.gsub(/\?/, 'index.html.r?') : "#{uri}index.html.r"
+          item.publish_page(render_public_as_string(uri, :site => item.content.site),
             :path => "#{path}.r", :dependent => true)
           results[0] += 1
         else

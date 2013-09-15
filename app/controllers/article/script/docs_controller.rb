@@ -12,7 +12,7 @@ class Article::Script::DocsController < Cms::Controller::Script::Publication
       item = params[:item]
       if item.state == 'recognized'
         puts "-- Publish: #{item.class}##{item.id}"
-        uri  = "#{item.public_uri}"
+        uri  = "#{item.public_uri}?doc_id=#{item.id}"
         path = "#{item.public_path}"
         
         if !item.publish(render_public_as_string(uri, :site => item.content.site))

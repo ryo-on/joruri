@@ -7,7 +7,6 @@ class Portal::Public::Node::CategoriesController < Cms::Controller::Public::Base
     return http_error(404) unless @content = Portal::Content::Base.find_by_id(content.id)
     @entries_uri = @content.public_uri('Portal::FeedEntry')
 
-    @page  = params[:page]
     @limit = 50
 
     if params[:name]
@@ -27,6 +26,8 @@ class Portal::Public::Node::CategoriesController < Cms::Controller::Public::Base
   def show
     return http_error(404) unless params[:file] =~ /^index$/
 
+    @page  = params[:page]
+    
     entry = Portal::FeedEntry.new.public
     entry.agent_filter(request.mobile)
     entry.and "#{Cms::FeedEntry.table_name}.content_id", @content.id
@@ -36,7 +37,7 @@ class Portal::Public::Node::CategoriesController < Cms::Controller::Public::Base
     @entries = entry.find_with_own_docs(@content.doc_content, :groups, {:item => @item})
     return true if render_feed(@entries)
 
-    return http_error(404) if @more == true && @entries.current_page > @entries.total_pages
+    return http_error(404) if @entries.current_page > @entries.total_pages
 
     prev   = nil
     @items = []

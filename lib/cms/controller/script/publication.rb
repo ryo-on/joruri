@@ -18,9 +18,23 @@ class Cms::Controller::Script::Publication < ApplicationController
     res = item.publish_page(render_public_as_string(params[:uri], :site => site),
       :path => params[:path], :dependent => params[:dependent])
     return false unless res
-    return true if params[:path] !~ /(\/|\.html)$/
+    #return true if params[:path] !~ /(\/|\.html)$/
     
-    uri  = (params[:uri] =~ /\.html$/ ? "#{params[:uri]}.r" : "#{params[:uri]}index.html.r")
+    ## ruby html
+    uri = params[:uri]
+    if uri =~ /\.html$/
+      uri += ".r"
+    elsif uri =~ /\/$/
+      uri += "index.html.r"
+    elsif uri =~ /\/\?/
+      uri = uri.gsub(/(\/)(\?)/, '\\1index.html.r\\2')
+    elsif uri =~ /\.html\?/
+      uri = uri.gsub(/(\.html)(\?)/, '\\1.r\\2')
+    else
+      return true
+    end
+    
+    #uri  = (params[:uri] =~ /\.html$/ ? "#{params[:uri]}.r" : "#{params[:uri]}index.html.r")
     path = (params[:path] =~ /\.html$/ ? "#{params[:path]}.r" : "#{params[:path]}index.html.r")
     dep  = params[:dependent] ? "#{params[:dependent]}/ruby" : "ruby"
     

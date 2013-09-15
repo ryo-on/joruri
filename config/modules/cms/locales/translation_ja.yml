@@ -45,6 +45,9 @@ ja:
         mobile_head: "携帯HEADタグ"
         mobile_body: "携帯BODY"
         mobile_stylesheet: "携帯スタイルシート"
+        smart_phone_head: "スマートフォン HEADタグ"
+        smart_phone_body: "スマートフォン BODYタグ"
+        smart_phone_stylesheet: "スマートフォン スタイルシート"
 
       cms/piece:
         concept_id: "コンセプト"

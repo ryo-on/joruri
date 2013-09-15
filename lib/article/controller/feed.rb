@@ -72,7 +72,10 @@ module Article::Controller::Feed
           xml.id      "tag:#{Page.site.domain},#{doc.created_at.strftime('%Y')}:#{doc.public_uri}"
           xml.title   doc.title
           xml.updated doc.published_at.strftime('%Y-%m-%dT%H:%M:%S%z').sub(/([0-9][0-9])$/, ':\1') #.rfc822
-          xml.summary strimwidth(doc.body, 500), :type => 'text'
+          #xml.summary strimwidth(doc.body, 500), :type => 'html'
+          xml.summary(:type => 'html') do |p|
+            p.cdata! strimwidth(doc.body, 500)
+          end
           xml.link    :rel => 'alternate', :href => doc.public_full_uri
           #xml.link    :rel => 'enclosure', :href => "#{doc.public_full_uri}#{content.xhtml}", :type => 'text/xhtml'
 

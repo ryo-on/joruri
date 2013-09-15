@@ -6,11 +6,13 @@ class Portal::Script::CategoriesController < Cms::Controller::Script::Publicatio
       uri  = "#{@node.public_uri}#{item.name}/"
       path = "#{@node.public_path}#{item.name}/"
       publish_page(item, :uri => uri, :path => path)
+      publish_more(item, :uri => uri, :path => path, :first => 2, :dependent => :more)
 
       item.public_children.each do |c|
         uri  = "#{@node.public_uri}#{c.name}/"
         path = "#{@node.public_path}#{c.name}/"
         publish_page(item, :uri => uri, :path => path, :dependent => "#{c.name}")
+        publish_more(item, :uri => uri, :path => path, :first => 2, :dependent => "#{c.name}/more")
       end
     end
 

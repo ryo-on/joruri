@@ -1,5 +1,9 @@
 # encoding: utf-8
 class Article::Content::Setting < Cms::ContentSetting
+  set_config :word_dictionary, :name => "本文/単語変換辞書",
+    :form_type => :text, :lower_text => "CSV形式（例　対象文字,変換後文字 ）"
+  set_config :allowed_attachment_type, :name => "添付ファイル/許可する種類",
+    :comment => "（例　<tt>gif,jpg,png,pdf,doc,xls,ppt,odt,ods,odp</tt> ）"
   set_config :default_map_position, :name => "地図/デフォルト座標",
     :comment => "（経度, 緯度）"
   set_config :inquiry_email_display, :name => "連絡先/メールアドレス表示",

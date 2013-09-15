@@ -47,7 +47,12 @@ module Cms::Controller::Layout
   
   def render_public_layout
     if Rails.env.to_s == 'production' && !@no_cache
-      headers.delete("Cache-Control") #cache on
+      # enable cache
+      headers.delete("Cache-Control")
+      # no cache
+      #response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
+      #response.headers["Pragma"] = "no-cache"
+      #response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
     end
     
     Page.current_item = Page.current_node unless Page.current_item
@@ -75,11 +80,15 @@ module Cms::Controller::Layout
       Page.layout    = layout.clone
       Page.layout.id = layout.id
     else
-      Page.layout = Cms::Layout.new
+      Page.layout = Cms::Layout.new({
+        :body             => '[[content]]',
+        :mobile_body      => '[[content]]',
+        :smart_phone_body => '[[content]]'
+      })
       return render :text => Page.content, :layout => 'layouts/public/base'
     end
     
-    body = request.mobile? ? Page.layout.mobile_body.to_s : Page.layout.body.to_s
+    body = Page.layout.body_tag(request).clone.to_s
     
     ## render the piece
     Cms::Lib::Layout.find_design_pieces(body, concepts).each do |name, item|

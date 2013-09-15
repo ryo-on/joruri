@@ -31,14 +31,22 @@ module Article::Model::Rel::Doc::Area
   
   def area_is(area)
     return self if area.blank?
+    
     area = [area] unless area.class == Array
-    area.each do |c|
-      if c.level_no == 1
-        area += c.public_children
+    ids  = []
+    
+    searcher = lambda do |_area|
+      _area.each do |_c|
+        next if _c.level_no > 4
+        next if ids.index(_c.id)
+        ids << _c.id
+        searcher.call(_c.public_children)
       end
     end
     
-    ids = area.collect{|c| c.id}.uniq
+    searcher.call(area)
+    ids = ids.uniq
+    
     if ids.size > 0
       self.and :area_ids, 'REGEXP', "(^| )(#{ids.join('|')})( |$)"
     end

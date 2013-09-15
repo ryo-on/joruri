@@ -5,7 +5,6 @@ class Article::Public::Node::AttributesController < Cms::Controller::Public::Bas
   def pre_dispatch
     return http_error(404) unless @content = Page.current_node.content
     
-    @page  = params[:page]
     @limit = 50
     
     if params[:name]
@@ -25,6 +24,8 @@ class Article::Public::Node::AttributesController < Cms::Controller::Public::Bas
   end
   
   def show
+    @page  = params[:page]
+    
     return show_feed if params[:file] == "feed"
     return http_error(404) unless params[:file] =~ /^(index|more)$/
     @more  = params[:file] == 'more'
@@ -62,6 +63,8 @@ class Article::Public::Node::AttributesController < Cms::Controller::Public::Bas
   end
   
   def show_attr
+    @page  = params[:page]
+    
     attr = Article::Unit.new.public
     attr.and :name_en, params[:attr]
     return http_error(404) unless @attr = attr.find(:first, :order => :sort_no)

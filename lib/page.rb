@@ -32,12 +32,6 @@ class Page
     Core.script_uri.index(@@site.mobile_full_uri) == 0
   end
   
-  def self.head_tag
-    return nil if !@@layout || !@@layout.id
-    tag = @@layout.head_tag(mobile?)
-    tag
-  end
-  
   def self.body_id
     return nil unless @@uri
     id = @@uri.gsub(/^\/_.*?\/[0-9]+\//, '/')

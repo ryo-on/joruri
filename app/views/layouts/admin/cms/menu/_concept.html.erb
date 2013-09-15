@@ -1,5 +1,7 @@
 <%
 
+@exists = {}
+
 def concepts_list(item = nil)
   h = ''
   if item == nil
@@ -8,6 +10,10 @@ def concepts_list(item = nil)
     end
     return h
   end
+  
+  return h if @exists[item.id]
+  @exists[item.id] = true
+  
   children = item.readable_children
   h += "<li>#{concept_mark(item, children.size)}"
   h += link_to h(item.name), cms_navi_concept_path(item)

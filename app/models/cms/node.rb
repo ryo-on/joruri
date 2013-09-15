@@ -214,31 +214,6 @@ class Cms::Node < ActiveRecord::Base
     return self
   end
   
-  ## NodePage
-  def replace_page?
-    cond = {:unid => unid, :rel_type => "replace"}
-    Sys::UnidRelation.find(:first, :conditions => cond) ? true : nil
-  end
-  
-  def replaced_page?
-    cond = {:rel_unid => unid, :rel_type => "replace"}
-    Sys::UnidRelation.find(:first, :conditions => cond) ? true : nil
-  end
-  
-  def replace_page
-    return nil unless replaced_page?
-    cond = {:rel_unid => unid, :rel_type => "replace"}
-    rel = Sys::UnidRelation.find(:first, :conditions => cond)
-    self.class.find_by_unid(rel.unid)
-  end
-  
-  def replaced_page
-    return nil unless replace_page?
-    cond = {:unid => unid, :rel_type => "replace"}
-    rel = Sys::UnidRelation.find(:first, :conditions => cond)
-    self.class.find_by_unid(rel.rel_unid)
-  end
-  
 protected
   def remove_file
     close_page# rescue nil

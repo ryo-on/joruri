@@ -5,6 +5,7 @@ class Article::Doc < ActiveRecord::Base
   include Cms::Model::Base::Page::Publisher
   include Cms::Model::Base::Page::TalkTask
   include Sys::Model::Rel::Unid
+  include Sys::Model::Rel::UnidRelation
   include Sys::Model::Rel::Creator
   include Cms::Model::Rel::Inquiry
   include Sys::Model::Rel::Recognition
@@ -32,7 +33,8 @@ class Article::Doc < ActiveRecord::Base
   attr_accessor :link_checker
   
   validates_presence_of :title
-  validates_uniqueness_of :name, :scope => :content_id
+  validates_uniqueness_of :name, :scope => :content_id,
+    :if => %Q(!replace_page?)
   
   validates_presence_of :state, :recent_state, :list_state, :language_id,
     :if => %Q(state == "recognize")
@@ -41,6 +43,8 @@ class Article::Doc < ActiveRecord::Base
   validates_length_of :body,  :maximum => 100000,
     :if => %Q(state == "recognize")
   validates_length_of :mobile_body,  :maximum => 10000,
+    :if => %Q(state == "recognize")
+  validate :validate_word_dictionary,
     :if => %Q(state == "recognize")
   validate :validate_platform_dependent_characters,
     :if => %Q(state == "recognize")
@@ -53,6 +57,25 @@ class Article::Doc < ActiveRecord::Base
   
   before_save :check_digit
   before_save :modify_attributes
+  
+  def validate_word_dictionary
+    dic = content.setting_value(:word_dictionary)
+    return if dic.blank?
+    
+    words = []
+    dic.split(/\r\n|\n/).each do |line|
+      next if line !~ /,/
+      data = line.split(/,/)
+      words << [data[0].strip, data[1].strip]
+    end
+    
+    if !body.blank?
+      words.each {|src, dst| self.body = body.gsub(src, dst) }
+    end
+    if !mobile_body.blank?
+      words.each {|src, dst| self.mobile_body = mobile_body.gsub(src, dst) }
+    end
+  end
   
   def validate_platform_dependent_characters
     [:title, :body, :mobile_body].each do |attr|
@@ -110,9 +133,14 @@ class Article::Doc < ActiveRecord::Base
     "#{content.public_path}/docs/#{_name}/index.html"
   end
 
+  def public_uri=(uri)
+    @public_uri = uri
+  end
+  
   def public_uri
+    return @public_uri if @public_uri
     return nil unless node = content.doc_node
-    "#{node.public_uri}#{name}/"
+    @public_uri = "#{node.public_uri}#{name}/"
   end
   
   def public_full_uri
@@ -311,6 +339,11 @@ class Article::Doc < ActiveRecord::Base
     self.state = 'public'
     self.published_at ||= Core.now
     return false unless save(false)
+    
+    if rep = replaced_page
+      rep.destroy
+    end
+    
     publish_page(content, :path => public_path, :uri => public_uri)
   end
   
@@ -337,7 +370,7 @@ class Article::Doc < ActiveRecord::Base
     publish_files ## dust remains
   end
   
-  def duplicate
+  def duplicate(rel_type = nil)
     item = self.class.new(self.attributes)
     item.id            = nil
     item.unid          = nil
@@ -346,8 +379,11 @@ class Article::Doc < ActiveRecord::Base
     item.recognized_at = nil
     item.published_at  = nil
     item.state         = 'draft'
-    item.name          = nil
-    item.title         = item.title.gsub(/^(【複製】)*/, "【複製】")
+    
+    if rel_type == nil
+      item.name          = nil
+      item.title         = item.title.gsub(/^(【複製】)*/, "【複製】")
+    end
     
     item.in_recognizer_ids  = recognition.recognizer_ids if recognition
     item.in_editable_groups = editable_group.group_ids.split(' ') if editable_group
@@ -369,12 +405,6 @@ class Article::Doc < ActiveRecord::Base
       item.in_maps = _maps
     end
     
-    #if tasks.size > 0
-    #  in_tasks = {}
-    #  tasks.each{|c| in_tasks[c.name] = c.process_at.to_s(:db) if c.process_at }
-    #  item.in_tasks = in_tasks
-    #end
-    
     return false unless item.save(false)
     
     files.each do |f|
@@ -383,6 +413,14 @@ class Article::Doc < ActiveRecord::Base
       file.unid        = nil
       file.parent_unid = item.unid
       file.save
+    end
+    
+    if rel_type == :replace
+      rel = Sys::UnidRelation.new
+      rel.unid     = item.unid
+      rel.rel_unid = self.unid
+      rel.rel_type = 'replace'
+      rel.save
     end
     
     return item
