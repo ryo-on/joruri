@@ -6,9 +6,13 @@ class Cms::Site < ActiveRecord::Base
   include Sys::Model::Rel::Creator
   include Sys::Model::Auth::Manager
   
-  belongs_to :status,  :foreign_key => :state,      :class_name => 'Sys::Base::Status'
+  belongs_to :status,   :foreign_key => :state,      :class_name => 'Sys::Base::Status'
+  has_many   :contents, :foreign_key => :site_id,    :class_name => 'Cms::Content',
+    :order => 'name, id'
   
   validates_presence_of :state, :name, :full_uri
+  
+  validate :validate_attributes
   
   def states
     [['公開','public']]
@@ -19,6 +23,7 @@ class Cms::Site < ActiveRecord::Base
   end
   
   def uri
+    return '/' unless full_uri.match(/^[a-z]+:\/\/[^\/]+\//)
     full_uri.sub(/^[a-z]+:\/\/[^\/]+\//, '/')
   end
   
@@ -59,5 +64,13 @@ class Cms::Site < ActiveRecord::Base
     end
     item.and cond
     return item.find(:first, :order => :id)
+  end
+  
+protected
+  def validate_attributes
+    if !full_uri.blank? && full_uri !~ /^[a-z]+:\/\/[^\/]+\//
+      self.full_uri += '/'
+    end
+    return true
   end
 end

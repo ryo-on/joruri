@@ -13,7 +13,7 @@ class Article::Public::Node::DocsController < Cms::Controller::Public::Base
     doc.and :content_id, @content.id
     doc.and :language_id, 1
     doc.visible_in_list
-    #doc.search params
+    doc.search params
     doc.page params[:page], (request.mobile? ? 20 : 50)
     @docs = doc.find(:all, :order => 'published_at DESC')
     return true if render_feed(@docs)

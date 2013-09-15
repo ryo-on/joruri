@@ -11,25 +11,34 @@ class Cms::Controller::Script::Publication < ApplicationController
   
   def publish_page(item, params = {})
     site = params[:site] || @site
-    res = item.publish_page(render_public_as_string(params[:uri], :site => site), :path => params[:path])
-    if res == true && params[:path] =~ /(\/|\.html)$/
-      uri  = (params[:uri] =~ /\.html$/ ? "#{params[:uri]}.r" : "#{params[:uri]}index.html.r")
-      path = (params[:path] =~ /\.html$/ ? "#{params[:path]}.r" : "#{params[:path]}index.html.r")
-      item.publish_page(render_public_as_string(uri, :site => site), :path => path)
+    res = item.publish_page(render_public_as_string(params[:uri], :site => site),
+      :path => params[:path], :dependent => params[:dependent])
+    return false unless res
+    return true if params[:path] !~ /(\/|\.html)$/
+    
+    uri  = (params[:uri] =~ /\.html$/ ? "#{params[:uri]}.r" : "#{params[:uri]}index.html.r")
+    path = (params[:path] =~ /\.html$/ ? "#{params[:path]}.r" : "#{params[:path]}index.html.r")
+    dep  = params[:dependent] ? "#{params[:dependent]}/ruby" : "ruby"
+    if item.published? || !File.exist?(path)
+      item.publish_page(render_public_as_string(uri, :site => site), :path => path, :dependent => dep)
     end
+    
     return res
-  rescue
+  rescue => e
     return false
   end
   
   def publish_more(item, params = {})
+    limit = 1
     file  = params[:file] || 'index'
     first = params[:first] || 1
-    first.upto(30) do |p|
+    first.upto(limit) do |p|
       page = (p == 1 ? "" : ".p#{p}") 
       uri  = "#{params[:uri]}#{file}#{page}.html"
       path = "#{params[:path]}#{file}#{page}.html"
-      break unless publish_page(item, :uri => uri, :site => params[:site], :path => path)
+      rs   = publish_page(item, :uri => uri, :site => params[:site], :path => path, :dependent => params[:dependent])
+      return item.published?
+      #break unless rs
     end
   end
 end

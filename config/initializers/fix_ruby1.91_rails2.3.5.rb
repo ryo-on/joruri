@@ -2,7 +2,16 @@
 # patch for ruby1.9.1 and Rails2.3.5
 
 class Symbol; def to_a; [self.to_s]; end; end
-class String; def to_a; [self.to_s]; end; end
+
+class ::String #:nodoc:
+  def to_a
+    [self.to_s]
+  end
+  
+  def blank?
+    (!self.respond_to?(:valid_encoding?) or self.valid_encoding?) ? self !~ /\S/ : self.strip.size == 0
+  end
+end
 
 require 'mysql'
 class Mysql::Result

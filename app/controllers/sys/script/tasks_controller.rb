@@ -21,9 +21,11 @@ class Sys::Script::TasksController < ApplicationController
           :action => task.name, :params => {:unid => unid, :item => item}
         if res =~ /^OK/i
           task.destroy
+        else
+          puts res
         end
       rescue => e
-        puts "Error: #{e}"
+        puts "Error #{e}"
       end
     end
     

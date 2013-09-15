@@ -14,7 +14,7 @@ class Article::Public::Node::RecentDocsController < Cms::Controller::Public::Bas
     @docs = doc.find(:all, :order => 'published_at DESC')
     return true if render_feed(@docs)
     
-    return http_error(404) if @docs.current_page > @docs.total_pages
+    #return http_error(404) if @docs.current_page > @docs.total_pages
     
     prev = nil
     @items = []

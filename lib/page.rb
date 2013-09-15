@@ -2,6 +2,7 @@ class Page
   cattr_accessor :site
   cattr_accessor :uri
   cattr_accessor :layout
+  cattr_accessor :content
   cattr_accessor :title
   cattr_accessor :current_item
   cattr_accessor :current_piece
@@ -13,6 +14,7 @@ class Page
     @@site          = nil
     @@uri           = nil
     @@layout        = nil
+    @@content       = nil
     @@title         = nil
     @@current_item  = nil
     @@current_piece = nil
@@ -24,7 +26,8 @@ class Page
   def self.mobile?
     return true if @@mobile
     return nil unless @@site
-    Core.script_uri =~ /^#{@@site.mobile_full_uri}/ if !@@site.mobile_full_uri.blank?
+    return nil if @@site.mobile_full_uri.blank?
+    Core.script_uri.index(@@site.mobile_full_uri) == 0
   end
   
   def self.head_tag

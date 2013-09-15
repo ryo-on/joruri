@@ -3,20 +3,19 @@ class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
   
   before_filter :pre_dispatch_piece
   
-  @@_models = {}
-  
-  def self.set_model(model)
-    @@_models[self] = model
-  end
-  
-  def model
-    @@_models[self.class] ? @@_models[self.class] : Cms::Piece
-  end
-  
   def pre_dispatch_piece
     return error_auth unless Core.user.has_auth?(:designer)
     return error_auth unless @piece = Cms::Piece.new.readable.find(params[:id])
     default_url_options :piece => @piece
+  end
+  
+  def model
+    return @model_class if @model_class
+    mclass = self.class.to_s.gsub(/^(\w+)::Admin/, '\1').gsub(/Controller$/, '').singularize
+    eval(mclass)
+    @model_class = eval(mclass)
+  rescue
+    @model_class = Cms::Piece
   end
   
   def index

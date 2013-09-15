@@ -2,7 +2,8 @@
 
 return '' if item.maps.size == 0
 
-map_key  = Core.mode =~ /^(public|preview)$/ ? Page.site.map_key : Core.map_key
+map_key = Core.mode =~ /^(public|preview)$/ ? Page.site.map_key : Core.map_key
+map_key = Core.map_key if Core.request_uri =~ /^\/_preview\//
 
 _map = item.find_map_by_name('1')
 return '' if _map.map_lat == '' || _map.map_lng == ''

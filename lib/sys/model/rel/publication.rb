@@ -1,6 +1,8 @@
 # encoding: utf-8
 module Sys::Model::Rel::Publication
   def self.included(mod)
+#    mod.belongs_to :publisher, :foreign_key => :path, :primary_key => :path, :class_name => 'Sys::Publisher',
+#      :dependent => :destroy
     mod.belongs_to :publisher, :foreign_key => 'unid', :class_name => 'Sys::Publisher',
       :dependent => :destroy
   end
@@ -20,7 +22,8 @@ module Sys::Model::Rel::Publication
   def preview_uri(options = {})
     return nil unless public_uri
     site = options[:site] || Page.site
-    "#{Core.full_uri}_preview/#{format('%08d', site.id)}#{public_uri}" 
+    mb   = options[:mobile] ? 'm' : nil
+    "#{Core.full_uri}_preview/#{format('%08d', site.id)}#{mb}#{public_uri}" 
   end
 
   def publish_uri(options = {})
@@ -95,6 +98,10 @@ module Sys::Model::Rel::Publication
     end
     publisher(true)
     
+    ## yomiage sound
+#    add_publisher(:path => path, :content => content)
+#    add_talk_task(:path => path)
+    
     return true
   end
 
@@ -113,7 +120,7 @@ module Sys::Model::Rel::Publication
       self.in_creator = {:user_id => '', :group_id => ''}
     end
 
-    publish(content)
+    publish(content, options)
   end
 
   def close

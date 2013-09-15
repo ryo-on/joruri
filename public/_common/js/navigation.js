@@ -14,25 +14,25 @@ function Navigation(settings) {
     
     if (this.settings['theme']) {
       for (var k in this.settings['theme']) {
-        Event.observe($(k), 'click', function(evt) {self.theme(evt)}, false);
+        Event.observe($(k), 'click', function(evt) {self.theme(evt); Event.stop(evt);}, false);
       }
     }
     if (this.settings['fontSize']) {
       for (var k in this.settings['fontSize']) {
-        Event.observe($(k), 'click', function(evt) {self.fontSize(evt)}, false);
+        Event.observe($(k), 'click', function(evt) {self.fontSize(evt); Event.stop(evt);}, false);
       }
     }
     if (this.settings['ruby']) {
       var k = this.settings['ruby'];
       if (k) {
-        Event.observe($(k), 'click', function(evt) {self.ruby(evt)}, false);
+        Event.observe($(k), 'click', function(evt) {self.ruby(evt); Event.stop(evt);}, false);
       }
     }
     if (this.settings['talk']) {
       var k = this.settings['talk'];
       if (k) {
         $(this.settings['talk']).addClassName('talkOff');
-        Event.observe($(k), 'click', function(evt) {self.talk(evt)}, false);
+        Event.observe($(k), 'click', function(evt) {self.talk(evt); Event.stop(evt);}, false);
       }
     }
   }
@@ -118,14 +118,18 @@ function Navigation_ruby(element, flag, noticeContainer) {
       if (location.pathname.search(/\/$/i) != -1) {
         location.href = location.pathname + "index.html.r" + location.search;
       } else if (location.pathname.search(/\.html\.mp3$/i) != -1) {
-        location.href = location.pathname.replace(/\.html\.mp3/, ".html.r") + location.search;
+        location.href = location.pathname.replace(/\.html\.mp3$/, ".html.r") + location.search;
       } else if (location.pathname.search(/\.html$/i) != -1) {
-        location.href = location.pathname.replace(/\.html/, ".html.r") + location.search;
+        location.href = location.pathname.replace(/\.html$/, ".html.r") + location.search;
+      } else if (location.pathname.search(/\.html$/i) != -1) {
+        location.href = location.pathname.replace(/\.html$/, ".html.r") + location.search;
+      } else {
+        location.href = location.href.replace(/#.*/, '');
       }
     } else {
       if (location.pathname.search(/\.html\.r$/i) != -1) {
-        location.href = location.pathname.replace(/\.html\.r/, ".html") + location.search;
-      } else if (location.pathname.search(/\/$/i) != -1) {
+        location.href = location.pathname.replace(/\.html\.r$/, ".html") + location.search;
+      } else {
         location.reload();
       }
     }
@@ -165,9 +169,8 @@ function Navigation_Talk(element, player, container) {
   }
   
   var uri = location.pathname;
-  if (uri.match(/\/$/)) {
-    uri += 'index.html';
-  }
+  if (uri.match(/\/$/)) uri += 'index.html';
+  uri = uri.replace(/\.html\.r$/, '.html');
   
   var now   = new Date();
   var param = '?' + now.getDay() + now.getHours();
@@ -191,7 +194,9 @@ function Navigation_Talk(element, player, container) {
     } else {
       uri += '.m3u' + param;
       player.innerHTML = '';
-      $('navigationNotice').remove();
+      if ((new CookieManager()).getCookie('navigation_ruby') != 'on') {
+        $('navigationNotice').remove();
+      }
     }
   } else {
     location.href = uri;

@@ -19,6 +19,7 @@ class Cms::Admin::Tool::RebuildController < Cms::Controller::Admin::Base
       
       item = Cms::Content.new
       item.and :model, 'Article::Doc'
+      item.and :site_id, Core.site.id
       item.and :id, @item.content_id if !@item.content_id.blank?
       items = item.find(:all)
       items.each do |item|
@@ -38,6 +39,7 @@ class Cms::Admin::Tool::RebuildController < Cms::Controller::Admin::Base
       
       results = [0, 0]
       item = Cms::Layout.new
+      item.and :site_id, Core.site.id
       item.and :concept_id, @item.concept_id if !@item.concept_id.blank?
       items = item.find(:all)
       items.each do |item|

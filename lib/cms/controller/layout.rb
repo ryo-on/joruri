@@ -6,8 +6,14 @@ module Cms::Controller::Layout
     mode = Core.set_mode('preview')
     
     Page.initialize
-    Page.site = options[:site] || Core.site
-    Page.uri  = path
+    Page.site   = options[:site] || Core.site
+    Page.uri    = path
+    
+    ## reset_mobile
+    if Page.mobile? || request.mobile?
+      Page.mobile = nil
+      def request.mobile; nil; end
+    end
     
     begin
       routes = ActionController::Routing::Routes
@@ -48,7 +54,7 @@ module Cms::Controller::Layout
     return true if Page.error
     
     ## content
-    content_data = response.body
+    Page.content = response.body
     
     #response.content_type = nil
     erase_render_results
@@ -64,7 +70,7 @@ module Cms::Controller::Layout
       Page.layout.id = layout.id
     else
       Page.layout = Cms::Layout.new
-      return render :text => content_data, :layout => 'layouts/public/base'
+      return render :text => Page.content, :layout => 'layouts/public/base'
     end
     
     body = request.mobile? ? Page.layout.mobile_body.to_s : Page.layout.body.to_s
@@ -88,7 +94,7 @@ module Cms::Controller::Layout
     end
     
     ## render the content
-    body.gsub!("[[content]]", content_data)
+    body.gsub!("[[content]]", Page.content)
     
     ## render the data/text
     Cms::Lib::Layout.find_data_texts(body, concepts).each do |name, item|

@@ -60,7 +60,7 @@ class Cms::Admin::KanaDictionariesController < Cms::Controller::Admin::Base
     if res == true
       flash[:notice] = '辞書を更新しました。'
     else
-      flash[:notice] = res
+      flash[:notice] = res.join('<br />')
     end
     
     redirect_to cms_kana_dictionaries_url

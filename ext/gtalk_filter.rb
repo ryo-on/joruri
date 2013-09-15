@@ -1,9 +1,9 @@
 #!/usr/local/bin/ruby
 # encoding: utf-8
-
-$KCODE = 'UTF-8'
+# $KCODE = 'UTF-8'
 require 'nkf'
 require 'logger'
+require 'shell'
 
 class GtalkFilter
   def initialize
@@ -19,10 +19,11 @@ class GtalkFilter
     p = ''
     c = exec_chaone('、')
     
-    text.force_encoding('utf-8').split(/。/).each do |s|
+    text = NKF.nkf('-w', text)
+    text.split(/。/).each do |s|
       s.split(/、/).each do |w|
         w = '、' + w
-        if (p.size + w.size) > 400
+        if (p.split(//u).size + w.split(//u).size) > 60
           x += exec_chaone(p)
           p = w
         else
@@ -42,11 +43,14 @@ class GtalkFilter
   
   def exec_chaone(str)
     cmd = "echo \"#{str}\" | #{@chasen} -i w -r #{@chasenrc} | #{@chaone} -e UTF-8 -s gtalk"
-    res = `#{cmd}`.to_s.force_encoding('utf-8')
+    res = `#{cmd}`.to_s
+    res = NKF.nkf('-Ww', res)
     return '' if $? != 0 || res.slice(0, 1) != '<'
     res.sub!('<S>', '')
     res.sub!('</S>', '')
     return res
+  rescue Exception => e
+    ''
   end
   
   def log(msg)

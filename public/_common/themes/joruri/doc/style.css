@@ -67,20 +67,48 @@
 }
 /* docs ichiran
 ----------------------------------------------- */
+.contentPortalCategory .entries,
+.contentPortalEntries .entries,
 .contentArticleDocs .docs {
   margin-left: 10px;
 }
+.contentPortalCategory h2.date,
+.contentPortalEntries h2.date,
 .contentArticleDocs .docs h2 {
   margin: 0px 0px 5px 0px;
   padding: 5px 0 5px 10px;
   background-color: #e3f0fa;
   font-weight: bold;
 }
+.contentPortalCategory .entries ul,
+.contentPortalEntries .entries ul,
 .contentArticleDocs .docs ul {
   margin: 0px 0px 25px 7px;
 }
+.contentPortalCategory .entries li,
+.contentPortalEntries .entries li,
 .contentArticleDocs .docs li {
   margin: 0px;
+  padding: 0px 0px 5px 10px;
+  background-image: url(./images/ic-list-shinchaku.gif);
+  background-position: 0px 7px;
+  background-repeat: no-repeat;
+}
+
+/* group-portal
+----------------------------------------------- */
+.contentPortalCategory .category h2 {
+  margin: 0px 0px 0px 10px;
+  padding: 0px 0px 5px 8px;
+  background-image: url(./images/ic-list.gif);
+  background-position: 0px 7px;
+  background-repeat: no-repeat;
+}
+.contentPortalCategory .category .children {
+  margin: 0px 0px 15px 0px;
+}
+.contentPortalCategory .category .children a {
+  margin: 0px 0px 0px 20px;
   padding: 0px 0px 5px 10px;
   background-image: url(./images/ic-list-shinchaku.gif);
   background-position: 0px 7px;

@@ -1,6 +1,6 @@
 ## simple logger
 class Sys::Lib::Debugger::Dump
-  def self.log(data)
+  def self.dump_log(data)
     log = "#{Rails.root}/log/dump.log"
     f = File.open(log, 'a')
     f.flock(File::LOCK_EX)

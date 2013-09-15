@@ -394,7 +394,7 @@ a.siteMap,x:-moz-broken {
   background-image: url(./images/bg-menu02.gif);
   background-position: left -40px;
   background-repeat: repeat-x;
-  color: #000000;
+  color: #ffffff;
 }
 #globalNavi a.top {
   background-image: url(./images/bg-menu01.gif);
@@ -430,10 +430,10 @@ html:first-child #globalNavi a.bosai {
 
 /* IE */
 * html #globalNavi {
-  width: 100.1%;
+  width: 100%;
 }
 * html #globalNavi a.bosai {
-  width: 12.3%;
+  width: 12.2%;
 }
 *:first-child+html #globalNavi {
   width: 100.3%;
@@ -441,20 +441,11 @@ html:first-child #globalNavi a.bosai {
 
 /* global navi active
 ----------------------------------------------- */
-.articleCategoryKurashi #globalNavi a.kurashi,
-.articleCategoryFukushi #globalNavi a.fukushi,
-.articleCategoryKyoikubunka #globalNavi a.kyoiku,
-.articleCategoryKanko #globalNavi a.kanko,
-.articleCategorySangyoshigoto #globalNavi a.sangyoshigoto,
-.articleCategoryGyoseimachizukuri #globalNavi a.sangyo {
-  background-image: url(./images/bg-menu02.gif);
-  background-position: left -40px;
+#page-index #globalNavi a.top,
+#globalNavi a.current,
+#globalNavi a.current:hover {
+  background-position: left -80px;
   background-repeat: repeat-x;
-  color: #000000;
-}
-.articleCategoryBosaigai #globalNavi a.bosai {
-  background-image: url(./images/bg-menu03.gif);
-  background-position: left -40px;
   color: #000000;
 }
 
@@ -737,9 +728,11 @@ h1 {
 
 /* tabs
 ------------------------------------- */
+#docTabPortal .tabs,
 #docTab .tabs {
   width: 100%;
 }
+#docTabPortal .tabs a,
 #docTab .tabs a {
   display: inline-block;
   float: left;
@@ -756,6 +749,7 @@ h1 {
   font-weight: bold;
   text-decoration: none;
 }
+#docTabPortal .tabs:after,
 #docTab .tabs:after {  
   content: ".";  
   display: block;  
@@ -765,19 +759,22 @@ h1 {
   line-height: 0;  
   clear: both;  
 }
+#docTabPortal .tabs a.bosai,
 #docTab .tabs a.bosai {
   background-image: url(./images/bg-tab2.gif);
   color: #cc0000;
 }
-
+#docTabPortal .tabs a:hover,
 #docTab .tabs a:hover {
   background-position: 0px -100px;
   color: #333333;
 }
+#docTabPortal .tabs a.bosai:hover,
 #docTab .tabs a.bosai:hover {
   background-position: 0px -100px;
   color: #cc0000;
 }
+#docTabPortal .tabs a.current,
 #docTab .tabs a.current {
   background-position: 0px -200px;
   color: #ffffff;
@@ -785,20 +782,24 @@ h1 {
 
 /* content
 ------------------------------------- */
+#docTabPortal .wrapper,
 #docTab .wrapper {
   clear: both;
   width: 100%;
   margin: 0px;
   border: 1px solid #cccccc;
 }
+#docTabPortal .content,
 #docTab .content {
   clear: both;
   height: auto !important;
   padding: 10px 0px;
 }
+#docTabPortal .content ul,
 #docTab .content ul {
   padding: 0px 20px 0px 15px;
 }
+#docTabPortal .content li,
 #docTab .content li {
   margin: 0px;
   padding: 0px 0px 0px 10px;
@@ -841,10 +842,12 @@ h1 {
   overflow: hidden;
   vertical-align: middle;
 }
-#docTab .links .more {
+#docTabPortal .links .more,
+ .links .more {
   text-align: right;
   padding: 10px 20px 10px 10px;
 }
+#docTabPortal .links .more a,
 #docTab .links .more a {
   overflow: hidden;
   padding-top: 10px; 

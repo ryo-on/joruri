@@ -52,6 +52,7 @@ class Core
   
   ## Absolute path.
   def self.uri
+    return '/' unless @@config['uri'].match(/^[a-z]+:\/\/[^\/]+\//)
     @@config['uri'].sub(/^[a-z]+:\/\/[^\/]+\//, '/')
   end
   
@@ -181,9 +182,11 @@ private
       @@internal_uri = @@request_uri
       @@current_node = nil
     when 'preview'
-      site_id        = @@request_uri.gsub(/^\/_[a-z]+\/([0-9]+)(.*)/, '\1').to_i
+      site_id        = @@request_uri.gsub(/^\/_[a-z]+\/([0-9]+).*/, '\1').to_i
+      site_modile    = @@request_uri =~ /^\/_[a-z]+\/([0-9]+)m/
       @@site         = Cms::Site.find(site_id)
       Page.site      = @@site
+      Page.mobile    = site_modile
       @@internal_uri = search_node @@request_uri.gsub(/^\/_[a-z]+\/[0-9]*(.*)/, '\1')
     when 'public'
       @@site         = Cms::Site.find_by_script_uri(@@script_uri)

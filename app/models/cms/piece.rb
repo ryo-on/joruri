@@ -1,19 +1,44 @@
 # encoding: utf-8
 class Cms::Piece < ActiveRecord::Base
   include Sys::Model::Base
-  include ::Cms::Model::Base::Piece
+  include Cms::Model::Base::Piece
+  include Cms::Model::Base::Page::Publisher
   include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
-  include Sys::Model::Rel::Publication
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
   include Cms::Model::Rel::Content
   include Cms::Model::Auth::Concept
 
-
   belongs_to :status,   :foreign_key => :state,      :class_name => 'Sys::Base::Status'
+  has_many   :settings, :foreign_key => :piece_id,   :class_name => 'Cms::PieceSetting',
+    :order => :sort_no
 
+  attr_accessor :in_settings
+  
   validates_presence_of :state, :model, :name, :title
+  
+  after_save :save_settings
+  
+  def in_settings
+    unless read_attribute(:in_settings)
+      values = {}
+      settings.each do |st|
+        if st.sort_no
+          values[st.name] ||= {}
+          values[st.name][st.sort_no] = value
+        else
+          values[st.name] = st.value
+        end
+      end
+      write_attribute(:in_settings, values)
+    end
+    read_attribute(:in_settings)
+  end
+  
+  def in_settings=(values)
+    write_attribute(:in_settings, values)
+  end
   
   def locale(name)
     model = self.class.to_s.underscore
@@ -46,5 +71,24 @@ class Cms::Piece < ActiveRecord::Base
     attr += ' class="' + _cls + '"' if _cls != ''
     
     attr
+  end
+  
+  def new_setting(name = nil)
+    Cms::PieceSetting.new({:piece_id => id, :name => name.to_s})
+  end
+  
+  def setting_value(name)
+    st = settings.find(:first, :conditions => {:name => name.to_s})
+    st ? st.value : nil
+  end
+
+protected
+  def save_settings
+    in_settings.each do |name, value|
+      st = settings.find(:first, :conditions => {:name => name}) || new_setting(name)
+      st.value = value
+      st.save if st.changed?
+    end
+    return true
   end
 end

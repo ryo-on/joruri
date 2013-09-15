@@ -6,8 +6,11 @@ class ApplicationController < ActionController::Base
   before_filter :initialize_application
   
   def initialize_application
-    mobile_view if Page.mobile? || request.mobile?
     return false if Core.dispatched?
+    
+    Page.mobile = true if request.mobile?
+    set_mobile if Page.mobile? && !request.mobile?
+    
     return Core.dispatched
   end
   
@@ -25,11 +28,10 @@ class ApplicationController < ActionController::Base
     #
   end
   
-  def mobile_view
-    Page.mobile = true
+  def set_mobile
     def request.mobile
       Jpmobile::Mobile::Au.new(nil)
-    end unless request.mobile?
+    end
   end
   
 private
@@ -44,17 +46,7 @@ private
   
   ## Production && local
   def rescue_action_in_public(exception)
-    #exception.each{}
     http_error(500, nil)
-  end
-  
-  def error_log(message)
-    f = File.open(RAILS_ROOT + '/log/errors.log', 'a')
-    f.flock(File::LOCK_EX)
-    f.puts "#{Core.now} - #{message.to_s.gsub(/\n/, ' ')}"
-    f.flock(File::LOCK_UN)
-    f.close
-    return if RAILS_ENV !~ /development/
   end
   
   def http_error(status, message = nil)
@@ -62,12 +54,7 @@ private
     
     ## errors.log
     if Core.mode !~ /preview/
-      f = File.open(RAILS_ROOT + '/log/errors.log', 'a')
-      f.flock(File::LOCK_EX)
-      f.puts "#{Core.now} #{status} #{request.env['REQUEST_URI']}" +
-        ', "' + message.to_s.gsub(/\n/, ' ').gsub(/"/, '""') + '"'
-      f.flock(File::LOCK_UN)
-      f.close
+      error_log("#{status} #{request.env['REQUEST_URI']} #{message.to_s.gsub(/\n/, ' ')}")
     end
     
     ## Render
@@ -82,7 +69,6 @@ private
     
     @message = message
     return respond_to do |format|
-      #render :text => "<html><body><h1>#{message}</h1></body></html>"
       format.html { render(:status => status, :file => file) }
       format.xml  { render :xml => "<errors><error>#{status} #{message}</error></errors>" }
     end

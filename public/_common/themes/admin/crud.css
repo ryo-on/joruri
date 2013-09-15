@@ -134,6 +134,9 @@ table.show input.dateTime {
 table.show td.mceEditor {
   padding: 0px;
 }
+table.show td.mceEditor .mceLayout {
+  width: 100% !important;
+}
 table.show td.mceEditor .lowerMenu {
   padding: 5px 10px;
 }

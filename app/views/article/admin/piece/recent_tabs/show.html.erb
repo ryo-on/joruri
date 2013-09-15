@@ -9,12 +9,12 @@
 
 <table class="index">
   <tr>
-    <th style="width: 200px;"><%= Article::Piece::RecentTab.new(@piece).locale(:name) %></th>
-    <th style="width: 200px;"><%= Article::Piece::RecentTab.new(@piece).locale(:title) %></th>
+    <th style="width: 200px;"><%= Article::Piece::RecentTabXml.new(@piece).locale(:name) %></th>
+    <th style="width: 200px;"><%= Article::Piece::RecentTabXml.new(@piece).locale(:title) %></th>
     <th style="width: ;">条件</th>
   </tr>
 
-  <% Article::Piece::RecentTab.find(:all, @piece).each do |item| %>
+  <% Article::Piece::RecentTabXml.find(:all, @piece).each do |item| %>
   <tr <%= cycle '', 'class="cycle"' %>>
     <td><%=h item.name %></td>
     <td><%=h item.title %></td>

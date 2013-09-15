@@ -1,6 +1,8 @@
 # encoding: utf-8
 class Article::Unit < Sys::Group
   include Cms::Model::Base::Page
+  include Cms::Model::Base::Page::Publisher
+  include Cms::Model::Base::Page::TalkTask
   
   belongs_to :parent, :foreign_key => 'parent_id', :class_name => "#{self}"
   

@@ -94,8 +94,8 @@ class Cms::Concept < ActiveRecord::Base
   end
   
   def candidate_parents
-    args1  = %Q( :conditions => ["id != ? AND id = ? AND level_no = 1", id, Core.site.id], )
-    args1  = %Q( :conditions => ["id = ? AND level_no = 1", Core.site.id], ) unless id
+    args1  = %Q( :conditions => ["id != ? AND site_id = ? AND level_no = 1", id, Core.site.id], )
+    args1  = %Q( :conditions => ["site_id = ? AND level_no = 1", Core.site.id], ) unless id
     args1 += %Q( :order => :name)
     args2  = %Q( :conditions => ["id != ? AND parent_id = ?", id, p.id], )
     args2  = %Q( :conditions => ["parent_id = ?", p.id], ) if new_record?

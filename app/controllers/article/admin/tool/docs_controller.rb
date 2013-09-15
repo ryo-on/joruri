@@ -12,10 +12,17 @@ class Article::Admin::Tool::DocsController < Cms::Controller::Admin::Base
     
     item = Article::Doc.new.public
     item.and :content_id, content.id
-    items = item.find(:all, :order => 'published_at DESC')
-    items.each do |item|
+    items = item.find(:all, :select => "id", :order => 'published_at DESC')
+    #items = item.find(:all, :order => 'published_at DESC')
+
+    items.each do |c|
+      item = c.class.find(c.id)
       begin
-        if item.rebuild(render_public_as_string(item.public_uri, :site => item.content.site))
+        uri  = "#{item.public_uri}"
+        path = item.public_path
+        if item.rebuild_page(render_public_as_string(uri, :site => item.content.site), :path => path)
+          item.publish_page(render_public_as_string("#{uri}/index.html.r", :site => item.content.site),
+            :path => "#{path}.r", :dependent => true)
           results[0] += 1
         else
           raise item.errors.full_messages if item.errors.size > 0

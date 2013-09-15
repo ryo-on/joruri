@@ -1,6 +1,9 @@
+# encoding: utf-8
 class Article::Attribute < ActiveRecord::Base
   include Sys::Model::Base
   include Cms::Model::Base::Page
+  include Cms::Model::Base::Page::Publisher
+  include Cms::Model::Base::Page::TalkTask
   include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
   include Cms::Model::Auth::Content

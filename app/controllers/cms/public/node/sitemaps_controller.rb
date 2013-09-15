@@ -9,6 +9,7 @@ class Cms::Public::Node::SitemapsController < Cms::Controller::Public::Base
     item = Cms::Node.new.public
     item.and :route_id, Page.site.root_node.id
     item.and :directory, 1
+    item.and :name, 'IS NOT', nil
     @items = item.find(:all, :order => :name)
     
     @children = lambda do |node|

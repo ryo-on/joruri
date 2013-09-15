@@ -14,6 +14,9 @@ ActionController::Routing::Routes.draw do |map|
       :path_prefix => "/_admin/#{mod}/:content/:form"
     
     ## content
+    ns.resources :content_base,
+      :controller => "admin/content/base",
+      :path_prefix => "/_admin/#{mod}"
     
     ## node
     ns.resources :node_forms,

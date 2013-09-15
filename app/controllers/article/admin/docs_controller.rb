@@ -42,9 +42,9 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
       :notice_state => 'hidden',
       :recent_state => 'visible',
       :list_state   => 'visible',
-      :event_state  => 'hidden',
-      :in_inquiry   => {'state' => 'visible'}
+      :event_state  => 'hidden'
     })
+    @item.in_inquiry = @item.default_inquiry
     
     ## add tmp_id
     unless params[:_tmp]
@@ -104,7 +104,7 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
       if @item.state == 'recognize'
         send_recognition_request_mail(@item)
       else
-        @item.recognition.destroy if @item.recognition;
+        @item.recognition.destroy if @item.recognition
       end
       @item.close if @item.published_at
     end
@@ -126,6 +126,14 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
   def destroy
     @item = Article::Doc.new.find(params[:id])
     _destroy @item
+  end
+
+  def publish(item)
+    _publish(item) do
+      uri  = "#{item.public_uri}index.html.r"
+      path = "#{item.public_path}.r"
+      item.publish_page(render_public_as_string(uri, :site => item.content.site), :path => path, :dependent => :ruby)
+    end
   end
 
 protected

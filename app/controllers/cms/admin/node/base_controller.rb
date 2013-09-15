@@ -42,6 +42,7 @@ class Cms::Admin::Node::BaseController < Cms::Controller::Admin::Base
     @item.attributes = params[:item]
     
     _update @item do
+      @item.close_page if !@item.public?
       respond_to do |format|
         format.html { return redirect_to(cms_nodes_path) }
       end

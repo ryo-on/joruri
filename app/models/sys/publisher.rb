@@ -1,31 +1,28 @@
 class Sys::Publisher < ActiveRecord::Base
   include Sys::Model::Base
   
-  #validates_presence_of :unid
+  validates_presence_of :unid
   
   before_validation :modify_path
-  before_destroy :close
+  before_save :check_path
+  before_destroy :remove_files
   
   def modify_path
-    self.published_path = published_path.gsub(/^#{Rails.root.to_s}/, '.')
+    self.path = path.gsub(/^#{Rails.root.to_s}/, '.')
   end
   
-  def close
-    path = published_path
-    path = "#{Rails.root}/#{path}" unless path.slice(0, 1) == '/'
-    FileUtils.rm(path) if FileTest.exist?(path)
+  def remove_files(options = {})
+    up_path = options[:path] || path
+    up_path = File.expand_path(path, Rails.root) if up_path.to_s.slice(0, 1) == '/'
+    FileUtils.rm(up_path) if FileTest.exist?(up_path)
+    FileUtils.rm("#{up_path}.mp3") if FileTest.exist?("#{up_path}.mp3")
+    FileUtils.rmdir(File.dirname(path)) rescue nil
+    return true
+  end
 
-    ## sound file to talk
-#    if path =~ /\.html$/
-#      sound = path + '.mp3'
-#      File.delete(sound) if FileTest.exist?(sound)
-#    end
-
-    begin
-      Dir::rmdir(File::dirname(path))
-    rescue
-      return true
-    end
+protected
+  def check_path
+    remove_files(:path => path_was) if !path_was.blank? && path_changed?
     return true
   end
 end

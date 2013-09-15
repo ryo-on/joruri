@@ -1,17 +1,16 @@
 # encoding: utf-8
 class Cms::Lib::Navi::Gtalk
-  def self.check_category(str)
-    require 'shell'
-    sh = Shell.cd("#{Rails.root}/ext/gtalk")
-    chasenrc = '../config/chasenrc_gtalk'
-    format = '%P /'
-    command  = "echo \"#{str}\" | chasen -i w -r #{chasenrc} -F '#{format}'"
-    return sh.system(command).to_s.force_encoding('utf-8').gsub(/\/.*/, '').strip
-  end
+#  def self.check_category(str)
+#    require 'shell'
+#    sh = Shell.cd("#{Rails.root}/ext/gtalk")
+#    chasenrc = '../config/chasenrc_gtalk'
+#    format = '%P /'
+#    command  = "echo \"#{str}\" | chasen -i w -r #{chasenrc} -F '#{format}'"
+#    return sh.system(command).to_s.force_encoding('utf-8').gsub(/\/.*/, '').strip
+#  end
   
   def self.make_text(content)
-    text = self.to_utf8(content)
-    text = self.html_to_string(text)
+    text = self.html_to_string(content.toutf8)
     return self.to_gtalk_string(text)
   end
   
@@ -34,6 +33,7 @@ class Cms::Lib::Navi::Gtalk
     return false unless text
     
     text = self.class.make_text(text)
+    text = text.split(//u).slice(0, 3000).join
     
     cnf = Tempfile::new("gtalk_cnf", '/tmp')
     wav = Tempfile::new("gtalk_wav", '/tmp')
@@ -75,12 +75,6 @@ class Cms::Lib::Navi::Gtalk
   end
   
 private
-  def self.to_utf8(text)
-    require 'nkf'
-    text = NKF.nkf('-w', text)
-    return text
-  end
-  
   def self.html_to_string(text)
     if text =~ /<div id="content">/
       text.gsub!(/.*?<div id="content">(.*)<!-- end #content --><\/div>.*/im, '\1')
@@ -138,9 +132,7 @@ private
     text.gsub!(/<[^<>]*>/, '、')
     
     ## oversize
-    text.gsub!(/[^、]{100}/u) do |m|
-      "#{m}、"
-    end
+    text.gsub!(/[^、]{60}/u) {|m| "#{m}、"}
     
     return text
   end

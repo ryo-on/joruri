@@ -10,6 +10,23 @@ class Cms::KanaDictionary < ActiveRecord::Base
   
   before_save :convert_to_dic
   
+  def search_category(str, type)
+    unless @sh
+      require 'shell'
+      @sh = Shell.cd("#{Rails.root}/ext")
+    end
+    if type == :ruby
+      @sh.cd("#{Rails.root}/ext")
+      chasenrc = './config/chasenrc_ruby'
+    else
+      @sh.cd("#{Rails.root}/ext/gtalk")
+      chasenrc = '../config/chasenrc_gtalk'
+    end
+    format   = '%P /'
+    command  = "echo \"#{str}\" | chasen -i w -r #{chasenrc} -F '#{format}'"
+    return @sh.system(command).to_s.force_encoding('utf-8').gsub(/\/.*/, '').strip
+  end
+  
   def convert_to_dic
     self.ipadic_body = ''
     self.unidic_body = ''
@@ -25,7 +42,7 @@ class Cms::KanaDictionary < ActiveRecord::Base
         return false
       end
       word = data[0].strip
-      kana = data[1].strip
+      kana = data[1].strip.tr("ぁ-ん", "ァ-ン")
       kana.gsub!(/([アカサタナハマヤラワガザダバパァャヮ])ー/u, '\1ア')
       kana.gsub!(/([イキシチニヒミリギジヂビピィ])ー/u, '\1イ')
       kana.gsub!(/([ウクスツヌフムルグズヅブプゥュ])ー/u, '\1ウ')
@@ -33,7 +50,7 @@ class Cms::KanaDictionary < ActiveRecord::Base
       kana.gsub!(/([オコソトノホモロヲゴゾドボポォョ])ー/u, '\1オ')
       
       ## ipadic
-      category = Cms::Lib::Navi::Ruby.check_category(word)
+      category = search_category(word, :ruby)
       if !category.blank?
         self.ipadic_body += '(品詞 (' + category + '))' +
           ' ((見出し語 (' + word+ ' 500)) (読み ' + kana + ') (発音 ' + kana + '))' + "\n"
@@ -48,7 +65,7 @@ class Cms::KanaDictionary < ActiveRecord::Base
       end
       word.tr!("0-9a-zA-Z", "０-９ａ-ｚＡ-Ｚ")
       kana.gsub!(/[^ァ-ン]/, '')
-      category = Cms::Lib::Navi::Gtalk.check_category(word)
+      category = search_category(word, :gtalk)
       if !category.blank?
         self.unidic_body += '(POS (' + category + '))' +
           ' ((LEX (' + word + ' 500)) (READING ' + kana + ') (PRON ' + kana + ')'+
@@ -80,6 +97,7 @@ class Cms::KanaDictionary < ActiveRecord::Base
     end
 
     require 'shell'
+    errors = []
     
     ## ipadic
     dir = "#{Rails.root}/ext/morph/ipadic"
@@ -100,7 +118,7 @@ class Cms::KanaDictionary < ActiveRecord::Base
     FileUtils.rm(tmp.path + '_dat.lex') if FileTest.exist?(tmp.path + '_dat.lex')
     FileUtils.rm(tmp.path + '_dat.tmp') if FileTest.exist?(tmp.path + '_dat.tmp')
     FileUtils.rm(tmp.path) if FileTest.exist?(tmp.path)
-    return '辞書の作成に失敗しました（ふりがな）' unless success
+    errors << '辞書の作成に失敗しました（ふりがな）' unless success
     
     ## unidic
     dir = "#{Rails.root}/ext/morph/unidic"
@@ -121,8 +139,8 @@ class Cms::KanaDictionary < ActiveRecord::Base
     FileUtils.rm(tmp.path + '_dat.lex') if FileTest.exist?(tmp.path + '_dat.lex')
     FileUtils.rm(tmp.path + '_dat.tmp') if FileTest.exist?(tmp.path + '_dat.tmp')
     FileUtils.rm(tmp.path) if FileTest.exist?(tmp.path)
-    return '辞書の作成に失敗しました（読み上げ）' unless success
+    errors << '辞書の作成に失敗しました（読み上げ）' unless success
     
-    return true
+    return errors.size > 0 ? errors : true
   end
 end

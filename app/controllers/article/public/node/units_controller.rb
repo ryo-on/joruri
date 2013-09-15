@@ -22,6 +22,7 @@ class Article::Public::Node::UnitsController < Cms::Controller::Public::Base
   end
 
   def show
+    return show_feed if params[:file] == "feed"
     return http_error(404) unless params[:file] =~ /^(index|more)$/
     @more  = params[:file] == 'more'
     @page  = 1  unless @more
@@ -47,6 +48,12 @@ class Article::Public::Node::UnitsController < Cms::Controller::Public::Base
     return http_error(404)
   end
 
+  def show_feed #portal
+    @feed = true
+    @items = []
+    return render(:action => :show_department)
+  end
+  
   def show_department
     attr = Article::Attribute.new.public
     @items = attr.find(:all, :order => :sort_no)

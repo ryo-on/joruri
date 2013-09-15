@@ -7,7 +7,7 @@ class Util::File
     if options[:data]
       f = File.open(path, 'w')
       f.flock(File::LOCK_EX)
-      f.puts(options[:data] ? options[:data] : '')
+      f.write(options[:data] ? options[:data] : '')
       f.flock(File::LOCK_UN)
       f.close
     elsif options[:src]

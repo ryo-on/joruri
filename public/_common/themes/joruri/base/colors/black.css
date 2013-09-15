@@ -209,6 +209,8 @@ table.city tr.cycle {
 
 /* docs
 ----------------------------------------------- */
+.contentPortalCategory h2.date,
+.contentPortalEntries h2.date,
 .contentArticleRecentDocs .docs h2 {
   border: 1px solid #ffffff;
   background-color: #000000;
@@ -237,7 +239,10 @@ table.city tr.cycle {
 .level2 a, .level3 a {
   color: #ffffff;
 }
-
+ul.sitemap li.level1,
+ul.sitemap ul.level2 {
+  background-color: #000000;
+}
 /* mayor
 ----------------------------------------------- */
 #mayorSide {

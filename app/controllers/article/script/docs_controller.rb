@@ -5,14 +5,21 @@ class Article::Script::DocsController < Cms::Controller::Script::Publication
       uri  = "#{@node.public_uri}"
       path = "#{@node.public_path}"
       publish_more(@node, :uri => uri, :path => path, :first => 2)
-      render :text => "OK"
     end
     
     begin
       item = params[:item]
       puts "-- 公開 #{item.title}"
       if item.state == 'recognized'
-        item.publish(render_public_as_string(item.public_uri, :site => item.content.site))
+        uri  = "#{item.public_uri}"
+        path = "#{item.public_path}"
+        rs = item.publish(render_public_as_string(uri, :site => item.content.site))
+        if rs == true && (item.published? || !File.exist?("#{path}.r"))
+          item.publish_page(render_public_as_string("#{uri}index.html.r", :site => item.content.site),
+            :path => "#{path}.r", :dependent => :ruby)
+        end
+      else
+        raise "not recognized."
       end
     rescue => e
       return render(:text => "Error #{e}")
@@ -26,6 +33,8 @@ class Article::Script::DocsController < Cms::Controller::Script::Publication
       puts "-- 非公開 #{item.title}"
       if item.state == 'public'
         item.close
+      else
+        raise "not opend."
       end
     rescue => e
       return render(:text => "Error #{e}")

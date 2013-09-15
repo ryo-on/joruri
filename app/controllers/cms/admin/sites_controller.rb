@@ -30,6 +30,7 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
     @item = Cms::Site.new(params[:item])
     @item.state = 'public'
     _create @item do
+      make_concept(@item)
       make_node(@item)
     end
   end
@@ -42,33 +43,47 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
     end
   end
   
+  def destroy
+    @item = Cms::Site.new.find(params[:id])
+    _destroy @item
+  end
+
+protected
+  def make_concept(item)
+    concept = Cms::Concept.new({
+      :parent_id => 0,
+      :site_id   => item.id,
+      :state     => 'public',
+      :level_no  => 1,
+      :sort_no   => 1,
+      :name      => item.name
+    })
+    concept.save
+  end
+  
   def make_node(item)
     if node = item.root_node
       if node.title != item.name
         node.title = item.name
         node.save
       end
-    else
-      node = Cms::Node.new({
-        :site_id      => item.id,
-        :state        => 'public',
-        :published_at => Core.now,
-        :parent_id    => 0,
-        :route_id     => 0,
-        :model        => 'Cms::Directory',
-        :directory    => 1,
-        :name         => '/',
-        :title        => item.name
-      })
-      if node.save
-        item.node_id = node.id
-        item.save
-      end
+      return true
     end
-  end
-  
-  def destroy
-    @item = Cms::Site.new.find(params[:id])
-    _destroy @item
+    
+    node = Cms::Node.new({
+      :site_id      => item.id,
+      :state        => 'public',
+      :published_at => Core.now,
+      :parent_id    => 0,
+      :route_id     => 0,
+      :model        => 'Cms::Directory',
+      :directory    => 1,
+      :name         => '/',
+      :title        => item.name
+    })
+    if node.save
+      item.node_id = node.id
+      item.save
+    end
   end
 end

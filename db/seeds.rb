@@ -21,15 +21,19 @@ end
 
 truncate_table "cms_concepts"
 truncate_table "cms_contents"
+truncate_table "cms_content_settings"
 truncate_table "cms_data_files"
 truncate_table "cms_data_file_nodes"
 truncate_table "cms_data_texts"
+truncate_table "cms_feeds"
+truncate_table "cms_feed_entries"
 truncate_table "cms_inquiries"
 truncate_table "cms_kana_dictionaries"
 truncate_table "cms_layouts"
 truncate_table "cms_maps"
 truncate_table "cms_nodes"
 truncate_table "cms_pieces"
+truncate_table "cms_piece_settings"
 truncate_table "cms_sites"
 truncate_table "cms_talk_tasks"
 truncate_table "schema_migrations"
@@ -308,3 +312,4 @@ p = create_cms_node :parent_id => 1   , :concept_id => c_life.id, :layout_id => 
 
 load_seed :article
 load_seed :enquete
+load_seed :portal

@@ -2,7 +2,7 @@
 
 def show_children(node, level = 1, cls = nil)
   html = ''
-  cls ||= node.name.gsub(/\..*/, '').camelize(:lower)
+  cls ||= node.name.to_s.gsub(/\..*/, '').camelize(:lower)
   children = @children.call(node)
   
   html += %Q(<li class="level#{level} #{cls}">#{link_to(h(node.title), node.public_uri, :class => "level#{level}")})

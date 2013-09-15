@@ -10,7 +10,7 @@ class Article::Public::Piece::RecentTabsController < Sys::Controller::Public::Ba
   def index
     @tabs = []
     
-    Article::Piece::RecentTab.find(:all, @piece, :order => :sort_no).each do |tab|
+    Article::Piece::RecentTabXml.find(:all, @piece, :order => :sort_no).each do |tab|
       next if tab.name.blank?
       
       current   = (@tabs.size == 0) ? true : nil

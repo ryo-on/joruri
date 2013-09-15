@@ -1,8 +1,9 @@
 # encoding: utf-8
 class Cms::Node < ActiveRecord::Base
   include Sys::Model::Base
-  include Sys::Model::Rel::Publication ###
   include Cms::Model::Base::Page
+  include Cms::Model::Base::Page::Publisher
+  include Cms::Model::Base::Page::TalkTask
   include Cms::Model::Base::Node
   include Sys::Model::Tree
   include Sys::Model::Rel::Unid
@@ -20,6 +21,8 @@ class Cms::Node < ActiveRecord::Base
     :order => :name, :dependent => :destroy
   
   validates_presence_of :parent_id, :state, :model, :name, :title
+  
+  after_destroy :remove_file
   
   def validate
     errors.add :parent_id, :invalid if id != nil && id == parent_id
@@ -141,7 +144,7 @@ class Cms::Node < ActiveRecord::Base
       choices << [('　　' * i) + p.title, p.id]
       self.class.find(:all, eval("{#{args2}}")).each do |c|
         down.call(c, i + 1)
-        break if (loop += 1) > 20
+        break if (loop += 1) > 500
       end
     end
     
@@ -158,12 +161,18 @@ class Cms::Node < ActiveRecord::Base
     make_candidates(args1, args2)
   end
   
-  def candidate_routes
-    args1  = %Q( :conditions => ["id = ?", Core.site.root_node], )
-    args1 += %Q( :order => :name)
-    args2  = %Q( :conditions => ["id != ? AND route_id = ?", id, p.id], )
-    args2  = %Q( :conditions => ["route_id = ?", p.id], ) if new_record?
-    args2 += %Q( :order => :name)
-    make_candidates(args1, args2)
+#  def candidate_routes
+#    args1  = %Q( :conditions => ["id = ?", Core.site.root_node], )
+#    args1 += %Q( :order => :name)
+#    args2  = %Q( :conditions => ["id != ? AND route_id = ?", id, p.id], )
+#    args2  = %Q( :conditions => ["route_id = ?", p.id], ) if new_record?
+#    args2 += %Q( :order => :name)
+#    make_candidates(args1, args2)
+#  end
+  
+protected
+  def remove_file
+    close_page# rescue nil
+    return true
   end
 end

@@ -25,6 +25,7 @@ class Article::Public::Node::AttributesController < Cms::Controller::Public::Bas
   end
   
   def show
+    return show_feed if params[:file] == "feed"
     return http_error(404) unless params[:file] =~ /^(index|more)$/
     @more  = params[:file] == 'more'
     @page  = 1  unless @more
@@ -52,6 +53,12 @@ class Article::Public::Node::AttributesController < Cms::Controller::Public::Bas
       doc.page @page, @limit
       @docs = doc.find(:all, :order => 'published_at DESC')
     end
+  end
+  
+  def show_feed #portal
+    @feed = true
+    @items = []
+    return render(:action => :show)
   end
   
   def show_attr

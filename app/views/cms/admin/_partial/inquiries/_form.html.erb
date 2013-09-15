@@ -1,7 +1,7 @@
 <%
 
 def error?(col)
-  @item.errors.invalid?(col) ? 'class="fieldWithErrors"' : '' 
+  @item.errors.invalid?(col) ? 'class="fieldWithErrors"' : ''
 end
 
 groups = Sys::Group.find(:all, :conditions => {:level_no => 2}, :order => :sort_no)
@@ -14,7 +14,7 @@ group  = Sys::Group.find_by_id(item.in_inquiry['group_id']) || Core.user_group
 <div style="margin: 10px;">
 <%= f.radio_buttons "in_inquiry[state]", [['表示','visible'],['非表示','hidden']], :class => 'status' %>
 </div>
-    
+
 <table class="show">
 <tr>
   <th>課 <span class="note">※</span></th>

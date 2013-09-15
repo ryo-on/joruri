@@ -11,36 +11,36 @@ class Article::Admin::Piece::RecentTab::TabsController < Cms::Controller::Admin:
   end
   
   def index
-    @items = Article::Piece::RecentTab.find(:all, @piece, :order => :sort_no)
+    @items = Article::Piece::RecentTabXml.find(:all, @piece, :order => :sort_no)
     _index @items
   end
   
   def show
-    @item = Article::Piece::RecentTab.find(params[:id], @piece)
+    @item = Article::Piece::RecentTabXml.find(params[:id], @piece)
     return error_auth unless @item
     _show @item
   end
 
   def new
-    @item = Article::Piece::RecentTab.new(@piece, {
+    @item = Article::Piece::RecentTabXml.new(@piece, {
       :sort_no => 0
     })
   end
   
   def create
-    @item = Article::Piece::RecentTab.new(@piece, params[:item])
+    @item = Article::Piece::RecentTabXml.new(@piece, params[:item])
     _create @item
   end
   
   def update
-    @item = Article::Piece::RecentTab.find(params[:id], @piece)
+    @item = Article::Piece::RecentTabXml.find(params[:id], @piece)
     return error_auth unless @item
     @item.attributes = params[:item]
     _update @item
   end
   
   def destroy
-    @item = Article::Piece::RecentTab.find(params[:id], @piece)
+    @item = Article::Piece::RecentTabXml.find(params[:id], @piece)
     _destroy @item
   end
 end

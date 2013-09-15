@@ -1,10 +1,9 @@
 # encoding: utf-8
 class Cms::Layout < ActiveRecord::Base
   include Sys::Model::Base
-  include Sys::Model::Base::Page
+  include Cms::Model::Base::Page::Publisher
   include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
-  include Sys::Model::Rel::Publication
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
   include Cms::Model::Auth::Concept
@@ -12,6 +11,8 @@ class Cms::Layout < ActiveRecord::Base
   belongs_to :status,  :foreign_key => :state,      :class_name => 'Sys::Base::Status'
   
   validates_presence_of :state, :name, :title, :body
+  
+  after_destroy :remove_css_files
   
   def states
     [['公開','public']]
@@ -178,4 +179,10 @@ class Cms::Layout < ActiveRecord::Base
     return true
   end
   
+  def remove_css_files
+    FileUtils.rm(stylesheet_path) if File.exist?(stylesheet_path)
+    FileUtils.rm(mobile_stylesheet_path) if File.exist?(mobile_stylesheet_path)
+    FileUtils.rmdir(File.dirname(stylesheet_path)) rescue nil
+    return true
+  end
 end

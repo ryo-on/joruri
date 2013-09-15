@@ -2,11 +2,12 @@
 class Article::Doc < ActiveRecord::Base
   include Sys::Model::Base
   include Cms::Model::Base::Page
+  include Cms::Model::Base::Page::Publisher
+  include Cms::Model::Base::Page::TalkTask
   include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
   include Cms::Model::Rel::Inquiry
   include Sys::Model::Rel::Recognition
-  include Sys::Model::Rel::Publication ##
   include Sys::Model::Rel::Task
   include Cms::Model::Rel::Map
   include Sys::Model::Rel::File
@@ -293,5 +294,28 @@ class Article::Doc < ActiveRecord::Base
     end if params.size != 0
 
     return self
+  end
+  
+  def close_page(options = {})
+    return false unless super
+    publishers.destroy_all if publishers.size > 0
+    FileUtils.rm_f(::File.dirname(public_path))
+    return true
+  end
+
+  def publish(content)
+    @save_mode = :publish
+    self.state          = 'public'
+    self.published_at ||= Core.now
+    return false unless save(false)
+    publish_page(content, :path => public_path, :uri => public_uri)
+  end
+  
+  def close
+    @save_mode = :close
+    self.state = 'closed' if self.state == 'public'
+    return false unless save(false)
+    close_page
+    return true
   end
 end

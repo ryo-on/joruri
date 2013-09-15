@@ -15,6 +15,7 @@ module ApplicationHelper
   def safe(alt = nil, &block)
     begin
       yield
+    rescue PassiveRecord::RecordNotFound => e
     rescue NoMethodError => e
       # nil判定を追加
       #if e.respond_to? :args and (e.args.nil? or (!e.args.blank? and e.args.first.nil?))

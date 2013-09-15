@@ -1,6 +1,6 @@
 <div class="contentArticleAttribute contentArticleAttributeDetail">
 
-<div class="latest">
+<div class="latest"><% if !@feed %>
   <h2>新着情報</h2>
   <div class="feed">
     <%= link_to 'RSS' , "index.rss" , :class => 'feedRss' %>
@@ -14,7 +14,7 @@
   <% if !@more && @docs.size > 0 %>
   <div class="more"><%= link_to '&gt;&gt;新着記事一覧', "more.html" %></div>
   <% end %>
-</div>
+<% end %></div>
 
 <% if @more %>
   <%= paginate @docs %>
