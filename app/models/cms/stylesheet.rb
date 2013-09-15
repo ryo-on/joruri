@@ -185,7 +185,11 @@ class Cms::Stylesheet < ActiveRecord::Base
       return false
     end
     
-    ::File.open(src,'w') {|f| f.write(file.read) }
+    ::File.open(src,'w') do |f|
+      data = file.read
+      data.force_encoding(Encoding::UTF_8) if data.respond_to?(:force_encoding)
+      f.write(data)
+    end
     return true
   rescue => e
     errors.add_to_base(e.to_s)
@@ -193,7 +197,11 @@ class Cms::Stylesheet < ActiveRecord::Base
   end
   
   def update_file
-    ::File.open(upload_path, 'w') {|f| f.write(self.body) }
+    ::File.open(upload_path, 'w') do |f|
+      data = self.body
+      data.force_encoding(Encoding::UTF_8) if data.respond_to?(:force_encoding)
+      f.write(data)
+    end
     return true
   rescue => e
     errors.add_to_base(e.to_s)

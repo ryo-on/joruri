@@ -13,7 +13,7 @@ class Cms::Content < ActiveRecord::Base
     
   attr_accessor :in_settings
   
-  validates_presence_of :state, :model, :name
+  validates_presence_of :concept_id, :state, :model, :name
 
   after_save :save_settings
   

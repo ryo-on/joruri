@@ -20,8 +20,8 @@ module LinkHelper
       params[:method]  = :delete
     end
     
-    if link.class == String
-      return link_to(type, link, params)
+    if link.is_a?(String)
+      return link_to(type, link.to_s, params)
     elsif link.class == Array
       return link_to(link[0], link[1], params)
     else

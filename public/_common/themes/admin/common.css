@@ -57,12 +57,17 @@
 
 /* Error.
 ----------------------------------------------- */
-.fieldWithErrors {
- margin: 1px;
- padding: 1px;
- border: 1px solid #f00;
- display: inline-block;
- /display: inline;
+.fieldWithErrors input,
+.fieldWithErrors textarea, 
+.fieldWithErrors select {
+ border: 1px solid #e00;
+}
+.fieldWithErrors + .fieldWithErrors,
+.fieldWithErrors ~ .fieldWithErrors {
+  display: inline;
+}
+.fieldWithErrors input[type="hidden"] {
+  display: none;
 }
 #errorExplanation {
  width: 600px;

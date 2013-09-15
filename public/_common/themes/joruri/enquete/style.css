@@ -66,6 +66,20 @@
 .enqueteForm .errorExplanation {
   color: #ff0000;
 }
+.enqueteForm .captchaForm input {
+  ime-mode: disabled;
+}
+.enqueteForm .captchaForm .image img {
+  width: 110px;
+  height: 30px;
+  border: 1px solid #008800;
+}
+.enqueteForm .captchaForm .label {
+  margin: 5px 0;
+}
+.enqueteForm .captchaForm .field {
+  margin-left: 0px;
+}
 .enqueteForm .back {
   margin-top: 20px;
   text-align: center;

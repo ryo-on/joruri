@@ -1,10 +1,12 @@
 # encoding: utf-8
 class Enquete::Public::Node::FormsController < Cms::Controller::Public::Base
   include Article::Controller::Feed
+  include SimpleCaptcha::ControllerHelpers
   
   def pre_dispatch
     return http_error(404) unless @content = Page.current_node.content
-    #@docs_uri = @content.public_uri('Article::Doc')
+    
+    @use_captcha = @content.setting_value(:use_captcha) == "1"
   end
   
   def index
@@ -16,7 +18,6 @@ class Enquete::Public::Node::FormsController < Cms::Controller::Public::Base
   end
   
   def show
-    dump params
     item = Enquete::Form.new.public
     item.and :content_id, @content.id
     item.and :id, params[:form]
@@ -34,6 +35,18 @@ class Enquete::Public::Node::FormsController < Cms::Controller::Public::Base
     
     ## validate
     return false unless @form.valid?
+    
+    ## captcha
+    if params[:confirm].blank? && @use_captcha
+      item = Enquete::Form.new
+      item.name        = 'dummy'
+      item.captcha     = params[:item][:captcha]
+      item.captcha_key = params[:item][:captcha_key]
+      unless item.valid_with_captcha?
+        @form.errors.add *item.errors.to_a[0]
+        return false
+      end
+    end      
     
     ## confirm
     if params[:confirm].blank?

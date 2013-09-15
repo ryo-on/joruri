@@ -1,15 +1,15 @@
-## Joruri CMS 1.2.7 インストールマニュアル                  2012.12.25
+## Joruri CMS 1.3.0 インストールマニュアル                  2012.1.25
 
 **********************************************************************
  1 想定環境
 **********************************************************************
 
 [システム]
-OS         : CentOS 5.4
+OS         : CentOS 6.3
 Webサーバ  : Apache 2.2
 DBシステム : MySQL 5
 Ruby       : 1.9.1
-Rails      : 2.3.5
+Rails      : 2.3.15
 
 [設定]
 IPアドレス : 192.168.0.2
@@ -21,23 +21,25 @@ IPアドレス : 192.168.0.2
 
 CentOSをインストールします。
 
-※インストール完了後、ご利用になられる環境に合わせて適切なセキュリティ設定をお願いします。CentOSに関するセキュリティ設定については、本マニュアルの範囲外となります。
-
-rootユーザに変更します。
-
-  $ su -
+インストール完了後、ご利用の環境に合わせて適切なセキュリティ設定を行ってください。
+CentOSに関するセキュリティ設定については、本マニュアルの範囲外となります。
 
 **********************************************************************
  3 事前準備
 **********************************************************************
 
+rootユーザに変更します。
+
+  $ su -
+
 必要なパッケージをインストールします。
 
   # yum -y install \
-      wget make gcc-c++ \
+      wget make gcc-c++ patch \
       libxslt libxslt-devel libxml2-devel \
       libjpeg-devel libpng-devel \
       librsvg2-devel ghostscript-devel \
+      ImageMagick ImageMagick-devel \
       curl-devel nkf openldap-devel \
       shared-mime-info \
       httpd httpd-devel \
@@ -46,8 +48,7 @@ rootユーザに変更します。
 必要なパッケージをダウンロードします。
 
   # cd /usr/local/src/
-  # wget http://joruri.org/download/joruri-1.2.7.tar.gz \
-      http://image_magick.veidrodis.com/image_magick/ImageMagick-6.4.7-8.tar.gz \
+  # wget http://joruri.org/download/joruri-1.3.0.tar.gz \
       http://core.ring.gr.jp/archives/lang/ruby/1.9/ruby-1.9.1-p378.tar.gz \
       http://rubyforge.org/frs/download.php/60718/rubygems-1.3.5.tgz \
       http://chasen.org/~taku/software/darts/src/darts-0.32.tar.gz \
@@ -63,7 +64,7 @@ Joruriユーザを作成します。
 Joruriソースコードを設置します。
 
   # mkdir /var/share
-  # tar xvzf joruri-1.2.7.tar.gz -C /var/share
+  # tar xvzf joruri-1.3.0.tar.gz -C /var/share
   # chown -R joruri:joruri /var/share/joruri
 
 **********************************************************************
@@ -95,10 +96,7 @@ Joruriソースコードを設置します。
   # vi /etc/my.cnf
   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   [mysqld]
-  default-character-set=utf8    #追加
-  
-  [client]                      #追加（末尾に追加）
-  default-character-set=utf8    #追加
+  character-set-server=utf8 #追加
   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
 MySQLを起動します。
@@ -117,24 +115,15 @@ joruriユーザを作成します。
   # /usr/bin/mysql -u root -ppass \
       -e "grant all on *.* to joruri@localhost IDENTIFIED BY 'pass'"
 
-**********************************************************************
- 6 ImageMagick のインストール
-**********************************************************************
-
-ImageMagickをインストールします。
-
-  # cd /usr/local/src/
-  # tar xvzf ImageMagick-6.4.7-8.tar.gz
-  # cd ImageMagick-6.4.7-8
-  # ./configure
-  # make && make install
+※パスワードは適切な値を設定してください。
+本マニュアルでは pass と設定しています。
 
 **********************************************************************
- 7 Ruby on Rails のインストール
+ 6 Ruby on Rails のインストール
 **********************************************************************
 
 ======================================================================
- 7.1 Ruby, RubyGems のインストール
+ 6.1 Ruby, RubyGems のインストール
 ======================================================================
 
 Rubyをインストールします。
@@ -142,6 +131,18 @@ Rubyをインストールします。
   # cd /usr/local/src
   # tar xvzf ruby-1.9.1-p378.tar.gz
   # cd ruby-1.9.1-p378
+  
+  # wget http://bugs.ruby-lang.org/attachments/download/837/openssl-build-fix-v2.patch
+  # patch -p0 < openssl-build-fix-v2.patch
+    > File to patch:
+      # 以下のパスを順に入力
+      /usr/local/src/ruby-1.9.1-p378/ext/openssl/ossl.c
+      /usr/local/src/ruby-1.9.1-p378/ext/openssl/ossl.h
+      /usr/local/src/ruby-1.9.1-p378/ext/openssl/ossl_pkcs7.c
+      /usr/local/src/ruby-1.9.1-p378/ext/openssl/ossl_ssl.c
+      /usr/local/src/ruby-1.9.1-p378/ext/openssl/ossl_x509attr.c
+      /usr/local/src/ruby-1.9.1-p378/ext/openssl/ossl_x509crl.c
+  
   # ./configure
   # make && make install
 
@@ -153,33 +154,24 @@ RubyGemsをインストールします。
   # ruby setup.rb
 
 ======================================================================
- 7.2 Phusion Passenger のインストール
+ 6.2 gemライブラリ のインストール
 ======================================================================
 
-Phusion Passengerをインストールします。
+gemライブラリをインストールします。
 
-  # gem install passenger --no-ri --no-rdoc -v 2.2.9
-  # passenger-install-apache2-module
+  # ruby /var/share/joruri/doc/install/gems.rb
   
-  ( 画面の内容を確認して Enterキーを押してください。 )
+以下のgemがインストールされます。
 
-Apacheに設定を追加します。
-
-  # cp /var/share/joruri/config/samples/passenger.conf \
-      /etc/httpd/conf.d/passenger.conf
-
-======================================================================
- 7.3 gemライブラリ のインストール
-======================================================================
-
-Rails
-  # gem install rails --no-ri --no-rdoc --include-dependencies -v 2.3.5
-
-rake
   # gem install rake --no-ri --no-rdoc -v 0.8.7
-  # gem uninstall rake -v "> 0.8.7"
-
-Mysql/Ruby
+  # gem install rails --no-ri --no-rdoc --include-dependencies -v 2.3.15
+  # gem install ruby-ldap --no-ri --no-rdoc -v 0.9.10
+  # gem install rmagick --no-ri --no-rdoc -v 2.12.2
+  # gem install zipruby --no-ri --no-rdoc -v 0.3.6
+  # gem install mime-types --no-ri --no-rdoc -v 1.16
+  # gem install will_paginate --no-ri --no-rdoc -v 2.3.16
+  # gem install passiverecord --no-ri --no-rdoc -v 0.2
+  # gem install tamtam --no-ri --no-rdoc -v 0.0.3
   # gem install mysql --no-ri --no-rdoc -v 2.8.1
 
   ※補足
@@ -187,29 +179,30 @@ Mysql/Ruby
     # env ARCHFLAGS="-arch x86_64" gem install mysql -- \
     #     --with-mysql-config=/usr/local/mysql/bin/mysql_config
 
-Ruby/LDAP
-  # gem install ruby-ldap --no-ri --no-rdoc -v 0.9.10
+======================================================================
+ 6.3 Phusion Passenger のインストール
+======================================================================
 
-RMagick
-  # gem install rmagick --no-ri --no-rdoc -v 2.12.2
+Phusion Passengerをインストールします。
 
-Zip/Ruby
-  # gem install zipruby --no-ri --no-rdoc -v 0.3.6
+  # gem install passenger --no-ri --no-rdoc -v 3.0.19
+  # passenger-install-apache2-module
+  
+  ( 画面の内容を確認して Enterキーを押してください。 )
 
-mime-types
-  # gem install mime-types --no-ri --no-rdoc -v 1.16
+  ※補足
+    Apacheをソースからインストールしている場合は下記のように実行してください。
+    # export APXS2=/usr/local/apache2/bin/apxs
+    # export PATH=/usr/local/apache2/bin:$PATH
+    # passenger-install-apache2-module
 
-will_paginate
-  # gem install will_paginate --no-ri --no-rdoc -v 2.3.12
+Apacheに設定を追加します。
 
-PassiveRecord
-  # gem install passiverecord --no-ri --no-rdoc -v 0.2
-
-TamTam
-  # gem install tamtam --no-ri --no-rdoc -v 0.0.3
+  # cp /var/share/joruri/config/samples/passenger.conf \
+      /etc/httpd/conf.d/passenger.conf
 
 **********************************************************************
-  8 Joruri のインストール
+  7 Joruri のインストール
 **********************************************************************
 
 Joruriユーザに変更します。
@@ -218,7 +211,7 @@ Joruriユーザに変更します。
   $ cd /var/share/joruri
 
 ======================================================================
- 8.1 設定ファイル
+ 7.1 設定ファイル
 ======================================================================
 
 環境に応じて設定ファイルを編集します。
@@ -243,13 +236,9 @@ DB接続情報
 VirtualHost設定
 
   $ vi config/virtual-hosts/joruri.conf
-  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  <VirtualHost 192.168.0.2:80>
-    ServerName 192.168.0.2
-  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
 ======================================================================
- 8.2 データベースの作成
+ 7.2 データベースの作成
 ======================================================================
 
 データベースを作成します。
@@ -258,28 +247,26 @@ VirtualHost設定
 
 テーブルを作成します。
 
-  $ rake db:schema:load RAILS_ENV=development
+  $ rake db:schema:load RAILS_ENV=production
 
 初期データを登録します。
 
-  $ rake db:seed RAILS_ENV=development
+  $ rake db:seed RAILS_ENV=production
 
 サンプルデータを登録します。
 
-  $ rake db:seed:demo RAILS_ENV=development
+  $ rake db:seed:demo RAILS_ENV=production
 
 ======================================================================
- 8.3 VirtualHost の反映
+ 7.3 VirtualHost の反映
 ======================================================================
 
 Apacheに設定を追加します。
-
   $ su -
   # ln -s /var/share/joruri/config/virtual-hosts/joruri.conf \
       /etc/httpd/conf.d/
 
 Apacheを再起動します。
-
   # /sbin/service httpd configtest
   # /sbin/service httpd restart
 
@@ -309,7 +296,7 @@ Apacheを再起動します。
       パスワード : user3
 
 **********************************************************************
- 9 Joruri のインストール (ふりがな・読み上げ機能)
+ 8 Joruri のインストール (ふりがな・読み上げ機能)
 **********************************************************************
 
 LAMEをインストールします。
@@ -374,13 +361,15 @@ ChaOneをインストールします。
 GalateaTalkをインストールします。
 
   # cd /var/share/joruri/ext/gtalk
+  # sed -i "s/ getline/ my_getline/" main.c
+  # sed -i "s/ getline/ my_getline/" getline.c
   # chmod 775 configure
   # ./configure
   # make
   # chmod 747 /var/share/joruri/ext/gtalk_filter.rb
 
 **********************************************************************
- 10 定期実行設定
+ 9 定期実行設定
 **********************************************************************
 
 記事の公開/非公開処理を設定します。
@@ -391,7 +380,7 @@ GalateaTalkをインストールします。
   $ crontab -e
   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   10,25,40,55 * * * * /usr/local/bin/ruby /var/share/joruri/script/runner \
-    -e development "Script.run('sys/script/tasks/exec')"
+    -e production "Script.run('sys/script/tasks/exec')"
   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
   ※公開ディレクトリ : /var/share/joruri/public_00000001
@@ -401,7 +390,7 @@ GalateaTalkをインストールします。
   $ crontab -e
   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   */15 * * * * /usr/local/bin/ruby /var/share/joruri/script/runner \
-    -e development "Script.run('cms/script/nodes/publish')"
+    -e production "Script.run('cms/script/nodes/publish')"
   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 音声ファイルを静的ファイルとして書き出します。
@@ -409,7 +398,7 @@ GalateaTalkをインストールします。
   $ crontab -e
   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   */15 * * * * /usr/local/bin/ruby /var/share/joruri/script/runner \
-    -e development "Script.run('cms/script/talk_tasks/exec')"
+    -e production "Script.run('cms/script/talk_tasks/exec')"
   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 新着記事ポータルで設定したAtomフィードを取り込みます。
@@ -417,7 +406,7 @@ GalateaTalkをインストールします。
   $ crontab -e
   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   0 * * * * /usr/local/bin/ruby /var/share/joruri/script/runner \
-    -e development "Script.run('cms/script/feeds/read')"
+    -e production "Script.run('cms/script/feeds/read')"
   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 **********************************************************************

@@ -35,7 +35,7 @@ module FormHelper
     end
     
     h = '<div class="submitters">'
-    if args[0].class == String || args[0].class == Symbol
+    if args[0].is_a?(String) || args[0].class == Symbol
       h += make_tag.call(args[0], args[1])
     elsif args[0].class == Hash
       args[0].each {|k, v| h += make_tag.call(k, v) }

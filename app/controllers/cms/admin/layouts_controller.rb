@@ -43,7 +43,7 @@ class Cms::Admin::LayoutsController < Cms::Controller::Admin::Base
   def update
     @item = Cms::Layout.new.find(params[:id])
     @item.attributes = params[:item]
-    _update(@item, :location => url_for(:action => :edit)) do
+    _update(@item) do
       @item.put_css_files
     end
   end

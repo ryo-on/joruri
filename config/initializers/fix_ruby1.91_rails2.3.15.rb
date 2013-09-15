@@ -1,5 +1,8 @@
 # encoding: utf-8
-# patch for ruby1.9.1 and Rails2.3.5
+# patch for ruby1.9.1 and Rails2.3.15
+
+Encoding.default_internal = 'utf-8'
+Encoding.default_external = 'utf-8'
 
 class Symbol; def to_a; [self.to_s]; end; end
 
@@ -66,35 +69,21 @@ module ActionController
   end
 end
 
-module ActionView
-  module Renderable #:nodoc:
-    private
-      def compile!(render_symbol, local_assigns)
-        locals_code = local_assigns.keys.map { |key| "#{key} = local_assigns[:#{key}];" }.join
-
-            #old_output_buffer = output_buffer;#{locals_code};#{compiled_source}
-        source = <<-end_src
-          # encoding: utf-8
-          def #{render_symbol}(local_assigns)
-            old_output_buffer = output_buffer;#{locals_code};#{compiled_source.respond_to?(:force_encoding) ? compiled_source.force_encoding(Encoding::UTF_8) : compiled_source}
-          ensure
-            self.output_buffer = old_output_buffer
-          end
-        end_src
-
-        begin
-          ActionView::Base::CompiledTemplates.module_eval(source, filename, 0)
-        rescue Errno::ENOENT => e
-          raise e # Missing template file, re-raise for Base to rescue
-        rescue Exception => e # errors from template code
-          if logger = defined?(ActionController) && Base.logger
-            logger.debug "ERROR: compiling #{render_symbol} RAISED #{e}"
-            logger.debug "Function body: #{source}"
-            logger.debug "Backtrace: #{e.backtrace.join("\n")}"
-          end
-
-          raise ActionView::TemplateError.new(self, {}, e)
-        end
+class ERB
+  module Util
+    def html_escape(s)
+      s = s.to_s
+      
+      ## check encoding
+      s.force_encoding(Encoding::UTF_8) if s.respond_to?(:force_encoding)
+      
+      if s.html_safe?
+        s
+      else
+        s.to_s.gsub(/&/, "&amp;").gsub(/\"/, "&quot;").gsub(/>/, "&gt;").gsub(/</, "&lt;").html_safe
       end
+    end
+    
+    module_function :html_escape
   end
 end

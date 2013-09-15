@@ -13,6 +13,8 @@ class Cms::DataFile < ActiveRecord::Base
   belongs_to :site   , :foreign_key => :site_id   , :class_name => 'Cms::Site'
   belongs_to :node   , :foreign_key => :node_id   , :class_name => 'Cms::DataFileNode'
   
+  validates_presence_of :concept_id
+  
   after_destroy :remove_public_file
   
   def public_path

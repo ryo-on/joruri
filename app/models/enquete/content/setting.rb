@@ -8,4 +8,6 @@ class Enquete::Content::Setting < Cms::ContentSetting
     :form_type => :text
   set_config :lower_reply_text, :name => "自動返信テキスト（下部）",
     :form_type => :text
+  set_config :use_captcha, :name => "画像認証",
+    :options => [["使用する", 1], ["使用しない", 0]]
 end

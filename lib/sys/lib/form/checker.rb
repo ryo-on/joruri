@@ -68,7 +68,7 @@ class Sys::Lib::Form::Checker
       html += %Q(</ul>)
     end
     
-    if options[:checkbox].class == String && @links.index(false)
+    if options[:checkbox].is_a?(String) && @links.index(false)
       html += %Q(<div class="checkbox">#{options[:checkbox]}</div>)
     end
     

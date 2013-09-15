@@ -17,7 +17,7 @@ class Cms::Piece < ActiveRecord::Base
 
   attr_accessor :in_settings
   
-  validates_presence_of :state, :model, :name, :title
+  validates_presence_of :concept_id, :state, :model, :name, :title
   validates_uniqueness_of :name, :scope => :concept_id,
     :if => %Q(!replace_page?)
   validates_format_of :name, :with => /^[0-9a-zA-Z\-_]+$/, :if => "!name.blank?",

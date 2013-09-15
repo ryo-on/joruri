@@ -42,7 +42,6 @@ module Sys::Model::Rel::File
   end
   
   def close_files
-    dump "remove files"
     #return true unless @save_mode == :close
     
     dir = public_files_path

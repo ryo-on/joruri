@@ -2,12 +2,12 @@
 module Article::Model::Rel::Doc::Rel
   attr_accessor :in_rel_doc_ids
   
-  def rel_docs
+  def rel_docs(options = {})
     docs = []
     ids = rel_doc_ids.to_s.split(' ').uniq
     return docs if ids.size == 0
     ids.each do |id|
-      doc = Article::Doc.find_by_id(id)
+      doc = Article::Doc.find_by_id(id, options)
       docs << doc if doc
     end
     docs

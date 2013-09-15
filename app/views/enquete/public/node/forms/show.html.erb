@@ -21,18 +21,28 @@
     <div class="field"><%= e.tag %></div>
   </div>
   <% end %>
-</div>
-
-<% if @form.elements.size > 0 %>
-<div class="submitters">
-  <% if !@confirm %>
-  <input type="submit" class="confirm" value="確認画面へ" />
-  <% else %>
-  <input type="hidden" name="confirm" value="1" />
-  <input type="submit" class="send" value="送信する" />
-  <input type="submit" class="edit" name="edit" value="変更する" />
+  
+  <% if !@confirm && @use_captcha %>
+  <div class="column">
+    <div class="name">画像認証</div>
+    <div class="field">
+      <%= show_simple_captcha :object => "item", :image_style => "simply_green", :distortion => "middle",
+      :label => "画像の文字を入力してください" %>
+    </div>
+  </div>
   <% end %>
 </div>
+
+<% if !@confirm %>
+  <div class="submitters">
+    <input type="submit" class="confirm" value="確認画面へ" />
+  </div>
+<% else %>
+  <div class="submitters">
+    <input type="hidden" name="confirm" value="1" />
+    <input type="submit" class="send" value="送信する" />
+    <input type="submit" class="edit" name="edit" value="変更する" />
+  </div>
 <% end %>
 
 <% end %>

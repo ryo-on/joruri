@@ -15,6 +15,8 @@ class Enquete::Form < ActiveRecord::Base
 
   validates_presence_of :name
   
+  apply_simple_captcha :message => "画像と文字が一致しません。", :add_to_base => true
+  
   def public
     self.and "#{self.class.table_name}.state", 'public'
     self

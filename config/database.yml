@@ -1,4 +1,4 @@
-development:
+production:
   adapter : mysql
   database: joruri
   username: joruri
@@ -16,7 +16,7 @@ test:
   encoding: 
   host: 
 
-production:
+development:
   adapter : 
   database: 
   username: 
