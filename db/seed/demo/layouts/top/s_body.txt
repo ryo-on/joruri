@@ -30,7 +30,7 @@
 <div id="contentContainer">
 <div id="contentBody">
 
-[[piece/smart-doc-tab-portal]]
+[[piece/smart-doc-tab]]
 [[piece/smart-topic]]
 [[piece/smart-lifeevent]]
 [[piece/useful-information]]

@@ -255,6 +255,16 @@ end
 ## ---------------------------------------------------------
 ## cms/nodes
 
+if node = Cms::Node.find(:first, :conditions => {:id => 1, :parent_id => 0})
+  node.title = site_name
+  node.save(false)
+end
+
+if node = Cms::Node.find(:first, :conditions => {:id => 2, :name => "index.html"})
+  node.title = site_name
+  node.save(false)
+end
+
 def create_cms_node(params)
   params[:site_id]        ||= 1
   params[:concept_id]     ||= 1

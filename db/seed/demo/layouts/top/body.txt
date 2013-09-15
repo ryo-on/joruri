@@ -34,7 +34,7 @@
 
 [[piece/photo]]
 
-[[piece/doc-tab-portal]]
+[[piece/doc-tab]]
 
 [[piece/topic]]
 
