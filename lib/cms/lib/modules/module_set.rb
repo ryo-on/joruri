@@ -14,7 +14,7 @@ class Cms::Lib::Modules::ModuleSet
     Dir::entries('config/modules').sort.each do |mod|
       next if mod =~ /^\.+$/
       file = "#{Rails.root}/config/modules/#{mod}/module.rb"
-      load(file) if FileTest.exist?(file)
+      load(file) if FileTest.exists?(file)
     end
     @@modules
   end
@@ -40,7 +40,7 @@ class Cms::Lib::Modules::ModuleSet
   
   def directory(name, label)
     label = "ディレクトリ/#{label}" if label != 'ディレクトリ'
-    @pages << Model.new(self, name, label, :directory)
+    @directories << Model.new(self, name, label, :directory)
   end
   
   def page(name, label)

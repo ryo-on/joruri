@@ -3,7 +3,7 @@
 case @item.form_type
 when :select
   opt = @item.config_options
-  value_form = f.select(:value, opt, :include_blank => true)
+  value_form = f.select(:value, opt, :include_blank => "　")
 when :text
   value_form = f.text_area(:value, :style => "width: 600px; height: 160px;")
 else
@@ -19,7 +19,7 @@ lower_text = @item.lower_text ? %Q(<div style="margin: 5px; line-height: 1.2;">#
 <table class="show">
   <tr>
     <th>設定名</th>
-    <td><%=h @item.config_name %></td>
+    <td><%= @item.config_name %></td>
   </tr><tr>
     <th>設定値</th>
     <td><%=br upper_text %><%= value_form %><%= @item.config[:comment] %><%=br lower_text %></td>

@@ -1,5 +1,3 @@
-<h2>メール送信動作確認</h2>
-
 <% if @errors.size > 0 %>
 <div id="errorExplanation" class="errorExplanation">
   <p>次の項目を確認してください。</p>
@@ -7,7 +5,9 @@
 </div>
 <% end %>
 
-<% form_tag do %>
+<%= form_tag do %>
+
+<p class="form">メール送信</p>
 
 <table class="show">
   <tr>
@@ -24,11 +24,7 @@
     <td><%= text_area_tag "item[body]", @item[:body], :class => "body", :style => "height: 60px;" %></td>
   </tr><tr>
     <th>設定</th>
-    <td>
-      Address: <%= @config[:address] %><br />
-      Port: <%= @config[:port] %><br />
-      Authentication: <%= @config[:authentication] %><br />
-    </td>
+    <td><% @config.each do |key, value| %><%= key %>: <%= value %><br /><% end %></td>
   </tr>
 </table>
 

@@ -2,7 +2,8 @@
 <div class="pieceContainer">
 <div class="pieceBody">
 <a href="/bbs/">
-  <img title="掲示板" alt="掲示板" src="/_common/themes/joruri/top/images/bn-bbs.gif" /></a>
+ジョールリ市<br />
+<span class="bbs">掲示板</span></a>
 </div>
 </div>
 </div>

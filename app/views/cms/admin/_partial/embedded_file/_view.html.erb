@@ -9,7 +9,7 @@ thumb = item.embedded_thumbnail(name)
 
 <% if thumb %>
 <div style="margin: 5px 0px 0px;">
-  <img src="<%= embedded_thumbnail_path(file) %>" style="<%= file.reduced_size(:width => 60, :height => 40, :css => true) %>" />
+  <img src="<%= embedded_thumbnail_path(file) %>" style="<%= file.reduce_size(:width => 60, :height => 40, :thumbnail => true, :css => true) %>" />
 </div>
 <% end %>
 

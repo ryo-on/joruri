@@ -1,5 +1,6 @@
 # encoding: utf-8
 class Cms::Public::Node::PagesController < Cms::Controller::Public::Base
+  
   def index
     @item = Cms::Node::Page.find(Page.current_node.id)
     

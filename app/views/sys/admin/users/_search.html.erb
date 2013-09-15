@@ -1,4 +1,4 @@
-<% form_for :item, :url => '',  :html => {:method => :get, :class => 'search'} do |f|
+<%= form_for :item, :url => '',  :html => {:method => :get, :class => 'search'} do |f| %><%
 
 groups = Sys::Group.find(:all, :conditions => {:level_no => 2}, :order => :sort_no)
 groups = f.select_with_tree(:in_group_id, groups)

@@ -1,6 +1,5 @@
 # encoding: utf-8
 module Cms::Model::Rel::Inquiry
-  attr_accessor :in_inquiry
   
   @@inquiry_presence_of = [:group_id, :tel, :email]
   
@@ -12,18 +11,18 @@ module Cms::Model::Rel::Inquiry
   end
 
   def in_inquiry
-    unless val = read_attribute(:in_inquiry)
+    unless val = @in_inquiry
       val = {}
       val = inquiry.attributes if inquiry
-      write_attribute(:in_inquiry, val)
+      @in_inquiry = val
     end
-    read_attribute(:in_inquiry)
+    @in_inquiry
   end
 
   def in_inquiry=(values)
     @inquiry = {}
     values.each {|k,v| @inquiry[k.to_s] = v if !v.blank? }
-    write_attribute(:in_inquiry, @inquiry)
+    @in_inquiry = @inquiry
   end
 
   def inquiry_states
@@ -43,20 +42,20 @@ module Cms::Model::Rel::Inquiry
   
   def validate_inquiry
     if @inquiry && @inquiry['state'] == 'visible'
-      if inquiry_presence?(:group) && @inquiry['group_id'].blank?
-        errors.add "連絡先（課）", :empty
+      if inquiry_presence?(:group_id) && @inquiry['group_id'].blank?
+        errors[:in_inquiry_group_id] = error_locale(:empty)
       end
       if inquiry_presence?(:tel) && @inquiry['tel'].blank?
-        errors.add "連絡先（電話番号）", :empty
+        errors[:in_inquiry_tel] = error_locale(:empty)
       end
-      errors.add "連絡先（電話番号）", :onebyte_characters if @inquiry['tel'].to_s !~/^[ -~｡-ﾟ]*$/
-      errors.add "連絡先（ファクシミリ）", :onebyte_characters if @inquiry['fax'].to_s !~/^[ -~｡-ﾟ]*$/
+      errors[:in_inquiry_tel] = error_locale(:onebyte_characters) if @inquiry['tel'].to_s !~/^[ -~｡-ﾟ]*$/
+      errors[:in_inquiry_fax] = error_locale(:onebyte_characters) if @inquiry['fax'].to_s !~/^[ -~｡-ﾟ]*$/
       
       if inquiry_email_setting != "hidden"
         if inquiry_presence?(:email) && @inquiry['email'].blank?
-          errors.add "連絡先（メールアドレス）", :empty
+          errors[:in_inquiry_email] = error_locale(:blank)
         end
-        errors.add "連絡先（メールアドレス）", :onebyte_characters if @inquiry['email'].to_s !~/^[ -~｡-ﾟ]*$/
+        errors[:in_inquiry_email] = error_locale(:invalid) if @inquiry['email'].to_s !~/^[ -~｡-ﾟ]*$/
       end
     end
   end

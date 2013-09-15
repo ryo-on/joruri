@@ -8,11 +8,11 @@
   </tr>
   
   <% for item in @items %>
-  <tr <%= cycle '', 'class="cycle"' %>>
+  <tr class="<%= cycle '', 'cycle' %>">
     <td style="text-align: center;"><%= link_to :show, url_for(:action => :show, :id => item) %></td>
-    <td><%=h item.name %></td>
+    <td><%= item.name %></td>
     <td><%=link_to h(item.title), sys_object_privileges_path(item) %></td>
-    <td style="text-align: center;"><%=h safe{item.updated_at.strftime('%Y-%m-%d %H:%M')} %></td>
+    <td style="text-align: center;"><%= safe{item.updated_at.strftime('%Y-%m-%d %H:%M')} %></td>
   </tr>
   <% end %>
 

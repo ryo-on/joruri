@@ -1,3 +1,5 @@
+<h2>ピース</h2>
+
 <%= action_menu :new if Core.user.has_priv?(:create, :item => Core.concept) %>
 <%= action_menu :index, cms_pieces_path %>
 <%= action_menu :show %>

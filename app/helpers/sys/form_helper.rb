@@ -1,7 +1,7 @@
 # encoding: utf-8
 module Sys::FormHelper
   def creator_form(form)
-    item = @template.instance_variable_get("@#{form.object_name}")
+    item = instance_variable_get("@#{form.object_name}")
     locals = {:f => form, :item => item}
     render :partial => 'sys/admin/_partial/creators/form', :locals => locals
   end
@@ -12,7 +12,7 @@ module Sys::FormHelper
   end
   
   def recognizer_form(form)
-    item = @template.instance_variable_get("@#{form.object_name}")
+    item = instance_variable_get("@#{form.object_name}")
     locals = {:f => form, :item => item}
     render :partial => 'sys/admin/_partial/recognizers/form', :locals => locals
   end
@@ -23,7 +23,7 @@ module Sys::FormHelper
   end
   
   def task_form(form)
-    item = @template.instance_variable_get("@#{form.object_name}")
+    item = instance_variable_get("@#{form.object_name}")
     locals = {:f => form, :item => item}
     render :partial => 'sys/admin/_partial/tasks/form', :locals => locals
   end
@@ -34,7 +34,7 @@ module Sys::FormHelper
   end
   
   def editable_group_form(form)
-    item = @template.instance_variable_get("@#{form.object_name}")
+    item = instance_variable_get("@#{form.object_name}")
     locals = {:f => form, :item => item}
     render :partial => 'sys/admin/_partial/editable_groups/form', :locals => locals
   end

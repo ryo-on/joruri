@@ -1,4 +1,4 @@
-<%= render :file => "#{::File.dirname(params[:controller])}/_search.html.erb" %>
+<%= render :partial => "faq/admin/docs/search" %>
 
 <table class="index">
 
@@ -13,11 +13,11 @@
   </tr>
   
   <% for item in @items %>
-  <tr <%= cycle '', 'class="cycle"' %>>
+  <tr class="<%= cycle '', 'cycle' %>">
     <td style="text-align: center;"><%= link_to :show, url_for(:action => :show, :id => item) %></td>
-    <td style="text-align: right;"><%=h item.id %></td>
-    <td><%=h truncate(item.title, :length => 36) %><%= " （更新用）" if item.replace_page? %></td>
-    <td><%=h item.creator.user.name_with_account if item.creator && item.creator.user %></td>
+    <td style="text-align: right;"><%= item.id %></td>
+    <td><%= truncate(item.title, :length => 36) %><%= " （更新用）" if item.replace_page? %></td>
+    <td><%= item.creator.user.name_with_account if item.creator && item.creator.user %></td>
     <td style="text-align: center;"><%= safe{item.updated_at.strftime("%Y-%m-%d %H:%M")} %></td>
     <td style="text-align: center;"><%= safe{item.status.name} %></td>
     <td style="text-align: center;">

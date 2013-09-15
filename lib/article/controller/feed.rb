@@ -59,10 +59,12 @@ module Article::Controller::Feed
     xml = Builder::XmlMarkup.new(:indent => 2)
     xml.instruct! :xml, :version => 1.0, :encoding => 'UTF-8'
     xml.feed 'xmlns' => 'http://www.w3.org/2005/Atom' do
-
+      
+      updated = (docs[0] && docs[0].published_at) ? docs[0].published_at : Date.today
+      
       xml.id      "tag:#{Page.site.domain},#{Page.site.created_at.strftime('%Y')}:#{Page.current_node.public_uri}"
       xml.title   @feed_name
-      xml.updated Time.now.strftime('%Y-%m-%dT%H:%M:%S%z').sub(/([0-9][0-9])$/, ':\1')
+      xml.updated updated.strftime('%Y-%m-%dT%H:%M:%S%z').sub(/([0-9][0-9])$/, ':\1')
       xml.link    :rel => 'alternate', :href => @node_uri
       xml.link    :rel => 'self', :href => @req_uri, :type => 'application/atom+xml', :title => @feed_name
 

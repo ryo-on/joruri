@@ -12,7 +12,7 @@ class Cms::Piece::Link < Cms::Piece
       dupe_link.piece_id   = dupe_item.id
       dupe_link.created_at = nil
       dupe_link.updated_at = nil
-      dupe_link.save(false)
+      dupe_link.save(:validate => false)
     end
     
     return dupe_item

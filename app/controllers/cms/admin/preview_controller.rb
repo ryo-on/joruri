@@ -17,18 +17,16 @@ class Cms::Admin::PreviewController < Cms::Controller::Admin::Base
     Page.uri    = path
     Page.mobile = options[:mobile]
     
-    routes = ActionController::Routing::Routes
-    node   = Core.search_node(path)
-    env    = {}
-    opt    = routes.recognize_optimized(node, env)
-    ctl    = opt[:controller]
-    act    = opt[:action]
+    node = Core.search_node(path)
+    env  = {}
+    opt  = _routes.recognize_path(node, env)
+    ctl  = opt[:controller]
+    act  = opt[:action]
     
     opt.each {|k,v| params[k] = v }
-    #opt[:layout_id] = params[:layout_id] if params[:layout_id]
-    #opt[:authenticity_token] = params[:authenticity_token] if params[:authenticity_token]
     
-    render_component :controller => ctl, :action => act, :params => params
+    res = render_component :controller => ctl, :action => act, :params => params
+    response.content_type = res.content_type
   end
 
 protected
@@ -37,7 +35,7 @@ protected
     return if response.body.class != String
     
     mobile   = Page.mobile? ? 'm' : ''
-    base_uri = "#{Core.full_uri}_preview/#{format('%08d', Page.site.id)}#{mobile}"
+    base_uri = "/_preview/#{format('%08d', Page.site.id)}#{mobile}"
     
     response.body = response.body.gsub(/<a[^>]+?href="\/[^"]*?"[^>]*?>/i) do |m|
       if m =~ /href="\/_(files|emfiles|layouts)\//

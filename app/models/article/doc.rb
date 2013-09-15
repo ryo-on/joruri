@@ -106,7 +106,7 @@ class Article::Doc < ActiveRecord::Base
   
   def validate_links
     unless @link_checker.check_link(body)
-      errors.add_to_base "リンクチェックの結果を確認してください。"
+      errors.add :base, "リンクチェックの結果を確認してください。"
     end
   end
   
@@ -274,7 +274,6 @@ class Article::Doc < ActiveRecord::Base
       qw = self.connection.quote_string(tag).gsub(/([_%])/, '\\\\\1')
       self.and "sql", "EXISTS (SELECT * FROM article_tags WHERE article_docs.unid = article_tags.unid AND word LIKE '#{qw}%') "
     end
-    
     self
   end
   
@@ -411,11 +410,11 @@ class Article::Doc < ActiveRecord::Base
     return self
   end
 
-  def publish(content)
+  def publish(content, options = {})
     @save_mode = :publish
     self.state = 'public'
     self.published_at ||= Core.now
-    return false unless save(false)
+    return false unless save(:validate => false)
     
     if rep = replaced_page
       rep.destroy
@@ -423,13 +422,14 @@ class Article::Doc < ActiveRecord::Base
     
     publish_page(content, :path => public_path, :uri => public_uri)
     publish_files
+    return true
   end
   
   def close
     @save_mode = :close
     self.state = 'closed' if self.state == 'public'
     #self.published_at = nil
-    return false unless save(false)
+    return false unless save(:validate => false)
     close_files
     return true
   end
@@ -444,11 +444,13 @@ class Article::Doc < ActiveRecord::Base
     super
   end
   
-  def rebuild(content, options)
+  def rebuild(content, options = {})
     return false unless public?
     @save_mode = :publish
-    publish_page(content, options)
-    publish_files ## dust remains
+    
+    publish_page(content, :path => public_path, :uri => public_uri)
+    publish_files if options[:file]
+    return true
   end
   
   def duplicate(rel_type = nil)
@@ -486,7 +488,7 @@ class Article::Doc < ActiveRecord::Base
       item.in_maps = _maps
     end
     
-    return false unless item.save(false)
+    return false unless item.save(:validate => false)
     
     files.each do |f|
       file = Sys::File.new(f.attributes)

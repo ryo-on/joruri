@@ -4,12 +4,12 @@
 
 <% if @link_entry_form %>
 <div class="bbsMenu">
-  <%= link_to "新規投稿", "#{@node_uri}new", :class => "newEntry" %>
+  <%= link_to "新規投稿", "#{@node_uri}new.html", :class => "newEntry" %>
 </div>
 <% else %>
 <div class="entryForm">
   <h2 class="formTitle">投稿フォーム</h2>
-  <% form_for :item, :url => @node_uri do |f| %>
+  <%= form_for :item, :url => @node_uri do |f| %>
     <%= render :partial => "form", :locals => {:f => f} %>
     <div class="submitters">
       <% if @use_once_click %>
@@ -39,16 +39,16 @@
 <% if @use_password %>
 <div class="deleteForm" id="deleteForm">
   <h2 class="formTitle">削除フォーム</h2>
-  <% form_for :item, :url => "#{@node_uri}#deleteForm" do |f| %>
+  <%= form_for :item, :url => "#{@node_uri}#deleteForm" do |f| %>
     <% if @delete_error %>
     <div class="errorExplanation">投稿No.と削除パスを正しく入力してください。</div>
     <% end %>
     <input type="hidden" name="_method" value="DELETE" />
     <dl>
       <dt>投稿No.</dt>
-      <dd><input class="no" type="text" name="no" value="<%= h(params[:no]) %>" /></dd>
+      <dd><input class="no" type="text" name="no" value="<%= params[:no] %>" autocomplete="off" /></dd>
       <dt>削除パス</dt>
-      <dd><input class="password" type="password" name="password" value="<%= h(params[:password]) %>" /></dd>
+      <dd><input class="password" type="password" name="password" value="<%= params[:password] %>" /></dd>
     </dl>
     <input type="submit" value="削除する" />
   <% end %>

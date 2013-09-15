@@ -14,8 +14,6 @@ class Article::Public::Node::TagDocsController < Cms::Controller::Public::Base
       return redirect_to("#{@base_uri}#{CGI::escape(@tag)}")
     end
     
-    @docs = Array.new.paginate
-    
     if @tag
       doc = Article::Doc.new.public
       doc.agent_filter(request.mobile)
@@ -24,6 +22,8 @@ class Article::Public::Node::TagDocsController < Cms::Controller::Public::Base
       doc.tag_is @tag
       doc.page params[:page], (request.mobile? ? 20 : 50)
       @docs = doc.find(:all, :order => 'published_at DESC')
+    else
+      @docs = Article::Doc.find(:all, :conditions => ["0 = 1"])
     end
     
     return true if render_feed(@docs)

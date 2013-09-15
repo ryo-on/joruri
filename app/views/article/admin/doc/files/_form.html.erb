@@ -1,8 +1,8 @@
 <%
 
-chFile = "$(item_name).value = $(item_file).value.replace(/\\\\/g, '/').replace(/.*\\//, '');"
-chFile += "$(item_title).value = $(item_file).value.replace(/\\\\/g, '/').replace(/.*\\//, '');"
-chFile += "if ($(item_name).value.match(/[^0-9a-z\\.\\-_\\+@]/i)) alert('保存ファイル名を半角英数字で入力してください。');"
+chFile = "$('#item_name').val( $('#item_file').val().replace(/\\\\/g, '/').replace(/.*\\//, '') );"
+chFile += "$('#item_title').val( $('#item_file').val().replace(/\\\\/g, '/').replace(/.*\\//, '') );"
+chFile += "if ($('#item_name').val().match(/[^0-9a-z\\.\\-_\\+@]/i)) alert('保存ファイル名を半角英数字で入力してください。');"
 
 %><table class="show" style="margin-top:0px;">
   
@@ -12,7 +12,7 @@ chFile += "if ($(item_name).value.match(/[^0-9a-z\\.\\-_\\+@]/i)) alert('保存�
     <td><%= f.file_field :file, :style => 'width: 450px;', :size => 64, :onchange => chFile %></td>
   </tr><tr>
     <th>画像リサイズ</th>
-    <td><%= f.select :in_resize_size, Sys::Model::Base::File.sizes(:include_blank => ""), :class => 'number'  %></td>
+    <td><%= f.select :in_resize_size, Sys::Model::Base::File.sizes(:include_blank => "　"), :class => 'number'  %></td>
   <!--
   </tr><tr>
     <th>サムネイルサイズ</th>

@@ -1,14 +1,14 @@
 <%= render :partial => 'menu' %>
 
-<%#= render :file => "cms/admin/data/files/show.html.erb" %>
+<%#= render :file => "cms/admin/data/files/show" %>
 
 <table class="show">
   <tr>
     <th><%= @item.locale(:state) %></th>
-    <td><%=h safe{@item.status.name} %></td>
+    <td><%= safe{@item.status.name} %></td>
   </tr><tr>
     <th><%= @item.locale(:node_id) %></th>
-    <td><%=h safe{@item.node.name} %></td>
+    <td><%= safe{@item.node.name} %></td>
   </tr>
   <% if @item.image_file? %>
   <tr>
@@ -20,11 +20,11 @@
   <% end %>
   <tr>
     <th><%= @item.locale(:name) %></th>
-    <td><%=h @item.name %></td>
+    <td><%= @item.name %></td>
   </tr><tr>
     <th><%= @item.locale(:title) %></th>
-    <td><%=h @item.title %></td>
+    <td><%= @item.title %></td>
   </tr><tr>
     <th><%= @item.locale(:size) %></th>
-    <td><%= @item.eng_unit %><br /><%= @item.image_size %></td>
+    <td><%= @item.eng_unit %> <%= @item.image_size %></td>
 </table>

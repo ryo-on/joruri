@@ -3,126 +3,109 @@ class Newsletter::Public::Node::FormsController < Cms::Controller::Public::Base
 
   def pre_dispatch
     return http_error(404) unless content = Page.current_node.content
-    @content = Newsletter::Content::Base.find_by_id(content.id)
+    
+    @content     = Newsletter::Content::Base.find_by_id(content.id)
+    @node        = Page.current_node
+    @node_uri    = @node.public_uri
+    @use_captcha = @content.setting_value(:use_captcha) == "1"
   end
 
   def index
-    if _receive
-      # complete view
-      redirect_to "#{Page.current_node.public_uri}sent/#{@item.id}/#{@item.token}/"
-    else
-      return false
+    @item = Newsletter::Request.new
+    return true unless request.post?
+    
+    @item.attributes   = params[:item]
+    @item.state        = "enabled"
+    @item.content_id   = @content.id
+    @item.request_type = "subscribe"
+    @item.ipaddr       = request.remote_addr
+    
+    valid = @use_captcha ? @item.valid_with_captcha? : @item.valid?
+    return unless valid
+    
+    begin
+      send_mail({
+        :from    => @content.mail_from,
+        :to      => @item.email,
+        :subject => "#{@content.name}登録のご案内",
+        :body    => @item.subscribe_guide_body,
+      })
+    rescue Exception => e
+      return render(:text => "処理に失敗しました。")
     end
+    
+    redirect_to "#{@node_uri}sent.html"
   end
 
   def change
-    if _receive
-      # complete view
-      redirect_to "#{Page.current_node.public_uri}sent/#{@item.id}/#{@item.token}/"
-    else
-      return false
+    @item = Newsletter::Request.new
+    return true unless request.post?
+    
+    @item.attributes   = params[:item]
+    @item.state        = "enabled"
+    @item.content_id   = @content.id
+    @item.request_type = "unsubscribe"
+    @item.ipaddr       = request.remote_addr
+    
+    valid = @use_captcha ? @item.valid_with_captcha? : @item.valid?
+    return unless valid
+    
+    begin
+      send_mail({
+        :from    => @content.mail_from,
+        :to      => @item.email,
+        :subject => "#{@content.name}解除のご案内",
+        :body    => @item.unsubscribe_guide_body,
+      })
+    rescue Exception => e
+      return render(:text => "処理に失敗しました。")
     end
+    
+    redirect_to "#{@node_uri}sent.html"
   end
-
+  
   def sent
-    item = Newsletter::Request.new
-    item.and :content_id, @content.id
-    item.and :id, params[:id]
-    item.and :token, params[:token]
-    return http_error(404) unless @item = item.find(:first)
-
-    if @item.subscribe? && !slave?
-      @item.destroy
-    end
+    #
   end
-
+  
+  def subscribe
+    return http_error(404) if params[:email].to_s !~ /^[^\/]+\/[^\/]+$/
+    
+    email = params[:email].gsub(/\/.*/, '')
+    hash  = params[:email].gsub(/.*\//, '')
+    type  = params[:type]
+    
+    @item = Newsletter::Request.new
+    @item.email        = email
+    @item.letter_type  = @item.letter_types.collect{|v, k| k }.index(type) ? type : "pc_text"
+    @item.state        = "enabled"
+    @item.content_id   = @content.id
+    @item.request_type = "subscribe"
+    @item.ipaddr       = request.remote_addr
+    
+    return http_error(404) if hash != @item.email_hash
+    return unless request.post?
+    
+    return redirect_to("#{@node_uri}sent.html?subscribe") if @item.save # @item.save_with_captcha
+  end
+  
   def unsubscribe
-    req = Newsletter::Request.new
-    req.and :content_id, @content.id
-    req.and :id, params[:id]
-    req.and :token, params[:token]
-    unless @req = req.find(:first)
-      render :text => '既に解除されているか、登録されていない可能性があります。'
-      return false
-    end
-
-    # member, request
-    mem = Newsletter::Member.new.enabled
-    mem.and :content_id, @content.id
-    mem.and :email, @req.unsubscribe_email
-    # mem.and :letter_type, @req.letter_type
-    if slave?
-      @req.request_state = 'done'
-      @req.save
-    else
-      if @mem = mem.find(:first)
-        @mem.state = 'disabled'
-        @mem.save
-      end
-      @req.request_state = 'done'
-      @req.destroy
-    end
-
-    # send mail
-    send_notice_mail(@req)
-    render :text => "メールマガジンの解除が完了いたしました。"
-    return false
-  end
-
-protected
-  def _receive
-    @item = Newsletter::Request.new({
-      :state        => 'enabled',
-      :content_id   => @content.id,
-    })
-    @item.is_slave(slave?)
-
-    ## post
-    return false unless request.post?
-    @item.submit_values(params[:item], params[:subscribe])
-
-    ## validate
-    return false unless @item.valid?
-
-    ## save
-    # request
-    @item.token = generate_token
-    @item.save
-    # member
-    if @item.subscribe? && !slave?
-      Newsletter::Member.new({
-        :state        => 'enabled',
-        :content_id   => @content.id,
-        :letter_type  => @item.letter_type,
-        :email        => @item.subscribe_email,
-      }).save
-    end
-
-    ## send mail
-    # subscribe            >> complete mail
-    # alter or unsubscribe >> notice mail
-    send_notice_mail(@item)
-  end
-
-  def send_notice_mail(item, optioins={})
-    mail_fr = item.content.sender_address || item.creator.user.email
-    subject = "#{item.notice_title}"
-    body = "#{item.notice_body}"
-
-    send_mail(mail_fr, item.email, subject, body)
-    return true
-  end
-
-  def generate_token
-    _token = ''
-    chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
-    while _token.size < 30
-      _token += chars[rand(chars.size) - 1, 1]
-    end
-    return _token
-  end
-
-  def slave?
-    Core.config.has_key?('master') ? true : false;
+    return http_error(404) if params[:email].to_s !~ /^[^\/]+\/[^\/]+$/
+    
+    email = params[:email].gsub(/\/.*/, '')
+    hash  = params[:email].gsub(/.*\//, '')
+    type  = params[:type]
+    
+    @item = Newsletter::Request.new
+    @item.email        = email
+    @item.state        = "enabled"
+    @item.content_id   = @content.id
+    @item.request_type = "unsubscribe"
+    @item.ipaddr       = request.remote_addr
+    
+    return http_error(404) if hash != @item.email_hash
+    return unless request.post?
+    
+    return redirect_to("#{@node_uri}sent.html?unsubscribe") if @item.save # @item.save_with_captcha
   end
 end

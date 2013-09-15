@@ -1,9 +1,9 @@
 <%= init_tiny_mce :readonly => true %>
 
 <% if rep = @item.replace_page %>
-<div class="noticeBox">更新用のページが作成されています ： <%= link_to h(rep.title), rep.admin_uri %></div>
+<div class="noticeBox">更新用のページが作成されています : <%= link_to h(rep.title), rep.admin_uri %></div>
 <% elsif org = @item.replaced_page %>
-<div class="noticeBox">更新されるページ ： <%= link_to h(org.title), org.admin_uri %></div>
+<div class="noticeBox">更新されるページ : <%= link_to h(org.title), org.admin_uri %></div>
 <% end %>
 
 <p class="form">基本情報</p>
@@ -20,7 +20,7 @@
 </table>
 
 <% if !@item.mobile_title.blank? || !@item.mobile_body.blank? %>
-<br /><p class="form">携帯向け</p>
+<p class="form">携帯向け</p>
 
 <table class="show">
   <tr>

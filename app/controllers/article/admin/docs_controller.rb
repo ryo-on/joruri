@@ -8,21 +8,15 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
   def pre_dispatch
     return error_auth unless @content = Cms::Content.find(params[:content])
     return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
-    default_url_options :content => @content
+    #default_url_options[:content] = @content
+
     return redirect_to(request.env['PATH_INFO']) if params[:reset]
     
     @recognition_type = @content.setting_value(:recognition_type)
   end
 
   def index
-    item = Article::Doc.new#.public#.readable
-    #item.public unless Core.user.has_auth?(:manager)
-    item.and :content_id, @content.id
-    item.search params
-    item.page  params[:page], params[:limit]
-    item.order params[:sort], 'updated_at DESC'
-    @items = item.find(:all)
-    _index @items
+    redirect_to article_edit_docs_path
   end
 
   def show
@@ -63,7 +57,7 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
     
     ## convert sys urls
     unid = params[:_tmp] || @item.unid
-    @item.body = @item.body.gsub(::File.join(Core.site.full_uri, sys_inline_files_path(unid)), '.')
+    @item.body = @item.body.gsub(::File.join(Core.site.full_uri, article_preview_doc_file_path(:parent => unid)), '.')
     
     ## link check
     @checker = Sys::Lib::Form::Checker.new
@@ -92,7 +86,7 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
 
     ## convert sys urls
     unid = params[:_tmp] || @item.unid
-    @item.body = @item.body.gsub(::File.join(Core.site.full_uri, sys_inline_files_path(unid)), '.')
+    @item.body = @item.body.gsub(::File.join(Core.site.full_uri, article_preview_doc_file_path(:parent => unid)), '.')
     
     ## link check
     @checker = Sys::Lib::Form::Checker.new
@@ -166,7 +160,8 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
     uri  = item.public_uri
     uri  = (uri =~ /\?/) ? uri.gsub(/\?/, 'index.html.r?') : "#{uri}index.html.r"
     path = "#{item.public_path}.r"
-    item.publish_page(render_public_as_string(uri, :site => item.content.site), :path => path, :dependent => :ruby)
+    item.publish_page(render_public_as_string(uri, :site => item.content.site),
+      :path => path, :uri => uri, :dependent => :ruby)
   end
   
   def publish(item)
@@ -186,32 +181,43 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
   
 protected
   def send_recognition_request_mail(item, users = nil)
-    mail_fr = Core.user.email
-    mail_to = nil
-    subject = "#{item.content.name}（#{item.content.site.name}）：承認依頼メール"
-    message = "#{Core.user.name}さんより「#{item.title}」についての承認依頼が届きました。\n" +
-      "次の手順により，承認作業を行ってください。\n\n" +
-      "１．PC用記事のプレビューにより文書を確認\n#{item.preview_uri(:params => {:doc_id => item.id})}\n\n" +
-      "２．次のリンクから承認を実施\n" +
-      "#{url_for(:action => :show, :id => item)}\n"
+    body = []
+    body << "#{Core.user.name}さんより「#{item.title}」についての承認依頼が届きました。\n"
+    body << "次の手順により，承認作業を行ってください。\n\n"
+    body << "1. PC用記事のプレビューにより文書を確認\n"
+    body << "#{item.preview_uri(:params => {:doc_id => item.id})}\n\n"
+    body << "2. 次のリンクから承認を実施\n"
+    body << "#{Core.site.admin_uri(:path => article_all_doc_path(:id => item.id))}\n"
     
-    users ||= item.recognizers
-    users.each {|user| send_mail(mail_fr, user.email, subject, message) }
+    (users || item.recognizers).each do |user|
+      send_mail({
+        :to      => user.email,
+        :from    => Core.user.email,
+        :subject => "#{item.content.name} 承認依頼メール | #{item.content.site.name}",
+        :body    => body.join
+      })
+    end
   end
 
   def send_recognition_success_mail(item)
     return true unless item.recognition
     return true unless item.recognition.user
     return true if item.recognition.user.email.blank?
-
-    mail_fr = Core.user.email
-    mail_to = item.recognition.user.email
     
-    subject = "#{item.content.name}（#{item.content.site.name}）：最終承認完了メール"
-    message = "「#{item.title}」についての承認が完了しました。\n" +
-      "次のＵＲＬをクリックして公開処理を行ってください。\n\n" +
-      "#{url_for(:action => :show, :id => item)}"
+    task   = item.find_task_by_name('publish')
+    notice = task.blank? ? "" : "直ちに公開する場合は"
     
-    send_mail(mail_fr, mail_to, subject, message)
+    body = []
+    body << "「#{item.title}」についての承認が完了しました。\n"
+    body << "#{notice}次のURLをクリックして公開処理を行ってください。\n\n"
+    body << "#{Core.site.admin_uri(:path => article_all_doc_path(:id => item.id))}\n\n"
+    body << "公開予定日時　#{task.strftime('%Y年%-m月%-d日 %H:%M')}\n" if !task.blank?
+    
+    send_mail({
+      :from    => Core.user.email,
+      :to      => item.recognition.user.email,
+      :subject => "#{item.content.name} 最終承認完了メール | #{item.content.site.name}",
+      :body    => body.join
+    })
   end
 end

@@ -8,8 +8,12 @@ class Newsletter::Member < ActiveRecord::Base
 
   belongs_to :status, :foreign_key => :state, :class_name => 'Sys::Base::Status'
 
-  validates_presence_of :letter_type, :email
+  validates_presence_of :state, :email, :letter_type
 
+  def mobile?
+    letter_type.to_s =~ /mobile/
+  end
+  
   def search(params)
     params.each do |n, v|
       next if v.to_s == ''

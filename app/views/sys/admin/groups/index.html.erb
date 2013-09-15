@@ -3,14 +3,18 @@
 
   <p>
     <%= link_to :show, sys_group_url(@parent.parent_id, @parent) %>
-    <%=h @parent.name %></p>
+    <%= @parent.name %></p>
   
   <div class="links">
-    <div><%= link_to :up, url_for(:parent => @parent.parent_id) if @parent.level_no > 1 %></div>
+    <% if @parent.level_no > 1 %>
+    <div class="menu"><%= link_to :up, url_for(:parent => @parent.parent_id) %></div>
+    <% end %>
     <% for item in @groups %>
-    <%= link_to :show, url_for(:action => :show, :id => item) %>
-    <%= link_to h(item.name), url_for(:action => :index, :parent => item) %>
-    <span class="remark"><%= item.sort_no %></span><br />
+    <div>
+      <%= link_to :show, url_for(:action => :show, :id => item) %>
+      <%= link_to h(item.name), url_for(:action => :index, :parent => item) %>
+      <span class="remark"><%= item.sort_no %></span>
+    </div>
     <% end %>
   </div>
   
@@ -27,10 +31,10 @@
   </tr>
   
   <% for item in @users %>
-  <tr <%= cycle '', 'class="cycle"' %>>
+  <tr class="<%= cycle '', 'cycle' %>">
     <td style="text-align: center;"><%= link_to '詳細', sys_group_user_path(@parent, item) %></td>
-    <td><%=h item.account %></td>
-    <td><%=h item.name %></td>
+    <td><%= item.account %></td>
+    <td><%= item.name %></td>
     <td style="text-align: center;"><%= safe{item.status.name} %></td>
   </tr>
   <% end %>

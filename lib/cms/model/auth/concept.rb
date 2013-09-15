@@ -1,3 +1,4 @@
+# encoding: utf-8
 module Cms::Model::Auth::Concept
   def readable
     if Core.site

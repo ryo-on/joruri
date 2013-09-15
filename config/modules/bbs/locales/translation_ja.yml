@@ -2,7 +2,10 @@ ja:
   activerecord: 
     attributes: 
       bbs/item: 
-        parent_id: "親ID（返信時）"
+        id: "投稿番号"
+        state: "状態"
+        created_at: "投稿日時"
+        parent_id: "親ID"
         thread_id: "スレッドID"
         content_id:  "コンテンツID"
         state: "状態"
@@ -12,6 +15,9 @@ ja:
         title: "タイトル"
         body: "本文"
         password: "削除パス"
+        ipaddr: "IPアドレス"
+        user_agent: "ユーザーエージェント"
+        captcha: "画像認証"
       
       ## piece
       bbs/piece/recent_item:

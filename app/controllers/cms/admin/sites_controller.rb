@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Cms::Admin::SitesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   
@@ -32,7 +33,7 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
     _create @item do
       make_concept(@item)
       make_node(@item)
-      ::FileUtils.mkdir_p(@item.public_path)
+      ::Storage.mkdir_p(@item.public_path)
     end
   end
   
@@ -84,7 +85,7 @@ protected
       :name         => '/',
       :title        => item.name
     })
-    node.save(false)
+    node.save(:validate => false)
     
     top = Cms::Node.new({
       :site_id      => item.id,
@@ -97,7 +98,7 @@ protected
       :name         => 'index.html',
       :title        => item.name
     })
-    top.save(false)
+    top.save(:validate => false)
     
     item.node_id = node.id
     item.save

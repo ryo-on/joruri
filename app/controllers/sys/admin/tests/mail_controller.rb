@@ -1,11 +1,18 @@
 # encoding: utf-8
 class Sys::Admin::Tests::MailController < Cms::Controller::Admin::Base
+  
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:manager)
   end
   
   def index
-    @config = ActionMailer::Base.smtp_settings
+    @config = {}
+    ApplicationMailer.smtp_settings.each do |key, value|
+      @config[key] = value
+      @config[key] = "****" if key.to_s == "user_name" && !value.blank?
+      @config[key] = "****" if key.to_s == "password" && !value.blank?
+    end
+    
     @errors = []
     
     @item = params[:item] || {}
@@ -18,9 +25,10 @@ class Sys::Admin::Tests::MailController < Cms::Controller::Admin::Base
       @errors << "差出人を入力してください。" if @item[:from].blank?
       @errors << "宛先を入力してください。" if @item[:to].blank?
       @errors << "件名を入力してください。" if @item[:subject].blank?
+      
       if @errors.size == 0
         begin
-          send_mail(@item[:from], @item[:to], @item[:subject], @item[:body])
+          send_mail(@item)
         rescue => e
           @errors << "送信に失敗しました。"
           @errors << e.to_s

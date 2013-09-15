@@ -1,3 +1,4 @@
+# encoding: utf-8
 module Cms::Model::Rel::PieceSetting
   def self.included(mod)
     mod.has_many   :settings, :foreign_key => :piece_id,   :class_name => 'Cms::PieceSetting',
@@ -6,10 +7,8 @@ module Cms::Model::Rel::PieceSetting
     mod.after_save :save_settings
   end
 
-  attr_accessor :in_settings
-  
   def in_settings
-    unless read_attribute(:in_settings)
+    unless @in_settings
       values = {}
       settings.each do |st|
         if st.sort_no
@@ -19,13 +18,13 @@ module Cms::Model::Rel::PieceSetting
           values[st.name] = st.value
         end
       end
-      write_attribute(:in_settings, values)
+      @in_settings = values
     end
-    read_attribute(:in_settings)
+    @in_settings
   end
   
   def in_settings=(values)
-    write_attribute(:in_settings, values)
+    @in_settings = values
   end
   
   def new_setting(name = nil)

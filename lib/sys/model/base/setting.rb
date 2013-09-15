@@ -2,7 +2,7 @@
 class Sys::Model::Base::Setting < ActiveRecord::Base
   include Sys::Model::Base
   
-  set_table_name "sys_settings"
+  self.table_name = "sys_settings"
   
   def self.set_config(id, params = {})
     @@configs ||= {}

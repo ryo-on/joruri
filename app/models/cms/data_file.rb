@@ -73,13 +73,13 @@ class Cms::DataFile < ActiveRecord::Base
   end
   
   # def publish(options = {})
-    # unless FileTest.exist?(upload_path)
-      # errors.add_to_base 'ファイルデータが見つかりません。'
+    # unless ::Storage.exists?(upload_path)
+      # errors.add :base, 'ファイルデータが見つかりません。'
       # return false
     # end
     # self.state        = 'public'
     # self.published_at = Core.now
-    # return false unless save(false)
+    # return false unless save(:validate => false)
     # remove_public_file
     # return upload_public_file
   # end
@@ -87,7 +87,7 @@ class Cms::DataFile < ActiveRecord::Base
   # def close
     # self.state        = 'closed'
     # self.published_at = nil
-    # return false unless save(false)
+    # return false unless save(:validate => false)
     # return remove_public_file
   # end
   
@@ -130,29 +130,26 @@ private
     if state == "public"
       upl_path = upload_path
       pub_path = public_path
-      Util::File.put(pub_path, :src => upl_path, :mkdir => true) if FileTest.exist?(upl_path)
+      
+      if ::Storage.exists?(upl_path)
+        ::Storage.mkdir_p(::File.dirname(pub_path))
+        ::Storage.cp(upl_path, pub_path)
+      end
       
       upl_path = ::File.dirname(upload_path) + "/thumb.dat"
       pub_path = ::File.dirname(public_path) + "/thumb/" + ::File.basename(public_uri)
-      Util::File.put(pub_path, :src => upl_path, :mkdir => true) if FileTest.exist?(upl_path)
+      
+      if ::Storage.exists?(upl_path)
+        ::Storage.mkdir_p(::File.dirname(pub_path))
+        ::Storage.cp(upl_path, pub_path)
+      end
     end
     return true
   end
   
   def remove_public_file
     dir = ::File.dirname(public_path)
-    FileUtils.rm_rf(dir) if FileTest.exist?(dir)
+    ::Storage.rm_rf(dir) if ::Storage.exists?(dir)
     return true
   end
-  
-  # def upload_public_file
-    # return false unless FileTest.exist?(upload_path)
-    # Util::File.put(public_path, :src => upload_path, :mkdir => true)
-  # end
-#   
-  # def remove_public_file
-    # return true unless FileTest.exist?(public_path)
-    # FileUtils.remove_entry_secure(public_path)
-    # return true
-  # end
 end

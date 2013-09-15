@@ -2,7 +2,7 @@
 module Cms::EmbeddedFileHelper
   
   def embedded_file_form(form, options = {})
-    item = @template.instance_variable_get("@#{form.object_name}")
+    item = instance_variable_get("@#{form.object_name}")
     locals = {:f => form, :item => item, :name => :file_id}.merge(options)
     render :partial => 'cms/admin/_partial/embedded_file/form', :locals => locals
   end

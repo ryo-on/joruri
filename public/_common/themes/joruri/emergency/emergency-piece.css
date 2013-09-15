@@ -245,7 +245,7 @@ input#search-box {
 }
 #calendar .calendar .days .sun,
 #calendar .calendar .days .holiday {
-  color: #ff0000;
+  color: #f00000;
 }
 .january, .february, .march, .april, .may, .june, .july, .august, .september, .october, .november, .december {
   height: 25px;

@@ -4,40 +4,50 @@
 @import "../piece/style.css";
 
 /* =========================================================
-   mailmagazine test
+   mailmagazine
 ========================================================= */
+
 .contentNewsletterForms .summary {
-  margin: 0 10px 10px;
+  margin: 0 0px 15px;
+  padding: 10px;
+  border: 1px solid #dba;
+  background-color: #ffd;
 }
-.contentNewsletterForms h2 {
+.contentNewsletterForms h2.cornerTitle {
+  margin: 0px 0px 15px;
   padding: 7px 10px;
   background-color: #232f8c;
-  color: #ffffff;
-  font-weight: bold;
-  font-size: 100%;
+  color: #fff;
 }
-.contentNewsletterComplete div.body,
-.contentNewsletterForms form {
-  margin: 10px 10px 0;
-}
-
-.contentNewsletterForms .column {
-  margin: 10px 0 20px;
+.contentNewsletterForms .body {
+  margin: 15px 0px;
 }
 .contentNewsletterForms .column .name {
-  padding: 4px 8px;
-  background-color: #f1f1f1;
+  margin: 15px 0px;
+  padding: 5px 8px;
+  background-color: #eee;
   border-left: 4px solid #232f92;
 }
+.contentNewsletterForms .column .required {
+  color: #e00;
+  font-weight: bold;
+}
 .contentNewsletterForms .column .field {
-  margin: 10px 0 0 15px;
+  margin: 15px 15px;
 }
-.contentNewsletterForms .column .name .required {
-  color: #ff0000;
+.contentNewsletterForms .column .field .email {
+  width: 400px;
+  ime-mode: disabled;
 }
-.contentNewsletterForms .submitters {
-  margin: 0;
-  padding: 0;
+.contentNewsletter .captcha img {
+  margin: 0px 0px 5px;
+  border: 1px solid #008800;
+}
+.contentNewsletter .captcha .field {
+  margin: 0px;
+}
+.contentNewsletter .captcha .field input {
+  ime-mode: disabled;
 }
 .contentNewsletterForms .change {
   margin: 30px 0 0 15px;
@@ -46,27 +56,36 @@
   padding: 0 0 5px 8px;
   background-image:url("./images/ic-list.gif");
   background-repeat:no-repeat;
-  background-position:left 5px;
+  background-position:left 35%;
 }
-.contentNewsletterForms label {
-  margin: 0 10px 0 0;
+.contentNewsletterForms .submitters {
+  margin: 0;
+  padding: 10px 0;
+  background-color: #d8ebf8;
+  text-align: center;
+}
+.contentNewsletterComplete .defaultMessage p {
+  font-size: 120%;
+}
+.contentNewsletterComplete .defaultMessage div.body {
+  margin: 15px 0px;
 }
 
 /* Errors
 ----------------------------------------------- */
-.errorExplanation h2 {
+x.errorExplanation h2 {
   padding: 4px;
   background-color: #ffdddd;
   font-weight: bold;
 }
-.contentNewsletterForms .errorExplanation,
-.contentNewsletterForms .errorExplanation h2 {
+x.contentNewsletterForms .errorExplanation,
+x.contentNewsletterForms .errorExplanation h2 {
   color: #ff0000;
 }
-.errorExplanation p {
+x.errorExplanation p {
   margin-top: 4px;
 }
-.errorExplanation ul {
+x.errorExplanation ul {
   list-style-type: disc;
   margin: 2px 20px 15px 20px;
 }

@@ -1,3 +1,4 @@
+# encoding: utf-8
 module Cms::Lib::Layout
   def self.current_concept
     concept = defined?(Page.current_item.concept) ? Page.current_item.concept : nil

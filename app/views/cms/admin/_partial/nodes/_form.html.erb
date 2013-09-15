@@ -12,10 +12,10 @@
   <% if @item.parent_id != 0 %>
   <tr>
     <th><%= item.locale(:parent_id) %></th>
-    <td><%= f.select(:parent_id, item.candidate_parents, :include_blank => true) %></td>
+    <td><%= f.select(:parent_id, item.candidate_parents, :include_blank => "　") %></td>
   </tr><tr>
     <th><%= item.locale(:route_id) %></th>
-    <td><%= f.select(:route_id, item.candidate_routes, :include_blank => true) %></td>
+    <td><%= f.select(:route_id, item.candidate_routes, :include_blank => "　") %></td>
   </tr>
   <% else %>
   <%= f.hidden_field(:parent_id, :value => 0) %>

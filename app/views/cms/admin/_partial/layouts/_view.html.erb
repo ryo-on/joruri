@@ -5,9 +5,9 @@
     <th>レイアウト</th>
     <td>
       <% if @item.layout %>
-        <%=h safe{@item.layout.title} %>
+        <%= safe{@item.layout.title} %>
       <% elsif defined?(@item.inherited_layout) && @item.inherited_layout %>
-        （<%=h safe{@item.inherited_layout.title} %>）
+        （<%= safe{@item.inherited_layout.title} %>）
       <% end %>
     </td>
   </tr>

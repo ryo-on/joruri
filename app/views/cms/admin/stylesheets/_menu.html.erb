@@ -1,39 +1,36 @@
-<script type="text/javascript">
-//<![CDATA[
-function showNewForm(showId) {
-  if ($('errorExplanation')) $('errorExplanation').hide();
-  if ($(showId).style.display != "none") {
-    $(showId).hide();
-  } else {
-    $('new_directory').hide();
-    $('new_file').hide();
-    $('new_upload').hide();
-    $(showId).show();
-    $('item_' + showId).focus();
-  }
-  return false;
-}
-//]]>
-</script>
+<%
+
+root = "#{@root.gsub(@base_uri[0], "")}"
+navi = [ link_to(root, "#{cms_stylesheets_path}") ]
+prev = []
+
+@path.split("/").each do |p|
+  prev << p
+  navi << link_to(p, "#{cms_stylesheets_path}/#{prev.join('/')}")
+end
+
+path    = (::File.dirname(@path) == '.') ? nil : ::File.dirname(@path)
+parent  = path ? "#{cms_stylesheets_path}/#{path}" : cms_stylesheets_path
+current = @path ? "#{cms_stylesheets_path}/#{@path}" : cms_stylesheets_path
+
+%><h2>スタイルシート</h2>
 
 <div class="navi">
-  <%=h @item.public_uri %>
+  <%== navi.join('<span class="separator">&gt;</span>') %>
 </div>
 
 <div class="actionMenu">
-<%= link_to "上へ", cms_stylesheets_path(::File.dirname(@path)) if @path != "" && !params[:do] && @item.directory? %>
-<%= link_to :index, cms_stylesheets_path(::File.dirname(@path)) if params[:do] %>
-<% if !params[:do] && @item.directory? && @item.creatable? %>
-  <%= link_to "新規ディレクトリ", "#", :onclick => "return showNewForm('new_directory');" %>
-  <%= link_to "新規ファイル", "#", :onclick => "return showNewForm('new_file');" %>
-  <%= link_to "アップロード", "#", :onclick => "return showNewForm('new_upload');" %>
-<% end %>
+<%= link_to "上へ", parent if @path != "" && !params[:do] && @item.directory? %>
+<%= link_to :index, parent if params[:do] %>
 <% if params[:do] == "show" %>
-  <%= link_to(:edit, cms_stylesheets_path(@path, :do => :edit)) if @item.textfile? && @item.editable? %>
-  <%= link_to("名称変更", cms_stylesheets_path(@path, :do => :rename)) if @item.editable? %>
-  <%= link_to("移動", cms_stylesheets_path(@path, :do => :move)) if @item.editable? %>
-  <%= link_to("削除", cms_stylesheets_path(@path, :do => :destroy), :confirm => "削除してよろしいですか？") if @item.deletable? %>
+  <%= link_to :edit, current + "?do=edit" %>
+  <%= link_to "移動", current + "?do=move" %>
+  <%= link_to "削除", current + "?do=destroy", :confirm => "削除してよろしいですか？" %>
 <% elsif params[:do] %>
-  <%= link_to :show, cms_stylesheets_path(@path, :do => :show) %>
+  <%= link_to :show, current + "?do=show" %>
+<% elsif !params[:do] && @item.directory? %>
+  <a href="#" id="newDir">新規ディレクトリ</a>
+  <a href="#" id="newFile">新規ファイル</a>
+  <a href="#" id="newUpload">アップロード</a>
 <% end %>
 </div>

@@ -1,10 +1,11 @@
+# encoding: utf-8
 class Cms::Admin::Piece::LinkItemsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:designer)
     return error_auth unless @piece = Cms::Piece.new.readable.find(params[:piece])
-    default_url_options :piece => @piece
+    #default_url_options[:piece] = @piece
   end
   
   def index

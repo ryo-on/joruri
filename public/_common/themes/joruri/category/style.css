@@ -85,21 +85,17 @@
 .contentArticleCategory .latest {
   margin-bottom: 30px;
   padding: 0px;
-  background-image: url(./images/tl-shinchaku-repeat.gif);
-  background-position: left top;
-  background-repeat: repeat-x;
 }
 .contentArticleCategory .latest h2 {
-  height: 30px;
-  line-height: 30px;
   margin-bottom: 10px;
-  padding-left: 10px;
-  background-image: url(./images/tl-shinchaku.gif);
-  background-repeat: no-repeat;
-  background-position: left top;
+  padding: 3px 10px;
+  background:#0952EB;
+  background: -moz-linear-gradient(top, #0952EB, #001C66);
+  background: -webkit-gradient(linear, center top, center bottom, from(#0952EB), to(#001C66));
+  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#0952EB', endColorstr='#001C69');
   color: #ffffff;
-  font-size: 120%;
   font-weight: bold;
+  font-size: 120%;
 }
 .contentArticleCategory ul {
   padding: 0 5px;
@@ -121,35 +117,6 @@ h3 {
 .more {
   padding: 0 5px 10px 0;
   text-align: right;
-}
-
-/* RSS Atom
------------------------------------------------ */
-.feed {
-  float: right;
-  position: relative;
-  top: -32px;
-  right: 10px;
-  height: 13px;
-  background-color: transparent;
-}
-.feed a.feedRss {
-  display: inline-block;
-  width: 40px;
-  height: 13px;
-  overflow: hidden;
-  background-image: url(./images/bt-rss.gif);
-  background-repeat: no-repeat;
-  text-indent: 50px;
-}
-.feed a.feedAtom {
-  display: inline-block;
-  width: 40px;
-  height: 13px;
-  overflow: hidden;
-  background-image:url(./images/bt-atom.gif);
-  background-repeat:no-repeat;
-  text-indent: 50px;
 }
 
 /* pagination

@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Cms::Map < ActiveRecord::Base
   include Sys::Model::Base
   
@@ -31,7 +32,7 @@ class Cms::Map < ActiveRecord::Base
       eval("self.point#{i}_lat  = nil")
       eval("self.point#{i}_lng  = nil")
     end
-    self.save(false)
+    self.save(:validate => false)
   end
   
   def markers

@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Cms::Controller::Script::Publication < ApplicationController
   include Cms::Controller::Layout
   before_filter :initialize_publication
@@ -8,17 +9,23 @@ class Cms::Controller::Script::Publication < ApplicationController
   
   def initialize_publication
     if @node = params[:node]
-      @site   = @node.site
+      @site = @node.site
     end
     @errors = []
+    
+    @dic_updated = Cms::KanaDictionary.dic_mtime.to_i
   end
   
   def publish_page(item, params = {})
+    Script.current
+    
     site = params[:site] || @site
-    res = item.publish_page(render_public_as_string(params[:uri], :site => site),
-      :path => params[:path], :dependent => params[:dependent])
-    return false unless res
+    pub = item.publish_page(render_public_as_string(params[:uri], :site => site),
+      :rel_unid => params[:rel_unid], :path => params[:path], :uri => params[:uri], :dependent => params[:dependent])
+    return false unless pub
     #return true if params[:path] !~ /(\/|\.html)$/
+
+    Script.success if item.published?
     
     ## ruby html
     uri = params[:uri]
@@ -41,32 +48,35 @@ class Cms::Controller::Script::Publication < ApplicationController
     ruby = nil
     if item.published?
       ruby = true
-    elsif !::File.exist?(path)
+    elsif !::Storage.exists?(path)
       ruby = true
-    elsif ::File.stat(path).mtime < Cms::KanaDictionary.dic_mtime(:ruby)
+    elsif ::Storage.mtime(path).to_i <= @dic_updated
       ruby = true
     end
     
     if ruby
       begin
         timeout(80) do
-          item.publish_page(render_public_as_string(uri, :site => site), :path => path, :dependent => dep)
+          item.publish_page(render_public_as_string(uri, :site => site),
+            :rel_unid => params[:rel_unid], :path => path, :uri => uri, :dependent => dep)
         end
       rescue TimeoutError => e
-        error_log("#{e}: #{uri}")
+        Script.error "#{uri} #{e}"
       rescue => e
-        error_log("#{e}: #{uri}")
+        Script.error "#{uri} #{e}"
       end
     end
     
-    return res
+    return pub
+  rescue Script::InterruptException => e
+    raise e
   rescue => e
     return false
   end
   
   def publish_more(item, params = {})
     stopp = nil
-    limit = Joruri.config.application["cms.publish_more_pages"].to_i rescue 0
+    limit = Joruri.config[:cms_publish_more_pages].to_i rescue 0
     limit = (limit < 1 ? 1 : 1 + limit)
     file  = params[:file] || 'index'
     first = params[:first] || 1
@@ -75,7 +85,7 @@ class Cms::Controller::Script::Publication < ApplicationController
       uri  = "#{params[:uri]}#{file}#{page}.html"
       path = "#{params[:path]}#{file}#{page}.html"
       dep  = "#{params[:dependent]}#{page}"
-      rs   = publish_page(item, :uri => uri, :site => params[:site], :path => path, :dependent => dep)
+      rs   = publish_page(item, :rel_unid => params[:rel_unid], :uri => uri, :site => params[:site], :path => path, :dependent => dep)
       unless rs
         stopp = p
         break

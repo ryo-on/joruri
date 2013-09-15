@@ -1,3 +1,5 @@
+<h2>コンテンツ</h2>
+
 <div class="actionMenu">
 <%= action_menu :new     if Core.user.has_auth?(:designer) && Core.user.has_priv?(:create, :item => Core.concept) %>
 <%= action_menu :index %>

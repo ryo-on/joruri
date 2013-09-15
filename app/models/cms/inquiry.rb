@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Cms::Inquiry < ActiveRecord::Base
   include Sys::Model::Base
   

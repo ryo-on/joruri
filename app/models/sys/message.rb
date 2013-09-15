@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Sys::Message < ActiveRecord::Base
   include Sys::Model::Base
   include Sys::Model::Base::Page

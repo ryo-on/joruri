@@ -10,3 +10,10 @@
 </div>
 </div>
 </div>
+
+<script type="text/javascript" src="/_common/js/jquery.min.js"></script>
+<script type="text/javascript" src="/_common/js/jquery/cookie.js"></script>
+<script type="text/javascript" src="/_common/js/joruri/smart-switch.js"></script>
+<script type="text/javascript">$(function() { new SmartSwitch('#smartSwitch', '表示の切り替え'); });</script>
+
+<div id="smartSwitch"></div>

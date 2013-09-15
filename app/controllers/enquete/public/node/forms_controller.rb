@@ -34,19 +34,28 @@ class Enquete::Public::Node::FormsController < Cms::Controller::Public::Base
     return false if params[:edit]
     
     ## validate
-    return false unless @form.valid?
+    #return false unless @form.valid?
+    @form.valid?
+    if params[:confirm].blank? && @use_captcha # TODO: change confirm params
+      @item.captcha     = params[:item][:captcha]
+      @item.captcha_key = params[:item][:captcha_key]
+      unless @item.valid_with_captcha?
+        @form.errors.add :base, @item.errors.to_a[0]
+      end
+    end
+    return false if @form.errors.size > 0
     
     ## captcha
-    if params[:confirm].blank? && @use_captcha
-      item = Enquete::Form.new
-      item.name        = 'dummy'
-      item.captcha     = params[:item][:captcha]
-      item.captcha_key = params[:item][:captcha_key]
-      unless item.valid_with_captcha?
-        @form.errors.add *item.errors.to_a[0]
-        return false
-      end
-    end      
+    # if params[:confirm].blank? && @use_captcha
+      # item = Enquete::Form.new
+      # item.name        = 'dummy'
+      # item.captcha     = params[:item][:captcha]
+      # item.captcha_key = params[:item][:captcha_key]
+      # unless item.valid_with_captcha?
+        # @form.errors.add :base, item.errors.to_a[0]
+        # return false
+      # end
+    # end      
     
     ## confirm
     if params[:confirm].blank?
@@ -75,8 +84,11 @@ class Enquete::Public::Node::FormsController < Cms::Controller::Public::Base
     ## send mail to answer
     answer_email = nil
     answer.columns.each do |col|
-      if col.form_column.name =~ /^(メールアドレス|Email|E-mail)$/i
-        answer_email = col.value if !col.value.blank?
+      if col.form_column.name =~ /^(メールアドレス|Email|E-mail)/i
+        if !col.value.blank?
+          answer_email = col.value
+          break
+        end
       end
     end
     begin
@@ -87,7 +99,7 @@ class Enquete::Public::Node::FormsController < Cms::Controller::Public::Base
       error_log("メール送信失敗 #{e}")
     end
     
-    redirect_to "#{Page.current_node.public_uri}#{@item.id}/sent"
+    redirect_to "#{Page.current_node.public_uri}#{@item.id}/sent.html"
   end
   
   def sent
@@ -99,7 +111,7 @@ class Enquete::Public::Node::FormsController < Cms::Controller::Public::Base
   
 protected
   def form(item)
-    form = Sys::Lib::Form::Builder.new(:item, {:template => @template})
+    form = Sys::Lib::Form::Builder.new(:item, {:template => view_context})
     item.public_columns.each do |col|
       form.add_element(col.column_type, col.element_name, col.name, col.element_options)
     end
@@ -109,15 +121,15 @@ protected
   def send_answer_mail(item, answer, answer_email = nil)
     mail_fr = @content.setting_value(:from_email)
     if mail_fr.blank?
-      mail_fr = "joruri@" + Page.site.full_uri.gsub(/^.*?\/\/(.*?)(:|\/).*/, '\\1')
+      mail_fr = "webmaster@" + Page.site.full_uri.gsub(/^.*?\/\/(.*?)(:|\/).*/, '\\1')
       mail_fr = mail_fr.gsub(/www\./, '')
     end
     
     mail_to = answer_email || item.content.setting_value(:email)
     return false if mail_to.blank?
     
-    subject  = "#{item.name}（#{item.content.site.name}）："
-    subject += answer_email.blank? ? '投稿がありました' : '自動返信メール'
+    name    = answer_email.blank? ? '投稿' : '自動返信'
+    subject = "#{item.name} #{name} | #{item.content.site.name}"
     
     upper_text = item.content.setting_value(:upper_reply_text).to_s
     lower_text = item.content.setting_value(:lower_reply_text).to_s
@@ -144,6 +156,11 @@ protected
     
     message += lower_text if !lower_text.blank?
     
-    send_mail(mail_fr, mail_to, subject, message)
+    send_mail({
+      :from    => mail_fr,
+      :to      => mail_to,
+      :subject => subject,
+      :body    => message
+    })
   end
 end

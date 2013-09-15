@@ -1,10 +1,10 @@
 <%
 
-blank_opt  = '<option value="">すべて</option>'
+blank_opt  = '<option value="">すべて</option>'.html_safe
 dir_opts   = [["ページ","0"],["ディレクトリ","1"]]
 state_opts = [["公開中","public"],['公開待ち','recognized'],['承認待ち','recognize'],['下書き','draft'],['非公開','closed']]
 
-%><% form_tag search_cms_nodes_path(0), :method => :get, :class => 'search' do %>
+%><%= form_tag search_cms_nodes_path(:parent => 0), :method => :get, :class => 'search' do %>
 
 <table>
   <tr>

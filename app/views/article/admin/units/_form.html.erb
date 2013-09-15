@@ -6,10 +6,10 @@
     <td><%= f.radio_buttons :web_state, @item.web_states, :class => 'status' %></td>
   </tr><tr>
     <th><%= @item.locale(:name) %></th>
-    <td><%=h @item.name %></td>
+    <td><%= @item.name %></td>
   </tr><tr>
     <th><%= @item.locale(:title) %></th>
-    <td><%=h @item.title %></td>
+    <td><%= @item.title %></td>
   </tr>
   <%= layout_form f, :container => :tr %>
   <tr>

@@ -1,44 +1,49 @@
-ActionController::Routing::Routes.draw do |map|
+Joruri::Application.routes.draw do
   mod = "bbs"
   
+  ## -------------------------------------------------------
   ## admin
-  map.namespace(mod, :namespace => '') do |ns|
-    ns.resources :items,
-      :controller  => "admin/items",
-      :path_prefix => "/_admin/#{mod}/:content"
+  
+  scope "#{Joruri.admin_uri}/#{mod}/c:concept", :module => mod, :as => mod do
     
+    resources :items,
+      :controller => "admin/items",
+      :path       => ":content/items"
+    resources :responses,
+      :controller => "admin/responses",
+      :path       => ":content/:parent/responses"
+    
+    ## -----------------------------------------------------
     ## content
-    ns.resources :content_base,
-      :controller => "admin/content/base",
-      :path_prefix => "/_admin/#{mod}"
-    ns.resources :content_settings,
-      :controller  => "admin/content/settings",
-      :path_prefix => "/_admin/#{mod}/:content"
     
+    resources :content_base,
+      :controller => "admin/content/base"
+    resources :content_settings,
+      :controller => "admin/content/settings",
+      :path       => ":content/content_settings"
+    
+    ## -----------------------------------------------------
     ## node
-    ns.resources :node_threads,
-      :controller  => "admin/node/threads",
-      :path_prefix => "/_admin/#{mod}/:parent"
     
+    resources :node_threads,
+      :controller => "admin/node/threads",
+      :path       => ":parent/node_threads"
+    
+    ## -----------------------------------------------------
     ## piece
-    ns.resources :piece_recent_items,
-      :controller  => "admin/piece/recent_items",
-      :path_prefix => "/_admin/#{mod}"
+    
+    resources :piece_recent_items,
+      :controller => "admin/piece/recent_items"
   end
   
+  ## -------------------------------------------------------
   ## public
-  map.namespace(mod, :namespace => '', :path_prefix => '/_public') do |ns|
-    ns.connect "node_threads/index.:format",
-      :controller => "public/node/threads",
-      :action     => :index
-    ns.connect "node_threads/new.:format",
-      :controller => "public/node/threads",
-      :action     => :new
-    ns.connect "node_threads/delete.:format",
-      :controller => "public/node/threads",
-      :action     => :delete
-    ns.connect "node_threads/:thread/index.:format",
-      :controller => "public/node/threads",
-      :action     => :show
+  
+  scope "_public/#{mod}", :module => mod, :as => "" do
+    
+    match "node_threads/index.:format"         => "public/node/threads#index"
+    match "node_threads/new.:format"           => "public/node/threads#new"
+    match "node_threads/delete.:format"        => "public/node/threads#delete"
+    match "node_threads/:thread/index.:format" => "public/node/threads#show"
   end
 end

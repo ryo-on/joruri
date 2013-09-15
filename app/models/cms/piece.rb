@@ -41,7 +41,7 @@ class Cms::Piece < ActiveRecord::Base
   end
   
   def node_is(node)
-  	layout = nil
+    layout = nil
     node = Cms::Node.find(:first, :conditions => {:id => node}) if node.class != Cms::Node
     layout = node.inherited_layout if node
     self.and :id, 'IN', layout.pieces if layout
@@ -78,7 +78,7 @@ class Cms::Piece < ActiveRecord::Base
       item.state = "closed"
     end
     
-    return false unless item.save(false)
+    return false unless item.save(:validate => false)
     
     # piece_settings
     settings.each do |setting|
@@ -86,7 +86,7 @@ class Cms::Piece < ActiveRecord::Base
       dupe_setting.piece_id   = item.id
       dupe_setting.created_at = nil
       dupe_setting.updated_at = nil
-      dupe_setting.save(false)
+      dupe_setting.save(:validate => false)
     end
     
     if rel_type == :replace

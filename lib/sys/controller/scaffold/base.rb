@@ -5,17 +5,17 @@ module Sys::Controller::Scaffold::Base
   end
   
 protected
-  def _index(items)
+  def _index(items, options = {})
     respond_to do |format|
-      format.html { render }
+      format.html { render options[:render] }
       format.xml  { render :xml => items.to_xml(:dasherize => false, :root => 'items') }
     end
   end
   
-  def _show(item)
+  def _show(item, options = {})
     return send(params[:do], item) if params[:do]
     respond_to do |format|
-      format.html { render }
+      format.html { render options[:render] }
       format.xml  { render :xml => item.to_xml(:dasherize => false, :root => 'item') }
     end
   end
@@ -26,6 +26,8 @@ protected
       location       = options[:location] || url_for(:action => :index)
       flash[:notice] = options[:notice] || '登録処理が完了しました。'
       yield if block_given?
+      
+      Sys::OperationLog.log(request, :item => item)
       respond_to do |format|
         format.html { redirect_to(location) }
         format.xml  { render(:xml => item.to_xml(:dasherize => false), :status => status, :location => location) }
@@ -33,7 +35,7 @@ protected
     else
       flash.now[:notice] = '登録処理に失敗しました。'
       respond_to do |format|
-        format.html { render(:action => :new) }
+        format.html { render (options[:render] || :new) }
         format.xml  { render(:xml => item.errors, :status => :unprocessable_entity) }
       end
     end
@@ -44,6 +46,8 @@ protected
       location       = options[:location] || url_for(:action => :index)
       flash[:notice] = '更新処理が完了しました。'
       yield if block_given?
+      
+      Sys::OperationLog.log(request, :item => item)
       respond_to do |format|
         format.html { redirect_to(location) }
         format.xml  { head :ok }
@@ -51,7 +55,7 @@ protected
     else
       flash.now[:notice] = '更新処理に失敗しました。'
       respond_to do |format|
-        format.html { render :action => :edit }
+        format.html { render (options[:render] || :edit) }
         format.xml  { render :xml => item.errors, :status => :unprocessable_entity }
       end
     end
@@ -62,6 +66,8 @@ protected
       location       = options[:location] || url_for(:action => :index)
       flash[:notice] = options[:notice] || '削除処理が完了しました。'
       yield if block_given?
+      
+      Sys::OperationLog.log(request, :item => item)
       respond_to do |format|
         format.html { redirect_to(location) }
         format.xml  { head :ok }
@@ -69,7 +75,7 @@ protected
     else
       flash.now[:notice] = '削除処理に失敗しました。'
       respond_to do |format|
-        format.html { render :action => :show }
+        format.html { render (options[:render] || :show) }
         format.xml  { render :xml => item.errors, :status => :unprocessable_entity }
       end
     end

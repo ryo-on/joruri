@@ -1,30 +1,33 @@
+# encoding: utf-8
 class Cms::Controller::Admin::Base < Sys::Controller::Admin::Base
   include Cms::Controller::Layout
   helper Cms::FormHelper
   layout  'admin/cms'
   
+  def default_url_options
+    Core.concept ? { :concept => Core.concept.id } : {}
+  end
+  
   def initialize_application
     return false unless super
     
-    if params[:cms_navi] && params[:cms_navi][:site]
-      site_id = params[:cms_navi][:site]
-      expires = site_id.blank? ? Time.now - 60 : Time.now + 60*60*24*7
-      cookies[:cms_site] = {:value => site_id, :path => '/', :expires => expires}
-      return redirect_to '/_admin'
-    end
-    
     if cookies[:cms_site] && !Core.site
       cookies.delete(:cms_site)
-      Core.site = nil
+      session.delete(:cms_concept)
+      return redirect_to "#{Joruri.admin_uri}/logout"
     end
     
     if Core.user
-      if Core.request_uri == '/_admin'
-        Core.set_concept(session, 0)
+      if params[:concept]
+        Core.concept_id = params[:concept]
+      elsif Core.request_uri == "#{Joruri.admin_uri}"
+        Core.concept_id = 0
+        session[:cms_concept] = Core.concept(:id)
       else
-        Core.set_concept(session)
+        Core.concept_id = session[:cms_concept]
       end
     end
+    
     return true
   end
 end

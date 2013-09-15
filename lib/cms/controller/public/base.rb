@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Cms::Controller::Public::Base < Sys::Controller::Public::Base
   include Cms::Controller::Layout
   layout  'base'
@@ -21,6 +22,26 @@ class Cms::Controller::Public::Base < Sys::Controller::Public::Base
     if Page.uri =~ /\.p[0-9]+\.html$/
       page = Page.uri.gsub(/.*\.p([0-9]+)\.html$/, '\\1')
       params[:page] = page.to_i if page !~ /^0+$/
+    end
+    
+    ## response by storage
+    if ::Storage.env == :db && Core.user.id == 0
+      
+      ## valid redirect_uri
+      if Core.request_uri =~ /\d{8}/
+        uri =  Core.request_uri =~ /\/$/ ? "#{Core.request_uri}index.html" : Core.request_uri 
+        Cms::Content.rewrite_regex(:site_id => Page.site.id).each do |src, dst|
+          if uri =~ /#{src.gsub('/', '\\/')}/
+            path = Page.site.public_path + uri.gsub(/#{src.gsub('/', '\\/')}/, dst.gsub('$', '\\'))
+            return send_storage_file(path) if ::Storage.exists?(path)
+          end
+        end
+      end
+      
+      path = "#{Page.site.public_path}" + Core.request_uri.gsub(/\/$/, "/index.html")
+      if ::Storage.exists?(path)
+        return send_storage_file(path) if (!request.mobile? && !request.smart_phone?) || cookies[:pc_view] == "on"
+      end
     end
   end
   

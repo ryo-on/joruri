@@ -1,5 +1,6 @@
 # encoding: utf-8
 class Sys::Admin::Tests::LinkCheckController < Cms::Controller::Admin::Base
+  
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:manager)
   end
@@ -19,7 +20,7 @@ protected
     body = ''
     @item[:body].split(/\r\n|\n|\r/m).each do |uri|
       next if uri.blank?
-      body += %Q(<a href="#{uri}">#{uri}</a>\n)
+      body += %Q(<a href="#{uri}">#{uri}</a>\n).html_safe
     end
     @checker.check_link body
   end

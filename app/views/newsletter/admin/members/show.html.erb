@@ -3,12 +3,17 @@
 <table class="show">
   <tr>
     <th><%= @item.locale(:state) %></th>
-    <td><%=h safe{@item.status.name} %></td>
+    <td><%= safe{@item.status.name} %></td>
   </tr><tr>
     <th><%= @item.locale(:email) %></th>
-    <td><%=h @item.email %></td>
+    <td><%= @item.email %></td>
+  </tr><tr>
+    <th><%= @item.locale(:letter_type) %></th>
+    <td><%= @item.letter_type_name %></td>
   </tr>
 </table>
+
+<p class="form">作成日時</p>
 
 <table class="show">
   <tr>

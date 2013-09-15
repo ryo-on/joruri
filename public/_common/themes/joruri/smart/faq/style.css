@@ -5,7 +5,7 @@
 
 /* FAQ
 ----------------------------------------------- */
-#faqRecentDocs .pieceHeader h2 {
+#faqRecentDocs .pieceHeader h2, #faqSearch .pieceHeader h2 {
   height: 44px;
   line-height: 44px;
   padding-left: 25px;
@@ -281,4 +281,18 @@ input#s_tag {
 }
 .contentFaqTags span.attributes {
   display: none;
+}
+
+/* FAQ search
+----------------------------------------------- */
+#faqSearch form {
+  padding: 10px;
+}
+#faqSearch .category1, #faqSearch .category2, #faqSearch .keyword {
+  margin-bottom: 10px;
+}
+#faqSearch .submitters {
+  clear: both;
+  margin-top: 0;
+  text-align: center;
 }

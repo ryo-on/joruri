@@ -2,15 +2,15 @@
 <div class="pieceContainer">
 <div class="pieceBody">
 <a href="#">
-<img src="/_common/themes/joruri/piece/images/bn-koukoku.gif" alt="広告バナー" title="広告バナー" /></a>
+<img src="/_common/themes/joruri/piece/images/bn_ad_01.gif" alt="広告バナー1" title="広告バナー1" /></a>
 <a href="#">
-<img src="/_common/themes/joruri/piece/images/bn-koukoku.gif" alt="広告バナー" title="広告バナー" /></a>
+<img src="/_common/themes/joruri/piece/images/bn_ad_02.gif" alt="広告バナー2" title="広告バナー2" /></a>
 <a href="#">
-<img src="/_common/themes/joruri/piece/images/bn-koukoku.gif" alt="広告バナー" title="広告バナー" /></a>
+<img src="/_common/themes/joruri/piece/images/bn_ad_03.gif" alt="広告バナー3" title="広告バナー3" /></a>
 <a href="#">
-<img src="/_common/themes/joruri/piece/images/bn-koukoku.gif" alt="広告バナー" title="広告バナー" /></a>
+<img src="/_common/themes/joruri/piece/images/bn_ad_04.gif" alt="広告バナー4" title="広告バナー4" /></a>
 
-<div class="pieceFooter"><a href="#"><img src="/_common/themes/joruri/piece/images/bt-koukokujigyou.gif" title="公告事業について" alt="公告事業について" width="170" height="30" /></a></div>
+<div class="pieceFooter"><a href="#">ジョ－ルリ市の広告事業について</a></div>
 
 
 </div>

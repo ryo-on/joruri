@@ -18,16 +18,18 @@ class Faq::Public::Node::Doc::FilesController < Cms::Controller::Public::Base
     return http_error(404) unless @file = item.find(:first)
     
     if Core.mode == "preview"
-      file_path = @file.upload_path
+      file_path = @file.upload_path(:type => params[:type])
     else ## public
-      file_path = "#{::File.dirname(@doc.public_path)}/files/#{@file.name}"
+      dir = params[:type] ? "#{params[:type]}/" : ''
+      file_path = "#{::File.dirname(@doc.public_path)}/files/#{dir}#{@file.name}"
     end
-    return http_error(404) unless FileTest.exists?(file_path)
+    
+    return http_error(404) unless ::Storage.exists?(file_path)
     
     if img = @file.mobile_image(request.mobile, :path => file_path)
       return send_data(img.to_blob, :type => @file.mime_type, :filename => @file.name, :disposition => 'inline')
     end
     
-    send_file file_path, :type => @file.mime_type, :filename => @file.name, :disposition => 'inline'
+    send_storage_file file_path, :type => @file.mime_type, :filename => @file.name
   end
 end

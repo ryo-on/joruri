@@ -24,8 +24,8 @@ module Cms::Model::Base::Piece
   end
   
   def admin_uri
-    controller = model.to_s.underscore.pluralize.gsub(/^(.*?)\//, "\\1/piece_") + "/#{id}"
-    "#{Core.uri}_admin/#{controller}"
+    controller = model.to_s.underscore.pluralize.gsub(/^(.*?)\//, "\\1/c#{concept_id}/piece_")
+    "#{Joruri.admin_uri}/#{controller}/#{id}"
   end
   
   def edit_admin_uri

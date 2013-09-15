@@ -1,23 +1,23 @@
+# encoding: utf-8
 module Article::Model::Rel::Doc::Attribute
-  attr_accessor :in_attribute_ids
   
   def in_attribute_ids
-    unless val = read_attribute(:in_attribute_ids)
-      write_attribute(:in_attribute_ids, attribute_ids.to_s.split(' ').uniq)
+    unless val = @in_attribute_ids
+      @in_attribute_ids = attribute_ids.to_s.split(' ').uniq
     end
-    read_attribute(:in_attribute_ids)
+    @in_attribute_ids
   end
   
   def in_attribute_ids=(ids)
     _ids = []
     if ids.class == Array
       ids.each {|val| _ids << val}
-      write_attribute(:attribute_ids, _ids.join(' '))
+      self.attribute_ids = _ids.join(' ')
     elsif ids.class == Hash || ids.class == HashWithIndifferentAccess
       ids.each {|key, val| _ids << val}
-      write_attribute(:attribute_ids, _ids.join(' '))
+      self.attribute_ids = _ids.join(' ')
     else
-      write_attribute(:attribute_ids, ids)
+      self.attribute_ids = ids
     end
   end
   

@@ -1,11 +1,13 @@
 # encoding: utf-8
 require 'mime/types'
+require 'nkf'
+
 class Cms::Stylesheet < ActiveRecord::Base
   include Sys::Model::Base
   include Cms::Model::Auth::Concept
   
   attr_accessor :name, :body, :base_path, :base_uri
-  attr_accessor :new_directory, :new_file, :upload
+  attr_accessor :new_directory, :new_file, :new_upload
   
   validates_presence_of :name
   validates_format_of :name, :with=> /^[0-9A-Za-z@\.\-\_]+$/, :message=> :not_a_filename
@@ -22,13 +24,14 @@ class Cms::Stylesheet < ActiveRecord::Base
   end
   
   def concept(reload = nil)
-    return @_concept if !reload && @_concept
-    if directory?
-      @_concept = concept_id ? Cms::Concept.find_by_id(concept_id) : nil
-    else
-      dir = self.class.new_by_path(::File.dirname(path))
-      @_concept = dir ? dir.concept : nil
-    end
+    return @_concept if @_concept && !reload
+    return @_concept = Cms::Concept.find_by_id(concept_id) if concept_id
+    
+    dir = ::File.dirname(path)
+    return @_concept = nil if !dir.blank? && dir =~ /^(\.+|\/)$/
+    
+    parent = self.class.new_by_path(dir)
+    @_concept = parent ? parent.concept : nil
   end
   
   def upload_path
@@ -44,35 +47,33 @@ class Cms::Stylesheet < ActiveRecord::Base
   end
   
   def directory?
-    ::FileTest.directory?(upload_path)
+    ::Storage.directory?(upload_path)
   end
   
   def file?
-    ::FileTest.file?(upload_path)
+    ::Storage.file?(upload_path)
   end
   
   def textfile?
     return false unless file?
-    mime_type.blank? || mime_type =~ /^text/i
-  end
-  
-  def read_stat
-    @_stat ||= ::File.stat(upload_path)
-    @_stat
+    mime_type.blank? || mime_type =~ /(text|javascript)/i
   end
   
   def read_body
-    self.body = NKF.nkf('-w', ::File.new(upload_path).read.to_s) if textfile?
-  rescue Exception
-    self.body = "#読み込みに失敗しました。"
+    begin
+      self.body = false
+      self.body = NKF.nkf('-w', ::Storage.read(upload_path).to_s) if textfile?
+    rescue => e
+      # #読み込み失敗
+    end
   end
   
   def mtime
-    read_stat.mtime
+    ::Storage.mtime(upload_path)
   end
   
   def mime_type
-    @_mime_type ||= MIME::Types.type_for(upload_path)[0].to_s
+    @_mime_type ||= ::Storage.mime_type(upload_path)
     @_mime_type
   end
   
@@ -82,32 +83,34 @@ class Cms::Stylesheet < ActiveRecord::Base
   end
   
   def size(unit = nil)
-    stat = read_stat
+    size = ::Storage.size(upload_path)
     if unit == :kb
-      (stat.size.to_f/1024).ceil
+      (size.to_f/1024).ceil
     else
-      stat.size
+      size
     end
   end
   
   def child_directories
     items = []
-    Dir::entries(upload_path).sort.each do |name|
+    ::Storage.entries(upload_path).sort.each do |name|
       next if name =~ /^\.+/
       child_path = ::File.join(upload_path, name)
-      next if ::FileTest.file?(child_path)
-      items << self.class.new_by_path(::File.join(path, name))
+      next if ::Storage.file?(child_path)
+      cpath = path.blank? ? name : ::File.join(path, name)
+      items << self.class.new_by_path(cpath)
     end
     items
   end
   
   def child_files
     items = []
-    Dir::entries(upload_path).sort.each do |name|
+    ::Storage::entries(upload_path).sort.each do |name|
       next if name =~ /^\.+/
       child_path = ::File.join(upload_path, name)
-      next if ::FileTest.directory?(child_path)
-      items << self.class.new_by_path(::File.join(path, name))
+      next if ::Storage.directory?(child_path)
+      cpath = path.blank? ? name : ::File.join(path, name)
+      items << self.class.new_by_path(cpath)
     end
     items
   end
@@ -135,14 +138,14 @@ class Cms::Stylesheet < ActiveRecord::Base
     return errors.size == 0
   end
   
-  def valid_exist?(path, type = nil)
-    return true unless ::File.exist?(path)
+  def valid_exists?(path, type = nil)
+    return true unless ::Storage.exists?(path)
     if type == nil
-      errors.add_to_base "ファイルが既に存在します。"
+      errors.add :base, "ファイルが既に存在します。"
     elsif type == :file
-      errors.add_to_base "ファイルが既に存在します。" if ::File.file?(path)
+      errors.add :base, "ファイルが既に存在します。" if ::Storage.file?(path)
     elsif type == :directory
-      errors.add_to_base "ディレクトリが既に存在します。" if ::File.file?(path)
+      errors.add :base, "ディレクトリが既に存在します。" if ::Storage.file?(path)
     end
     return errors.size == 0
   end
@@ -152,11 +155,11 @@ class Cms::Stylesheet < ActiveRecord::Base
     return false unless valid_filename?(:new_directory, @new_directory)
     
     src = ::File::join(upload_path, @new_directory)
-    return false unless valid_exist?(src)
+    return false unless valid_exists?(src)
     
-    FileUtils.mkdir(src)
+    ::Storage.mkdir(src)
   rescue => e
-    errors.add_to_base(e.to_s)
+    errors.add :base, (e.to_s)
     return false
   end
   
@@ -165,11 +168,11 @@ class Cms::Stylesheet < ActiveRecord::Base
     return false unless valid_filename?(:new_file, @new_file)
     
     src = ::File::join(upload_path, @new_file)
-    return false unless valid_exist?(src)
+    return false unless valid_exists?(src)
     
-    FileUtils.touch(src)
+    ::Storage.touch(src)
   rescue => e
-    errors.add_to_base(e.to_s)
+    errors.add :base, e.to_s
     return false
   end
   
@@ -180,31 +183,27 @@ class Cms::Stylesheet < ActiveRecord::Base
     end
     
     src = ::File::join(upload_path, file.original_filename)
-    if ::File.exist?(src) && FileTest.directory?(src)
-      errors.add_to_base "同名のディレクトリが既に存在します。"
+    if ::Storage.exists?(src) && ::Storage.directory?(src)
+      errors.add :base, "同名のディレクトリが既に存在します。"
       return false
     end
     
-    ::File.open(src,'w') do |f|
-      data = file.read
-      data.force_encoding(Encoding::UTF_8) if data.respond_to?(:force_encoding)
-      f.write(data)
-    end
+    ::Storage.binwrite(src, file.read)
     return true
   rescue => e
-    errors.add_to_base(e.to_s)
+    errors.add :base, e.to_s
     return false
   end
   
-  def update_file
-    ::File.open(upload_path, 'w') do |f|
-      data = self.body
-      data.force_encoding(Encoding::UTF_8) if data.respond_to?(:force_encoding)
-      f.write(data)
+  def update_item
+    if ::Storage.file?(upload_path)
+      ::Storage.write(upload_path, self.body)
+    else
+      save
     end
     return true
   rescue => e
-    errors.add_to_base(e.to_s)
+    errors.add :base, e.to_s
     return false
   end
   
@@ -216,14 +215,15 @@ class Cms::Stylesheet < ActiveRecord::Base
     dst = ::File::join(::File.dirname(upload_path), @new_name)
     
     is_dir = directory?
-    FileUtils.mv(src, dst) if src != dst
+    ::Storage.mv(src, dst) if src != dst
     
-    self.path = ::File.join(::File.dirname(path), @new_name)
+    self.path = ::File.join(::File.dirname(path), @new_name).gsub(/^\.\//, '')
+    
     return false if is_dir && !save
     
     return true
   rescue => e
-    errors.add_to_base(e.to_s)
+    errors.add :base, e.to_s
     return false
   end
   
@@ -236,16 +236,16 @@ class Cms::Stylesheet < ActiveRecord::Base
     dst = ::File::join(base_path, @new_path)
     return true if src == dst
     
-    if !::File.exist?(::File.dirname(dst))
-      errors.add_to_base "ディレクトリが見つかりません。（ #{::File.dirname(dst)} ）"
+    if !::Storage.exists?(::File.dirname(dst))
+      errors.add :base, "ディレクトリが見つかりません。（ #{::File.dirname(dst)} ）"
     elsif src == ::File.dirname(dst)
-      errors.add_to_base "ディレクトリが見つかりません。（ #{src} ）"
+      errors.add :base, "ディレクトリが見つかりません。（ #{src} ）"
     end
     return false if errors.size != 0
-    return false unless valid_exist?(dst, :file)
+    return false unless valid_exists?(dst, :file)
     
     is_dir = directory?
-    FileUtils.mv(src, dst)
+    ::Storage.mv(src, dst)
     
     self.path = @new_path
     return false if is_dir && !save
@@ -255,18 +255,22 @@ class Cms::Stylesheet < ActiveRecord::Base
     if e.to_s =~ /^same file/i
       return true
     elsif e.to_s =~ /^Not a directory/i
-      errors.add_to_base "ディレクトリが見つかりません。（ #{dst} ）"
+      errors.add :base, "ディレクトリが見つかりません。（ #{dst} ）"
     else
-      errors.add_to_base(e.to_s)
+      errors.add :base, e.to_s
     end
     return false
   end
   
+protected
+
   def remove_file
-    FileUtils.rm_rf(upload_path)
+    is_dir = directory?
+    ::Storage.rm_rf(upload_path)
+    self.class.destroy_all(["site_id = ? AND path LIKE ?", site_id, path.to_s.gsub(/\/$/, '') + "/%"]) if is_dir
     return true
   rescue => e
-    errors.add_to_base(e.to_s)
+    errors.add :base, e.to_s
     return false
   end
   

@@ -1,18 +1,18 @@
 <div class="contentFaqDoc">
 
 <div class="header">
-  <h1><%=h @item.title %></h1><% if false %>
-   <span class="unit"><%=h @item.creator.group.name if @item.creator.group %></span>
+  <h1><%= @item.title %></h1><% if false %>
+   <span class="unit"><%= @item.creator.group.name if @item.creator.group %></span>
    <span class="separetor">/</span>
   <% end %><div class="publishedAt"><%= (@item.published_at || Time.now).strftime('%Y年%-m月%-d日') %></div>
 </div>
 
 <div class="question">
-  <%= @item.question %>
+  <%== @item.question %>
 </div>
 
 <div class="body answer">
-  <%= @body %>
+  <%== @body %>
 </div>
 
 <%= render :partial => 'cms/public/_partial/maps/view', :locals => {:item => @item} %>

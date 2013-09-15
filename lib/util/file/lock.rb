@@ -1,8 +1,9 @@
+# encoding: utf-8
 class Util::File::Lock
   attr_accessor :locked
   
   def initialize(names = [])
-    @dir    = "#{RAILS_ROOT}/tmp/lock"
+    @dir    = "#{Rails.root.to_s}/tmp/lock"
     @names  = names || []
     @locked = {}
   end

@@ -17,7 +17,6 @@
 
 
 [[piece/common-banner]]
-
 [[piece/global-navi]]
 
 </div>
@@ -56,9 +55,9 @@
 
 [[piece/bn-faq]]
 
-[[piece/about]]
+[[piece/bn-bbs]]
 
-[[piece/bn-event]]
+[[piece/about]]
 
 [[piece/area-information]]
 
@@ -67,8 +66,6 @@
 [[piece/application]]
 
 [[piece/useful-information]]
-
-[[piece/bn-bbs]]
 
 [[piece/population]]
 
@@ -89,6 +86,8 @@
 [[piece/ad-upper]]
 
 [[piece/calendar]]
+
+[[piece/bn-event]]
 
 [[piece/attract-information]]
 

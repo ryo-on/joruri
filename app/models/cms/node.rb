@@ -22,6 +22,8 @@ class Cms::Node < ActiveRecord::Base
   has_many   :children, :foreign_key => :parent_id,  :class_name => 'Cms::Node',
     :order => :name, :dependent => :destroy
 
+  validates_presence_of :concept_id,
+    :if => %Q(parent_id == 0)
   validates_presence_of :parent_id, :state, :model, :name, :title
   validates_uniqueness_of :name, :scope => [:site_id, :parent_id],
     :if => %Q(!replace_page?)
@@ -257,11 +259,11 @@ protected
       s
     end
     
-    def publish(content)
+    def publish(content, options = {})
       @save_mode = :publish
       self.state = 'public'
       self.published_at ||= Core.now
-      return false unless save(false)
+      return false unless save(:validate => false)
       
       if rep = replaced_page
         rep.destroy if rep.directory == 0
@@ -274,7 +276,7 @@ protected
       @save_mode = :close
       self.state = 'closed' if self.state == 'public'
       #self.published_at = nil
-      return false unless save(false)
+      return false unless save(:validate => false)
       close_page
       return true
     end
@@ -302,7 +304,7 @@ protected
         item.in_inquiry = {:group_id => Core.user.group_id}
       end
       
-      return false unless item.save(false)
+      return false unless item.save(:validate => false)
       
       # node_settings
       settings.each do |setting|
@@ -310,7 +312,7 @@ protected
         dupe_setting.node_id   = item.id
         dupe_setting.created_at = nil
         dupe_setting.updated_at = nil
-        dupe_setting.save(false)
+        dupe_setting.save(:validate => false)
       end
       
       if rel_type == :replace

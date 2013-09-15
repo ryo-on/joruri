@@ -1,15 +1,22 @@
+# encoding: utf-8
 module Sys::Model::Base
   include Sys::Model::ConditionBuilder
   
   def self.included(mod)
-    mod.set_table_name mod.to_s.underscore.gsub('/', '_').downcase.pluralize
+    mod.table_name = mod.to_s.underscore.gsub('/', '_').downcase.pluralize
+#    mod.set_table_name mod.to_s.underscore.gsub('/', '_').downcase.pluralize
   end
   
   def locale(name)
     label = I18n.t name, :scope => [:activerecord, :attributes, self.class.to_s.underscore]
     return label =~ /^translation missing:/ ? name.to_s.humanize : label
   end
-
+  
+  def error_locale(name)
+    label = I18n.t name, :scope => [:errors, :messages]
+    return label =~ /^translation missing:/ ? name.to_s.humanize : label
+  end
+  
   def expand_join_query(joins)
     join_dependency = ActiveRecord::Associations::ClassMethods::InnerJoinDependency.new(self.class, joins, nil)
     " #{join_dependency.join_associations.collect { |assoc| assoc.association_join }.join} "
@@ -39,6 +46,6 @@ module Sys::Model::Base
     
     self.class.connection.execute(sql)
     rs = self.class.connection.execute("SELECT LAST_INSERT_ID() AS id FROM #{table}")
-    return rs.fetch_row[0]
+    return rs.first
   end
 end

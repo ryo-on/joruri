@@ -8,7 +8,7 @@ class Portal::Admin::FeedsController < Cms::Controller::Admin::Base
     return error_auth unless Core.user.has_auth?(:designer)
     return error_auth unless @content = Cms::Content.find(params[:content])
     return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
-    default_url_options :content => @content
+    #default_url_options[:content] = @content
     return redirect_to(request.env['PATH_INFO']) if params[:reset]
   end
 

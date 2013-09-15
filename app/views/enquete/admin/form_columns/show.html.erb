@@ -6,7 +6,7 @@
     <td><%= safe{@item.status.name} %></td>
   </tr><tr>
     <th><%= @item.locale(:name) %></th>
-    <td><%=h @item.name %></td>
+    <td><%= @item.name %></td>
   </tr><tr>
     <th><%= @item.locale(:body) %></th>
     <td><%= text_area_tag 'viewBody', @item.body, :class => 'mceEditor', :style => 'height: 100px;' %></td>
@@ -21,7 +21,7 @@
     <td><%= @item.required == 1 ? "必須" : "任意" %></td>
   </tr><tr>
     <th><%= @item.locale(:column_style) %></th>
-    <td><%=h @item.column_style %></td>
+    <td><%= @item.column_style %></td>
   </tr><tr>
     <th><%= @item.locale(:sort_no) %></th>
     <td><%= @item.sort_no %></td>

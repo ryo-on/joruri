@@ -7,18 +7,16 @@ module Sys::Model::Rel::Recognition
     mod.after_save :save_recognition
   end
 
-  attr_accessor :in_recognizer_ids
-  
   def in_recognizer_ids
-    unless read_attribute(:in_recognizer_ids)
-      write_attribute(:in_recognizer_ids, recognizer_ids.to_s)
+    unless @in_recognizer_ids
+      @in_recognizer_ids = recognizer_ids.to_s
     end
-    read_attribute(:in_recognizer_ids)
+    @in_recognizer_ids
   end
   
   def in_recognizer_ids=(ids)
     @_in_recognizer_ids_changed = true
-    write_attribute(:in_recognizer_ids, ids.to_s)
+    @in_recognizer_ids = ids.to_s
   end
   
   def recognizer_ids
@@ -70,7 +68,7 @@ module Sys::Model::Rel::Recognition
 
 private
   def validate_recognizers
-    errors.add "承認者", :empty if in_recognizer_ids.blank?
+    errors["承認者"] = "を入力してください。" if in_recognizer_ids.blank?
   end
   
   def save_recognition
@@ -78,27 +76,21 @@ private
     return false unless unid
     return false if @sent_save_recognition
     @sent_save_recognition = true
-    
-    rec = recognition || Sys::Recognition.new
+
+    unless (rec = recognition)
+      rec = Sys::Recognition.new
+      rec.id = unid
+    end
+
     rec.user_id        = Core.user.id
     rec.recognizer_ids = in_recognizer_ids.strip
     rec.info_xml       = nil
-    
-    if rec.new_record?
-      rec.id         ||= unid
-      rec.created_at   = Core.now
-      rec.updated_at   = Core.now
-      rec.save_with_direct_sql
-      rec = Sys::Recognition.find_by_id(rec.id)
-    else
-      rec.save
-    end
+    rec.save
+
     rec.reset_info
-    
-    sql = "UPDATE #{self.class.table_name} SET recognized_at = NULL WHERE id = #{id}"
-    self.recognized_at = nil
-    self.class.connection.execute(sql)
-    
+
+    self.update_attribute(:recognized_at, nil)
+
     return true
   end
 end

@@ -1,177 +1,143 @@
-ActionController::Routing::Routes.draw do |map|
+Joruri::Application.routes.draw do
   mod = "article"
   
+  ## -------------------------------------------------------
   ## admin
-  map.namespace(mod, :namespace => '') do |ns|
-    ns.resources :emergencies,
-      :controller  => "admin/emergencies",
-      :path_prefix => "/_admin/#{mod}"
-    ns.resources :units,
-      :controller  => "admin/units",
-      :path_prefix => "/_admin/#{mod}/:content/:parent"
-    ns.resources :categories,
-      :controller  => "admin/categories",
-      :path_prefix => "/_admin/#{mod}/:content/:parent"
-    ns.resources :attributes,
-      :controller  => "admin/attributes",
-      :path_prefix => "/_admin/#{mod}/:content"
-    ns.resources :areas,
-      :controller  => "admin/areas",
-      :path_prefix => "/_admin/#{mod}/:content/:parent"
-    ns.resources :docs,
-      :controller  => "admin/docs",
-      :path_prefix => "/_admin/#{mod}/:content"
-    ns.resources :edit_docs,
-      :controller  => "admin/docs/edit",
-      :path_prefix => "/_admin/#{mod}/:content"
-    ns.resources :recognize_docs,
-      :controller  => "admin/docs/recognize",
-      :path_prefix => "/_admin/#{mod}/:content"
-    ns.resources :publish_docs,
-      :controller  => "admin/docs/publish",
-      :path_prefix => "/_admin/#{mod}/:content"
-    ns.resources :inline_files,
-      :controller  => "admin/doc/files",
-      :path_prefix => "/_admin/#{mod}/:content/doc/:parent",
-      :member => {:download => :get}
     
+  scope "#{Joruri.admin_uri}/#{mod}", :module => mod, :as => mod do
+    
+    match "tool_import_uri"  => "admin/tool/import_uri#import"
+    match "tool_import_html" => "admin/tool/import_html#import"
+  end
+  
+  scope "#{Joruri.admin_uri}/#{mod}/c:concept", :module => mod, :as => mod do
+    
+    match ":content/doc_files/:parent/(*path)" => "admin/doc/files#preview",
+      :as => :preview_doc_file
+    match "rebuild" => "admin/rebuild#index",
+      :path => ":content/rebuild", :format => false
+    
+    resources :units,
+      :controller => "admin/units",
+      :path       => ":content/:parent/units"
+    resources :categories,
+      :controller => "admin/categories",
+      :path       => ":content/:parent/categories"
+    resources :attributes,
+      :controller => "admin/attributes",
+      :path       => ":content/attributes"
+    resources :areas,
+      :controller => "admin/areas",
+      :path       => ":content/:parent/areas"
+    resources :docs,
+      :controller => "admin/docs",
+      :path       => ":content/docs"
+    resources :edit_docs,
+      :controller => "admin/docs/edit",
+      :path       => ":content/edit_docs"
+    resources :recognize_docs,
+      :controller => "admin/docs/recognize",
+      :path       => ":content/recognize_docs"
+    resources :publish_docs,
+      :controller => "admin/docs/publish",
+      :path       => ":content/publish_docs"
+    resources :all_docs,
+      :controller => "admin/docs/all",
+      :path       => ":content/all_docs"
+    resources :inline_files,
+      :controller => "admin/doc/files",
+      :path       => ":content/doc/:parent/inline_files" do
+        member do
+          get :download
+        end
+      end
+    
+    ## -----------------------------------------------------
     ## content
-    ns.resources :content_base,
-      :controller => "admin/content/base",
-      :path_prefix => "/_admin/#{mod}"
-    ns.resources :content_settings,
+    
+    resources :content_base,
+      :controller => "admin/content/base"
+    resources :content_settings,
       :controller => "admin/content/settings",
-      :path_prefix => "/_admin/#{mod}/:content"
+      :path       => ":content/content_settings"
     
+    ## -----------------------------------------------------
     ## node
-    ns.resources :node_docs,
-      :controller  => "admin/node/docs",
-      :path_prefix => "/_admin/#{mod}/:parent"
-    ns.resources :node_recent_docs,
-      :controller  => "admin/node/recent_docs",
-      :path_prefix => "/_admin/#{mod}/:parent"
-    ns.resources :node_event_docs,
-      :controller  => "admin/node/event_docs",
-      :path_prefix => "/_admin/#{mod}/:parent"
-    ns.resources :node_tag_docs,
-      :controller  => "admin/node/tag_docs",
-      :path_prefix => "/_admin/#{mod}/:parent"
-    ns.resources :node_units,
-      :controller  => "admin/node/units",
-      :path_prefix => "/_admin/#{mod}/:parent"
-    ns.resources :node_categories,
-      :controller  => "admin/node/categories",
-      :path_prefix => "/_admin/#{mod}/:parent"
-    ns.resources :node_attributes,
-      :controller  => "admin/node/attributes",
-      :path_prefix => "/_admin/#{mod}/:parent"
-    ns.resources :node_areas,
-      :controller  => "admin/node/areas",
-      :path_prefix => "/_admin/#{mod}/:parent"
     
+    resources :node_docs,
+      :controller => "admin/node/docs",
+      :path       => ":parent/node_docs"
+    resources :node_recent_docs,
+      :controller => "admin/node/recent_docs",
+      :path       => ":parent/node_recent_docs"
+    resources :node_event_docs,
+      :controller => "admin/node/event_docs",
+      :path       => ":parent/node_event_docs"
+    resources :node_tag_docs,
+      :controller => "admin/node/tag_docs",
+      :path       => ":parent/node_tag_docs"
+    resources :node_units,
+      :controller => "admin/node/units",
+      :path       => ":parent/node_units"
+    resources :node_categories,
+      :controller => "admin/node/categories",
+      :path       => ":parent/node_categories"
+    resources :node_attributes,
+      :controller => "admin/node/attributes",
+      :path       => ":parent/node_attributes"
+    resources :node_areas,
+      :controller => "admin/node/areas",
+      :path       => ":parent/node_areas"
+    
+    ## -----------------------------------------------------
     ## piece
-    ns.resources :piece_recent_docs,
-      :controller  => "admin/piece/recent_docs",
-      :path_prefix => "/_admin/#{mod}"
-    ns.resources :piece_recent_tabs,
-      :controller  => "admin/piece/recent_tabs",
-      :path_prefix => "/_admin/#{mod}"
-    ns.resources :piece_recent_tab_tabs,
-      :controller  => "admin/piece/recent_tab/tabs",
-      :path_prefix => "/_admin/#{mod}/:piece"
-    ns.resources :piece_calendars,
-      :controller  => "admin/piece/calendars",
-      :path_prefix => "/_admin/#{mod}"
-    ns.resources :piece_units,
-      :controller  => "admin/piece/units",
-      :path_prefix => "/_admin/#{mod}"
-    ns.resources :piece_categories,
-      :controller  => "admin/piece/categories",
-      :path_prefix => "/_admin/#{mod}"
-    ns.resources :piece_attributes,
-      :controller  => "admin/piece/attributes",
-      :path_prefix => "/_admin/#{mod}"
-    ns.resources :piece_areas,
-      :controller  => "admin/piece/areas",
-      :path_prefix => "/_admin/#{mod}"
+    
+    resources :piece_recent_docs,
+      :controller => "admin/piece/recent_docs"
+    resources :piece_recent_tabs,
+      :controller => "admin/piece/recent_tabs"
+    resources :piece_recent_tab_tabs,
+      :controller => "admin/piece/recent_tab/tabs",
+      :path       => ":piece/piece_recent_tab_tabs"
+    resources :piece_calendars,
+      :controller => "admin/piece/calendars"
+    resources :piece_units,
+      :controller => "admin/piece/units"
+    resources :piece_categories,
+      :controller => "admin/piece/categories"
+    resources :piece_attributes,
+      :controller => "admin/piece/attributes"
+    resources :piece_areas,
+      :controller => "admin/piece/areas"
+
   end
 
-  map.connect "_admin/#{mod}/tool_import_uri",
-    :controller => "#{mod}/admin/tool/import_uri",
-    :action     => :import
-  
-  map.connect "_admin/#{mod}/tool_import_html",
-    :controller => "#{mod}/admin/tool/import_html",
-    :action     => :import,
-    :conditions => {:method => :post}
-    
+  ## -------------------------------------------------------
   ## public
-  map.namespace(mod, :namespace => '', :path_prefix => '/_public') do |ns|
-    ns.connect "node_docs/:name/index.html",
-      :controller => "public/node/docs",
-      :action     => :show
-    ns.connect "node_docs/:name/files/:type/:file.:format",
-      :controller => "public/node/doc/files",
-      :action     => :show
-    ns.connect "node_docs/:name/files/:file.:format",
-      :controller => "public/node/doc/files",
-      :action     => :show
-    ns.connect "node_docs/index.:format",
-      :controller => "public/node/docs",
-      :action     => :index
-    ns.connect "node_recent_docs/index.:format",
-      :controller => "public/node/recent_docs",
-      :action     => :index
-    ns.connect "node_event_docs/:year/:month/index.:format",
-      :controller => "public/node/event_docs",
-      :action     => :month
-    ns.connect "node_event_docs/schedule.:format",
-      :controller => "public/node/event_docs",
-      :action     => :schedule
-    ns.connect "node_event_docs/index.:format",
-      :controller => "public/node/event_docs",
-      :action     => :month
-    ns.connect "node_tag_docs/:tag",
-      :controller => "public/node/tag_docs",
-      :action     => :index
-    ns.connect "node_tag_docs/index.:format",
-      :controller => "public/node/tag_docs",
-      :action     => :index
-    ns.connect "node_units/:name/:attr/index.:format",
-      :controller => "public/node/units",
-      :action     => :show_attr
-    ns.connect "node_units/:name/:file.:format",
-      :controller => "public/node/units",
-      :action     => :show
-    ns.connect "node_units/index.html",
-      :controller => "public/node/units",
-      :action     => :index
-    ns.connect "node_categories/:name/:attr/index.:format",
-      :controller => "public/node/categories",
-      :action     => :show_attr
-    ns.connect "node_categories/:name/:file.:format",
-      :controller => "public/node/categories",
-      :action     => :show
-    ns.connect "node_categories/index.html",
-      :controller => "public/node/categories",
-      :action     => :index
-    ns.connect "node_attributes/:name/:attr/index.:format",
-      :controller => "public/node/attributes",
-      :action     => :show_attr
-    ns.connect "node_attributes/:name/:file.:format",
-      :controller => "public/node/attributes",
-      :action     => :show
-    ns.connect "node_attributes/index.html",
-      :controller => "public/node/attributes",
-      :action     => :index
-    ns.connect "node_areas/:name/:attr/index.:format",
-      :controller => "public/node/areas",
-      :action     => :show_attr
-    ns.connect "node_areas/:name/:file.:format",
-      :controller => "public/node/areas",
-      :action     => :show
-    ns.connect "node_areas/index.html",
-      :controller => "public/node/areas",
-      :action     => :index
+  
+  scope "_public/#{mod}", :module => mod, :as => "" do
+    
+    match "node_docs/:name/index.html"                 => "public/node/docs#show"
+    match "node_docs/:name/files/:type/:file.:format"  => "public/node/doc/files#show"
+    match "node_docs/:name/files/:file.:format"        => "public/node/doc/files#show"
+    match "node_docs/index.:format"                    => "public/node/docs#index"
+    match "node_recent_docs/index.:format"             => "public/node/recent_docs#index"
+    match "node_event_docs/schedule.:format"           => "public/node/event_docs#schedule"
+    match "node_event_docs/:year/:month/index.:format" => "public/node/event_docs#month"
+    match "node_event_docs/index.:format"              => "public/node/event_docs#month"
+    match "node_tag_docs/index.:format"                => "public/node/tag_docs#index"
+    match "node_tag_docs/:tag"                         => "public/node/tag_docs#index"
+    match "node_units/:name/:attr/index.:format"       => "public/node/units#show_attr"
+    match "node_units/:name/:file.:format"             => "public/node/units#show"
+    match "node_units/index.html"                      => "public/node/units#index"
+    match "node_categories/:name/:attr/index.:format"  => "public/node/categories#show_attr"
+    match "node_categories/:name/:file.:format"        => "public/node/categories#show"
+    match "node_categories/index.html"                 => "public/node/categories#index"
+    match "node_attributes/:name/:attr/index.:format"  => "public/node/attributes#show_attr"
+    match "node_attributes/:name/:file.:format"        => "public/node/attributes#show"
+    match "node_attributes/index.html"                 => "public/node/attributes#index"
+    match "node_areas/:name/:attr/index.:format"       => "public/node/areas#show_attr"
+    match "node_areas/:name/:file.:format"             => "public/node/areas#show"
+    match "node_areas/index.html"                      => "public/node/areas#index"
   end
 end

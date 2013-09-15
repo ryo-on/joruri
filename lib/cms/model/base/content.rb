@@ -26,12 +26,12 @@ module Cms::Model::Base::Content
   end
   
   def admin_uri
-    controller = model.underscore.pluralize.gsub(/^(.*?\/)/, "\\1#{id}/")
-    "#{Core.uri}_admin/#{controller}"
+    controller = model.underscore.pluralize.gsub(/^(.*?\/)/, "\\1c#{concept_id}/#{id}/")
+    "#{Joruri.admin_uri}/#{controller}"
   end
   
   def admin_content_uri
-    controller = model.to_s.underscore.pluralize.gsub(/^(.*?)\/.*/, "\\1/content_base") + "/#{id}"
-    "#{Core.uri}_admin/#{controller}"
+    controller = model.to_s.underscore.pluralize.gsub(/^(.*?)\/.*/, "\\1/c#{concept_id}/content_base")
+    "#{Joruri.admin_uri}/#{controller}/#{id}"
   end
 end

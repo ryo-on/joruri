@@ -9,7 +9,8 @@ class Cms::Admin::LayoutsController < Cms::Controller::Admin::Base
   end
   
   def index
-    item = Cms::Layout.new.readable
+    item = Cms::Layout.new
+    item.readable if params[:s_target] != "all"
     item.search params
     item.page  params[:page], params[:limit]
     item.order params[:sort], 'name, id'

@@ -1,6 +1,6 @@
 <div class="enqueteForm">
 
-<% form_for :item, :url => "#{Page.current_node.public_uri}#{@item.id}/" do |f| %>
+<%= form_for :item, :url => "#{Page.current_node.public_uri}#{@item.id}/" do |f| %>
 
 <%= error_messages_for "form" %>
 
@@ -9,15 +9,15 @@
 <% end %>
 
 <div class="form">
-  <div class="h2 name"><%=h @item.name %></div>
-  <% if !@item.body.blank? %><div class="body"><%= @item.body %></div><% end %>
+  <div class="h2 name"><%= @item.name %></div>
+  <% if !@item.body.blank? %><div class="body"><%== @item.body %></div><% end %>
 </div>
 
 <div class="columns">
   <% @form.elements.each do |e| %>
-  <div class="column <%= e.name %>">
-    <div class="name"><%=h e.label %> <span class="required"><%= "※" if e.required %></span></div>
-    <% if e.message && !@confirm %><div class="body"><%= e.message %></div><% end %>
+  <div class="column">
+    <div class="name"><%= e.label %> <span class="required"><%= "※" if e.required %></span></div>
+    <% if e.message && !@confirm %><div class="body"><%== e.message %></div><% end %>
     <div class="field"><%= e.tag %></div>
   </div>
   <% end %>

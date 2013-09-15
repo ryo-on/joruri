@@ -1,10 +1,10 @@
 <% inline_id = @item.unid %>
-<%= init_tiny_mce :readonly => true, :document_base_url => "/_admin/sys/#{inline_id}/inline_files/" %>
+<%= init_tiny_mce :readonly => true, :document_base_url => faq_preview_doc_file_path(:parent => inline_id, :path => '') %>
 
 <% if rep = @item.replace_page %>
-<div class="noticeBox">更新用の記事が作成されています ： <%= link_to h(rep.title), faq_doc_path(@content.id, rep.id) %></div>
+<div class="noticeBox">更新用の記事が作成されています : <%= link_to h(rep.title), {:id => rep.id} %></div>
 <% elsif org = @item.replaced_page %>
-<div class="noticeBox">公開時に更新される記事 ： <%= link_to h(org.title), faq_doc_path(@content.id, org.id) %></div>
+<div class="noticeBox">公開時に更新される記事 : <%= link_to h(org.title), {:id => org.id} %></div>
 <% end %>
 
 <table class="show">
@@ -26,9 +26,9 @@
 <table class="show">
   <tr>
     <th>タイトル</th>
-    <td><%=h @item.title %></td>
+    <td><%= @item.title %></td>
     <th style="width: 60px;">言語</th>
-    <td style="width: 150px;"><%=h @item.language.title if @item.language %></td>
+    <td style="width: 150px;"><%= @item.language.title if @item.language %></td>
   </tr>
   <tr style="display:none;">
     <th>ヘッダー</th>
@@ -86,7 +86,7 @@
 </table>
 
 <% if !@item.mobile_title.blank? || !@item.mobile_body.blank? %>
-<br /><p class="form">携帯向け</p>
+<p class="form">携帯向け</p>
 
 <table class="show">
   <tr>

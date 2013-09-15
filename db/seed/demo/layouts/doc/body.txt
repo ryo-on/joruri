@@ -31,7 +31,6 @@
 <div id="contentContainer">
 <div id="contentBody">
 
-[[piece/sns-share]]
 [[content]]
 
 </div>

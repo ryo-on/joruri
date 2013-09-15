@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Cms::Admin::Data::FilesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   include Sys::Controller::Scaffold::Publication
@@ -17,7 +18,8 @@ class Cms::Admin::Data::FilesController < Cms::Controller::Admin::Base
   def index
     @nodes = Cms::DataFileNode.find(:all, :conditions => {:concept_id => Core.concept(:id)}, :order => :name)
     
-    item = Cms::DataFile.new.readable
+    item = Cms::DataFile.new
+    item.readable if params[:s_target] != "all"
     #item.and 'node_id', @parent.id if @parent.id != 0
     item.search params
     item.page  params[:page], params[:limit]
@@ -70,7 +72,7 @@ class Cms::Admin::Data::FilesController < Cms::Controller::Admin::Base
     item.and :id, params[:id]
     return error_auth unless @file = item.find(:first)
     
-    send_file @file.upload_path, :type => @file.mime_type, :filename => @file.name, :disposition => 'inline'
+    send_storage_file @file.upload_path, :type => @file.mime_type, :filename => @file.name
   end
   
   def thumbnail
@@ -80,8 +82,8 @@ class Cms::Admin::Data::FilesController < Cms::Controller::Admin::Base
     
     upload_path = @file.upload_path
     thumb_path  = ::File.dirname(@file.upload_path) + "/thumb.dat"
-    upload_path = thumb_path if FileTest.exist?(thumb_path)
+    upload_path = thumb_path if ::Storage.exists?(thumb_path)
     
-    send_file upload_path, :type => @file.mime_type, :filename => @file.name, :disposition => 'inline'
+    send_storage_file upload_path, :type => @file.mime_type, :filename => @file.name
   end
 end

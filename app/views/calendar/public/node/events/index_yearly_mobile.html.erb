@@ -1,6 +1,6 @@
 <div class="calendarEvents calendarYearlyEvents">
 
-<div class="h2"><%=h sprintf("%d年", @year) %></div>
+<div class="h2"><%= sprintf("%d年", @year) %></div>
 
 <% @days.each do |day| %>
   <div class="date <%= day[:class] %>">
@@ -18,9 +18,9 @@
 
 <% if @pagination.prev_uri || @pagination.next_uri %>
 <div class="pagination">
-  <%= link_to("&lt;&lt;*前の年", @pagination.prev_uri, :accesskey => '*') if @pagination.prev_uri %>
+  <%= link_to("<<前の年", @pagination.prev_uri, :accesskey => '*') if @pagination.prev_uri %>
   <span class="separator">|</span>
-  <%= link_to("次の年#&gt;&gt;", @pagination.next_uri, :accesskey => '#') if @pagination.next_uri %>
+  <%= link_to("次の年#>>", @pagination.next_uri, :accesskey => '#') if @pagination.next_uri %>
 </div>
 <% end %>
 

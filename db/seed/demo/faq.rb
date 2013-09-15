@@ -26,6 +26,8 @@ create_cms_piece :concept_id => concept.id, :content_id => content.id, :model =>
   :name => "faq-category-list", :title => "FAQ分野一覧", :view_title => "分野一覧"
 create_cms_piece :concept_id => concept.id, :content_id => content.id, :model => "Faq::RecentDoc",
   :name => "faq-recent-docs", :title => "FAQ新着記事", :view_title => "新着記事"
+create_cms_piece :concept_id => concept.id, :content_id => content.id, :model => "Faq::SearchDoc",
+  :name => "faq-search", :title => "FAQ検索", :view_title => "FAQ検索"
 create_cms_piece :concept_id => concept.id, :model => "Cms::Free", :name => "faq-tel", :title => "コールセンター"
 create_cms_piece :concept_id => concept.id, :model => "Cms::Free", :name => "faq-page-title", :title => "ページタイトル"
 create_cms_piece :concept_id => concept.id, :model => "Cms::Free", :name => "faq-recent-title", :title => "FAQ新着情報タイトル"
@@ -36,16 +38,18 @@ create_cms_piece :concept_id => concept.id, :model => "Cms::Free", :name => "faq
 #create_cms_node :layout_id => layout.id, :content_id => content.id, :model => "Newsletter::Form", :name => "mailmagazine", :title => "メールマガジン"
 
 p = create_cms_node :concept_id => concept.id, :layout_id => nil, :model => 'Cms::Directory', :name => 'faq'   , :title => 'FAQ'
-    create_cms_node :concept_id => concept.id, :content_id => content.id, :layout_id => l_cate.id, :model => 'Faq::Category'  , :name => 'bunya', :title => '分野',
+    create_cms_node :concept_id => concept.id, :content_id => content.id, :layout_id => l_cate.id, :model => 'Faq::Category', :name => 'bunya', :title => '分野',
       :parent_id => p.id
-    create_cms_node :concept_id => concept.id, :content_id => content.id, :layout_id => l_doc.id, :model => 'Faq::Doc'  , :name => 'docs', :title => '記事',
+    create_cms_node :concept_id => concept.id, :content_id => content.id, :layout_id => l_doc.id, :model => 'Faq::Doc', :name => 'docs', :title => '記事',
       :parent_id => p.id
-    create_cms_node :concept_id => concept.id, :content_id => content.id, :layout_id => l_rec.id, :model => 'Faq::RecentDoc'  , :name => 'shinchaku', :title => '新着記事',
+    create_cms_node :concept_id => concept.id, :content_id => content.id, :layout_id => l_rec.id, :model => 'Faq::RecentDoc', :name => 'shinchaku', :title => '新着記事',
       :parent_id => p.id
-    create_cms_node :concept_id => concept.id, :content_id => content.id, :layout_id => l_tag.id, :model => 'Faq::TagDoc'  , :name => 'tag', :title => 'タグ検索',
+    create_cms_node :concept_id => concept.id, :content_id => content.id, :layout_id => l_rec.id, :model => 'Faq::SearchDoc', :name => 'search', :title => '新着記事',
+      :parent_id => p.id
+    create_cms_node :concept_id => concept.id, :content_id => content.id, :layout_id => l_tag.id, :model => 'Faq::TagDoc', :name => 'tag', :title => 'タグ検索',
       :parent_id => p.id
     create_cms_node :concept_id => concept.id, :layout_id => l_top.id, :model => 'Cms::Page'  , :name => 'index.html', :title => 'FAQ',
-      :parent_id => p.id , :body => file("nodes/faq/index/body")
+      :parent_id => p.id , :body => read_data("nodes/faq/index/body")
 
 ## ---------------------------------------------------------
 ## faq/categories
@@ -130,7 +134,7 @@ p = create concept, 0, 1, 7 , l_cate , content, 'bosaigai'         , '防災'
 ## ---------------------------------------------------------
 ## faq/docs
 
-def create(content_id, category_ids, rel_doc_ids, title, question, body = file('docs/002/body'))
+def create(content_id, category_ids, rel_doc_ids, title, question, body = read_data('docs/002/body'))
   Faq::Doc.create(:content_id => content_id, :state => 'public',
     :recognized_at => Core.now, :published_at => Core.now, :language_id => 1,
     :category_ids => category_ids,:rel_doc_ids => rel_doc_ids,

@@ -1,10 +1,10 @@
-<% form_tag("", :method => :put) do |f| %>
+<%= form_tag("", :method => :put) do |f| %>
   
   <table class="show">
     <tr>
       <th>設定ファイル</th>
     </tr><tr>
-      <td><%=h @file %></td>
+      <td><%= @file %></td>
     </tr>
   </table>
   
@@ -12,7 +12,7 @@
     <tr>
       <th>現在の設定</th>
     </tr><tr>
-      <td><textarea name="current_conf" readonly="readonly" style="width: 98%; height: 160px;"><%=h @current_conf %></textarea></td>
+      <td><textarea name="current_conf" readonly="readonly" style="width: 98%; height: 160px;"><%= @current_conf %></textarea></td>
     </tr>
   </table>
   
@@ -20,7 +20,7 @@
     <tr>
       <th>新しい設定</th>
     </tr><tr>
-      <td><textarea name="update_conf" readonly="readonly" style="width: 98%; height: 160px;"><%=h @update_conf %></textarea></td>
+      <td><textarea name="update_conf" readonly="readonly" style="width: 98%; height: 160px;"><%= @update_conf %></textarea></td>
     </tr>
   </table>
   

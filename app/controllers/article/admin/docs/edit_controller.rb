@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Article::Admin::Docs::EditController < Article::Admin::DocsController
   def index
     item = Article::Doc.new.editable

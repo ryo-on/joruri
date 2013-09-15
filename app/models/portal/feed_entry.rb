@@ -41,7 +41,7 @@ class Portal::FeedEntry < Cms::FeedEntry
     return "" if values.size == 0
     
     separator = %Q(<span class="separator">　</span>)
-    %Q(<span class="attributes">（#{values.join(separator)}）</span>)
+    %Q(<span class="attributes">（#{values.join(separator)}）</span>).html_safe
   end
   
   def public_uri

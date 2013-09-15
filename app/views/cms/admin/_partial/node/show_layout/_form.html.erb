@@ -13,11 +13,11 @@ end
 
 %><tr>
     <th><%= item.locale :show_concept_id %></th>
-    <td><%= f.select_with_tree "in_settings[show_concept_id]", root, :conditions => {:state => 'public'}, :include_blank => true %></td>
+    <td><%= f.select_with_tree "in_settings[show_concept_id]", root, :conditions => {:state => 'public'}, :include_blank => "　" %></td>
   </tr><tr>
     <th><%= item.locale :show_layout_id %></th>
-    <td><%= f.array_select 'in_settings[show_layout_id]', layouts, :include_blank => '' %></td>
+    <td><%= f.array_select 'in_settings[show_layout_id]', layouts, :include_blank => "　" %></td>
   </tr>
 <%= observe_field(:item_in_settings_show_concept_id, :update => :item_in_settings_show_layout_id,
-      :with => 'concept_id', :on => 'change', :url => layouts_cms_concepts_path(0))
+      :with => 'concept_id', :on => 'change', :url => layouts_cms_concepts_path(:parent => 0))
 %>

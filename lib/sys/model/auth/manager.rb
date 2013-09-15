@@ -1,3 +1,4 @@
+# encoding: utf-8
 module Sys::Model::Auth::Manager
   def readable
     self.and(0, 1) unless Core.user.has_auth?(:manager)

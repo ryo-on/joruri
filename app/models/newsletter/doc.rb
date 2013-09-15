@@ -6,12 +6,11 @@ class Newsletter::Doc < ActiveRecord::Base
   include Sys::Model::Rel::Creator
   include Cms::Model::Rel::Content
   include Cms::Model::Auth::Concept
-  include Newsletter::Model::Base::Delivery
 
-  belongs_to :status,           :foreign_key => :state,           :class_name => 'Sys::Base::Status'
-  belongs_to :content,          :foreign_key => :content_id,      :class_name => 'Newsletter::Content::Base'
-  has_many   :logs,             :foreign_key => :doc_id,          :class_name => 'Newsletter::DeliveryLog',
-                                :order => :updated_at, :dependent => :destroy
+  belongs_to :status,  :foreign_key => :state,      :class_name => 'Sys::Base::Status'
+  belongs_to :content, :foreign_key => :content_id, :class_name => 'Newsletter::Content::Base'
+  has_many   :logs,    :foreign_key => :doc_id,     :class_name => 'Newsletter::Log',
+    :dependent => :destroy
 
   validates_presence_of :state, :title, :body
 
@@ -22,12 +21,21 @@ class Newsletter::Doc < ActiveRecord::Base
     end
   end
 
-  def tests
-    return @tests if @tests
-    test = Newsletter::Test.new.enabled
+  def delivery_states
+    [['未配信','yet'], ['配信中','delivering'], ['配信済み','delivered'], ['配信失敗','error']]
+  end
+
+  def delivery_status
+    delivery_states.each {|val, key| return val if delivery_state.to_s == key }
+    nil
+  end
+  
+  def testers
+    return @testers if @testers
+    test = Newsletter::Tester.new.enabled
     test.and :content_id, self.content_id
     test.order 'agent_state DESC, id DESC'
-    @tests = test.find(:all)
+    @testers = test.find(:all)
   end
 
   def members
@@ -37,27 +45,30 @@ class Newsletter::Doc < ActiveRecord::Base
     member.order 'letter_type DESC, id'
     @members = member.find(:all)
   end
-
-  def mail_title(is_mobile=false, options={})
-    _title = ""
-    if is_mobile
-      _title = mobile_title.blank? ? title : mobile_title
-    else
-      _title = title
+  
+  def mail_from
+    addr = item.setting_value("sender_address")
+    @mail_from[content_id] = !addr.blank? ? addr : "webmaster@" + item.site.full_uri.gsub(/^.*?\/\/(.*?)(:|\/).*/, '\\1')
+    
+  end
+  
+  def mail_title(mobile = false)
+    if mobile
+      return mobile_title.blank? ? title : mobile_title if mobile
     end
-    _title
+    return title
   end
 
-  def mail_body(is_mobile=false, options={})
-    _body = ""
-    if is_mobile
-      _body = mobile_body.blank? ? body : mobile_body
-      _body += "\n\n" + content.signature_mobile if content.signature_state == 'enabled'
-    else
-      _body = body
-      _body += "\n\n" + content.signature if content.signature_state == 'enabled'
+  def mail_body(mobile = false)
+    if mobile
+      _body  = mobile_body.blank? ? body : mobile_body
+      _body += "\n\n#{content.signature_mobile}" if content.signature_state == 'enabled'
+      return _body
     end
-    _body
+    
+    _body  = body.to_s
+    _body += "\n\n#{content.signature}" if content.signature_state == 'enabled'
+    return _body
   end
 
   def search(params)

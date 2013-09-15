@@ -1,44 +1,47 @@
-ActionController::Routing::Routes.draw do |map|
+Joruri::Application.routes.draw do
   mod = "calendar"
   
+  ## -------------------------------------------------------
   ## admin
-  map.namespace(mod, :namespace => '') do |ns|
-    ns.resources :events,
-      :controller  => "admin/events",
-      :path_prefix => "/_admin/#{mod}/:content"
+  
+  scope "#{Joruri.admin_uri}/#{mod}/c:concept", :module => mod, :as => mod do
     
+    resources :events,
+      :controller => "admin/events",
+      :path       => ":content/events"
+    
+    ## -----------------------------------------------------
     ## content
-    ns.resources :content_base,
-      :controller => "admin/content/base",
-      :path_prefix => "/_admin/#{mod}"
-    ns.resources :content_settings,
-      :controller  => "admin/content/settings",
-      :path_prefix => "/_admin/#{mod}/:content"
     
+    resources :content_base,
+      :controller => "admin/content/base"
+    resources :content_settings,
+      :controller => "admin/content/settings",
+      :path       => ":content/content_settings"
+    
+    ## -----------------------------------------------------
     ## node
-    ns.resources :node_events,
-      :controller  => "admin/node/events",
-      :path_prefix => "/_admin/#{mod}/:parent"
     
+    resources :node_events,
+      :controller => "admin/node/events",
+      :path       => ":parent/node_events"
+    
+    ## -----------------------------------------------------
     ## piece
-    ns.resources :piece_monthly_links,
-      :controller  => "admin/piece/monthly_links",
-      :path_prefix => "/_admin/#{mod}"
-    ns.resources :piece_daily_links,
-      :controller  => "admin/piece/daily_links",
-      :path_prefix => "/_admin/#{mod}"
+    
+    resources :piece_monthly_links,
+      :controller => "admin/piece/monthly_links"
+    resources :piece_daily_links,
+      :controller => "admin/piece/daily_links"
   end
   
+  ## -------------------------------------------------------
   ## public
-  map.namespace(mod, :namespace => '', :path_prefix => '/_public') do |ns|
-    ns.connect "node_events/index.:format",
-      :controller => "public/node/events",
-      :action     => :index
-    ns.connect "node_events/:year/index.:format",
-      :controller => "public/node/events",
-      :action     => :index_yearly
-    ns.connect "node_events/:year/:month/index.:format",
-      :controller => "public/node/events",
-      :action     => :index_monthly
+  
+  scope "_public/#{mod}", :module => mod, :as => "" do
+    
+    match "node_events/index.:format"              => "public/node/events#index"
+    match "node_events/:year/index.:format"        => "public/node/events#index_yearly"
+    match "node_events/:year/:month/index.:format" => "public/node/events#index_monthly"
   end
 end

@@ -63,19 +63,14 @@
 .inquiry .email {
   padding-left: 15px;
 }
-#faqRecentDocs .pieceHeader {
-  margin-bottom: 5px;
-  background-image: url("./images/bg-shinchaku-repeat.gif");
-  background-repeat: repeat-x;
-  background-position: left top;
-}
-#faqRecentDocs .pieceHeader h2 {
-  height: 30px;
-  line-height: 30px;
-  padding-left: 10px;
-  background-image: url("./images/tl-shinchaku.gif");
-  background-repeat: no-repeat;
-  background-position: left top;
+#faqRecentDocs .pieceHeader h2, #faqSearch .pieceHeader h2,
+.contentFaqCategory .latest h2 {
+  margin-bottom: 10px;
+  padding: 3px 10px;
+  background:#0952EB;
+  background: -moz-linear-gradient(top, #0952EB, #001C66);
+  background: -webkit-gradient(linear, center top, center bottom, from(#0952EB), to(#001C66));
+  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#0952EB', endColorstr='#001C69');
   color: #ffffff;
   font-weight: bold;
   font-size: 120%;
@@ -137,23 +132,20 @@
   background-repeat: no-repeat;
   background-position: 0 7px;
 }
-#recentFaqTitle .pieceHeader {
-  background-image: url("./images/bg-shinchaku-repeat.gif");
-  background-repeat: repeat-x;
-  background-position: left top;
-}
 #recentFaqTitle h2 {
-  height: 30px;
-  line-height: 30px;
-  padding-left: 10px;
-  background-image: url("./images/tl-shinchaku.gif");
-  background-repeat: no-repeat;
-  background-position: left top;
+  margin-bottom: 10px;
+  padding: 3px 10px;
+  background:#0952EB;
+  background: -moz-linear-gradient(top, #0952EB, #001C66);
+  background: -webkit-gradient(linear, center top, center bottom, from(#0952EB), to(#001C66));
+  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#0952EB', endColorstr='#001C69');
   color: #ffffff;
   font-weight: bold;
   font-size: 120%;
 }
-
+#faqRecentDocs .links {
+  text-align: right;
+}
 /* FAQ category
 ----------------------------------------------- */
 .contentFaqCategory .category h2 {
@@ -179,18 +171,6 @@
   background-repeat: repeat-x;
   background-position: left top;
 }
-.contentFaqCategory .latest h2 {
-  height: 30px;
-  line-height: 30px;
-  margin-bottom: 10px;
-  padding-left: 10px;
-  background-image: url("./images/tl-shinchaku.gif");
-  background-repeat: no-repeat;
-  background-position: left top;
-  color: #ffffff;
-  font-weight: bold;
-  font-size: 120%;
-}
 .contentFaqCategory .category h3 {
   margin-bottom: 10px;
   padding: 5px 5px 4px 15px;
@@ -211,51 +191,6 @@
 }
 .contentFaqCategory .more {
   padding: 0 5px 10px 0;
-  text-align: right;
-}
-
-/* RSS Atom
------------------------------------------------ */
-#faqRecentDocs .feed,
-.contentFaqRecentDocs .feed {
-  float: right;
-  position: relative;
-  top: -27px;
-  right: 10px;
-  height: 13px;
-  background-color: transparent;
-}
-#faqRecentDocs .feed a.feedRss,
-.contentFaqRecentDocs .feed a.feedRss,
-.contentFaqCategory .feed a.feedRss {
-  display: inline-block;
-  width: 40px;
-  height: 13px;
-  overflow: hidden;
-  background-image: url(./images/bt-rss.gif);
-  background-repeat: no-repeat;
-  text-indent: 50px;
-}
-#faqRecentDocs .feed a.feedAtom,
-.contentFaqRecentDocs .feed a.feedAtom,
-.contentFaqCategory .feed a.feedAtom {
-  display: inline-block;
-  width: 40px;
-  height: 13px;
-  overflow: hidden;
-  background-image:url(./images/bt-atom.gif);
-  background-repeat:no-repeat;
-  text-indent: 50px;
-}
-.contentFaqCategory .feed {
-  float: right;
-  position: relative;
-  top: -32px;
-  right: 10px;
-  height: 13px;
-  background-color: transparent;
-}
-.links {
   text-align: right;
 }
 
@@ -295,4 +230,21 @@
 }
 .contentFaqTags ul {
   padding: 10px 5px 25px;
+}
+
+/* FAQ search
+----------------------------------------------- */
+#faqSearch .category1, #faqSearch .category2, #faqSearch .keyword {
+  float: left;
+  margin: 10px 20px 10px 0;
+}
+#faqSearch .category1 p, #faqSearch .category2 p, #faqSearch .keyword p {
+  float: left;
+  padding: 3px 0;
+  margin-right: 10px;
+}
+#faqSearch .submitters {
+  clear: both;
+  margin-top: 0;
+  text-align: center;
 }

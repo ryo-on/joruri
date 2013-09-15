@@ -122,7 +122,7 @@ module Sys::Model::Base::File
     if !name.blank?
       ext = ::File.extname(name.to_s).downcase
       if types[ext] != true
-        errors.add_to_base "許可されていないファイルです。（#{allowed_type}）"
+        errors.add :base, "許可されていないファイルです。（#{allowed_type}）"
         return
       end
     end
@@ -130,7 +130,7 @@ module Sys::Model::Base::File
     if !file.blank? && !file.original_filename.blank?
       ext = ::File.extname(file.original_filename.to_s).downcase
       if types[ext] != true
-        errors.add_to_base "許可されていないファイルです。（#{allowed_type}）"
+        errors.add :base, "許可されていないファイルです。（#{allowed_type}）"
         return
       end
     end
@@ -166,7 +166,6 @@ module Sys::Model::Base::File
           
           if size = resize_size
             if image_width > size[:width] || image_height > size[:height]
-              #size = reduced_size(size)
               @resized_image  = image.resize_to_fit(size[:width], size[:height])
               self.image_width  = @resized_image.columns
               self.image_height = @resized_image.rows
@@ -247,7 +246,7 @@ module Sys::Model::Base::File
   
   def image_size
     return '' unless image_file?
-    "( #{image_width}x#{image_height} )"
+    "(#{image_width}x#{image_height})"
   end
   
   def duplicated?
@@ -269,50 +268,36 @@ module Sys::Model::Base::File
   
   def eng_unit
     _size = size
-    return '' unless _size.to_s =~ /^[0-9]+$/
-    if _size >= 10**9
-      _kilo = 3
-      _unit = 'G'
-    elsif _size >= 10**6
-      _kilo = 2
-      _unit = 'M'
-    elsif _size >= 10**3
-      _kilo = 1
-      _unit = 'K'
-    else
-      _kilo = 0
-      _unit = ''
-    end
+    return _size if _size.to_s !~ /^[0-9]+$/
     
-    if _kilo > 0
-      _size = (_size.to_f / (1024**_kilo)).to_s + '000'
-      _keta = _size.index('.')
-      if _keta == 3
-        _size = _size.slice(0, 3)
-      else
-        _size = _size.to_f * (10**(3-_keta))
-        _size = _size.to_f.ceil.to_f / (10**(3-_keta))
-      end
+    if _size >= 1024**3
+      bs = (_size.to_f / (1024**3)).round#.to_s + '000'
+      return "#{bs}GB"
+    elsif _size >= 1024**2
+      bs = (_size.to_f / (1024**2)).round#.to_s + '000'
+      return "#{bs}MB"
+    elsif _size >= 1000
+      bs = (_size.to_f / 1024).round#.to_s + '000'
+      return "#{bs}KB"
     end
-    
-    "#{_size}#{_unit}Bytes"
+    return "#{_size}Bytes"
   end
   
-  def reduced_size(options = {})
+  def reduce_size(options = {})
     return nil unless image_file?
     
     src_w  = image_width.to_f
     src_h  = image_height.to_f
+    
+    if options[:thumbnail] && thumb_width && thumb_height
+      src_w  = thumb_width.to_f
+      src_h  = thumb_height.to_f
+    end
+    
     dst_w  = options[:width].to_f
     dst_h  = options[:height].to_f
     src_r  = (src_w / src_h)
     dst_r  = (dst_w / dst_h)
-    
-    # if options[:trim]
-      # wide  = dst_r > src_r
-      # dst_h = (dst_w / src_r) if wide
-      # dst_w = (dst_h * src_r) if !wide
-    # end
     
     wide  = dst_r > src_r
     dst_w = (dst_h * src_r) if wide
@@ -334,7 +319,7 @@ module Sys::Model::Base::File
     begin
       require 'RMagick'
       #info = Magick::Image::Info.new
-      size = reduced_size(:width => 300, :height => 400)
+      size = reduce_size(:width => 300, :height => 400)
       img  = Magick::Image.read(params[:path]).first
       img  = img.resize(size[:width], size[:height])
       
@@ -362,17 +347,20 @@ private
     thumb_path = ::File.dirname(upload_path) + "/thumb.dat"
     
     if @resized_image
-      Util::File.put(upload_path, :data => @resized_image.to_blob, :mkdir => true)
-      Util::File.put(org_path, :data => @_file_data, :mkdir => true)
+      ::Storage.mkdir_p(::File.dirname(upload_path))
+      ::Storage.binwrite(upload_path, @resized_image.to_blob)
+      ::Storage.mkdir_p(::File.dirname(org_path))
+      ::Storage.binwrite(org_path, @_file_data)
     else
-      Util::File.put(upload_path, :data => @_file_data, :mkdir => true)
-      FileUtils.remove_entry_secure(org_path, true) if FileTest.exist?(org_path)
+      ::Storage.mkdir_p(::File.dirname(upload_path))
+      ::Storage.binwrite(upload_path, @_file_data)
+      ::Storage.rm_rf(org_path) if ::Storage.exists?(org_path)
     end
     
     if @thumbnail_image
-      @thumbnail_image.write(thumb_path)
+      ::Storage.binwrite(thumb_path, @thumbnail_image.to_blob)
     else
-      FileUtils.remove_entry_secure(thumb_path, true) if FileTest.exist?(thumb_path)
+      ::Storage.rm_rf(thumb_path) if ::Storage.exists?(thumb_path)
     end
     
     return true
@@ -380,13 +368,18 @@ private
   
   ## filter/aftar_destroy
   def remove_internal_file
-    FileUtils.remove_entry_secure(upload_path, true) if FileTest.exist?(upload_path)
+    ::Storage.rm_rf(upload_path) if ::Storage.exists?(upload_path)
     
-    path = ::File.dirname(upload_path) + "/original.dat"
-    FileUtils.remove_entry_secure(path, true) if FileTest.exist?(path)
+    dir  = ::File.dirname(upload_path)
     
-    path = ::File.dirname(upload_path) + "/thumb.dat"
-    FileUtils.remove_entry_secure(path, true) if FileTest.exist?(path)
+    path = "#{dir}/original.dat"
+    ::Storage.rm_rf(path) if ::Storage.exists?(path)
+    
+    path = "#{dir}/thumb.dat"
+    ::Storage.rm_rf(path) if ::Storage.exists?(path)
+    
+    ::Storage.rmdir(dir) rescue nil
+    
     return true
   end
 end

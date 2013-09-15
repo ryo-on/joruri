@@ -20,59 +20,116 @@ p {
 /* Icon.
 ----------------------------------------------- */
 .iconFile, .iconDefault {
+  height: 40px;
   padding: 12px 5px 12px 42px;
+  line-height: 3.3;
   background-repeat: no-repeat;
   background-image: url(/_common/images/icons/default.gif);
-  line-height: 3.3;
-  height: 40px;
 }
 .iconBmp {
+  height: 40px;
+  padding: 12px 5px 12px 42px;
+  line-height: 3.3;
+  background-repeat: no-repeat;
   background-image: url(/_common/images/icons/bmp.gif);
 }
 .iconCsv {
+  height: 40px;
+  padding: 12px 5px 12px 42px;
+  line-height: 3.3;
+  background-repeat: no-repeat;
   background-image: url(/_common/images/icons/csv.gif); 
 }
 .iconDoc,
 .iconDocx {
+  height: 40px;
+  padding: 12px 5px 12px 42px;
+  line-height: 3.3;
+  background-repeat: no-repeat;
   background-image: url(/_common/images/icons/doc.gif); 
 }
 .iconGif {
+  height: 40px;
+  padding: 12px 5px 12px 42px;
+  line-height: 3.3;
+  background-repeat: no-repeat;
   background-image: url(/_common/images/icons/gif.gif); 
 }
 .iconJpg {
+  height: 40px;
+  padding: 12px 5px 12px 42px;
+  line-height: 3.3;
+  background-repeat: no-repeat;
   background-image: url(/_common/images/icons/jpg.gif); 
 }
 .iconJpe {
+  height: 40px;
+  padding: 12px 5px 12px 42px;
+  line-height: 3.3;
+  background-repeat: no-repeat;
   background-image: url(/_common/images/icons/jpg.gif); 
 }
 .iconJpeg {
+  height: 40px;
+  padding: 12px 5px 12px 42px;
+  line-height: 3.3;
+  background-repeat: no-repeat;
   background-image: url(/_common/images/icons/jpg.gif); 
 }
 .iconJtd {
+  height: 40px;
+  padding: 12px 5px 12px 42px;
+  line-height: 3.3;
+  background-repeat: no-repeat;
   background-image: url(/_common/images/icons/jtd.gif); 
 }
 .iconLzh {
+  height: 40px;
+  padding: 12px 5px 12px 42px;
+  line-height: 3.3;
+  background-repeat: no-repeat;
   background-image: url(/_common/images/icons/lzh.gif); 
 }
 .iconPdf {
+  height: 40px;
+  padding: 12px 5px 12px 42px;
+  line-height: 3.3;
+  background-repeat: no-repeat;
   background-image: url(/_common/images/icons/pdf.gif); 
 }
 .iconPng {
+  height: 40px;
+  padding: 12px 5px 12px 42px;
+  line-height: 3.3;
+  background-repeat: no-repeat;
   background-image: url(/_common/images/icons/png.gif); 
 }
 .iconPpt {
+  height: 40px;
+  padding: 12px 5px 12px 42px;
+  line-height: 3.3;
+  background-repeat: no-repeat;
   background-image: url(/_common/images/icons/ppt.gif); 
 }
 .iconTxt {
+  height: 40px;
+  padding: 12px 5px 12px 42px;
+  line-height: 3.3;
+  background-repeat: no-repeat;
   background-image: url(/_common/images/icons/txt.gif); 
 }
 .iconXls,
 .iconXlsx {
+  height: 40px;
+  padding: 12px 5px 12px 42px;
+  line-height: 3.3;
+  background-repeat: no-repeat;
   background-image: url(/_common/images/icons/xls.gif);
 }
 .iconZip {
   background-image: url(/_common/images/icons/zip.gif); 
 }
+
 strong {
   font-weight: bold;
 }

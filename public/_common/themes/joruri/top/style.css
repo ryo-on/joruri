@@ -8,23 +8,6 @@
    TOP
 ========================================================= */
 
-/* common banner
------------------------------------------------ */
-#commonBanner h1 {
-  float: left;
-  width: 29%;
-  height: 70px;
-}
-#commonBanner h1 a {
-  display: block;
-  width: 100%;
-  height: 0px !important;
-  height /**/: 70px; /* gokanmode */
-  overflow: hidden;
-  padding-top: 70px;
-  outline: 0;
-}
-
 /* mayor
 ----------------------------------------------- */
 #mayor {
@@ -130,13 +113,12 @@
   background-position: left top;
 }
 #ArticleCategory .pieceHeader h2 {
-  height: 30px;
-  line-height: 30px;
   margin-bottom: 10px;
-  padding-left: 10px;
-  background-image: url(./images/tl-shinchaku.gif);
-  background-repeat: no-repeat;
-  background-position: left top;
+  padding: 3px 10px;
+  background:#0952EB;
+  background: -moz-linear-gradient(top, #0952EB, #001C66);
+  background: -webkit-gradient(linear, center top, center bottom, from(#0952EB), to(#001C66));
+  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#0952EB', endColorstr='#001C69');
   color: #ffffff;
   font-weight: bold;
   font-size: 120%;
@@ -161,7 +143,7 @@
 #ArticleCategory .category h2 {
   float: left;
   line-height: 50px;
-  padding-left: 60px;
+  padding: 0 20px 0 60px;
 }
 #ArticleCategory .categoryKurashi h2 {
   background-image: url(./images/ic-kurashi.gif);
@@ -199,7 +181,7 @@
   background-position: 10px center;
 }
 #ArticleCategory .category .children {
-  margin: 0 10px 0 180px;
+  margin: 0 10px 0 210px;
 }
 #ArticleCategory .category .children div {
   display: inline; 
@@ -226,13 +208,12 @@
   background-position: left top;
 }
 #lifeEvent .pieceHeader h2 {
-  height: 30px;
-  line-height: 30px;
   margin-bottom: 10px;
-  padding-left: 10px;
-  background-image: url(./images/tl-shinchaku.gif);
-  background-repeat: no-repeat;
-  background-position: left top;
+  padding: 3px 10px;
+  background:#0952EB;
+  background: -moz-linear-gradient(top, #0952EB, #001C66);
+  background: -webkit-gradient(linear, center top, center bottom, from(#0952EB), to(#001C66));
+  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#0952EB', endColorstr='#001C69');
   color: #ffffff;
   font-weight: bold;
   font-size: 120%;
@@ -247,44 +228,76 @@
   vertical-align: middle;
   text-align: center;
 }
-#lifeEvent li p {
+#lifeEvent li a {
   line-height: 1.5;
-  padding: 8px 0;
+  padding: 55px 0 10px 0;
 }
-#lifeEvent li.pregnant p {
+#lifeEvent li.pregnant a {
+  display: block;
   margin: 0 6px 8px 0;
   background-color: #ffe7ff;
+  background-image: url(./images/ic-ninshin.gif);
+  background-repeat: no-repeat;
+  background-position: center 10px;
 }
-#lifeEvent li.child p {
+#lifeEvent li.child a {
+  display: block;
   margin: 0 4px 8px 2px;
   background-color: #ffecb9;
+  background-image: url(./images/ic-kosodate.gif);
+  background-repeat: no-repeat;
+  background-position: center 10px;
 }
-#lifeEvent li.work p {
+#lifeEvent li.work a {
+  display: block;
   margin: 0 2px 8px 4px;
   background-color: #c5efff;
+  background-image: url(./images/ic-shuushoku.gif);
+  background-repeat: no-repeat;
+  background-position: center 10px;
 }
-#lifeEvent li.adult p {
+#lifeEvent li.adult a {
+  display: block;
   margin: 0 0 8px 6px;
   background-color: #cdede8;
+  background-image: url(./images/ic-seijin.gif);
+  background-repeat: no-repeat;
+  background-position: center 10px;
 }
 #lifeEvent li.moving {
   clear: both;
 }
-#lifeEvent li.moving p {
+#lifeEvent li.moving a {
+  display: block;
   margin: 0 6px 8px 0;
   background-color: #e1f6be;
+  background-image: url(./images/ic-hikkoshi.gif);
+  background-repeat: no-repeat;
+  background-position: center 10px;
 }
-#lifeEvent li.marriage p {
+#lifeEvent li.marriage a {
+  display: block;
   margin: 0 4px 8px 2px;
   background-color: #eee9a9;
+  background-image: url(./images/ic-kekkon.gif);
+  background-repeat: no-repeat;
+  background-position: center 10px;
 }
-#lifeEvent li.welfare p {
+#lifeEvent li.welfare a {
+  display: block;
   margin: 0 2px 8px 4px;
   background-color: #f5dac5;
+  background-image: url(./images/ic-fukushi2.gif);
+  background-repeat: no-repeat;
+  background-position: center 10px;
 }
-#lifeEvent li.death p {
+#lifeEvent li.death a {
+  display: block;
   margin: 0 0px 8px 6px;
   background-color: #f0dfef;
+  background-image: url(./images/ic-shibou.gif);
+  background-repeat: no-repeat;
+  background-position: center 10px;
 }
 
 /* population
@@ -292,11 +305,11 @@
 #population.piece {
   margin: 0 0 10px;
 }
-#menu #population .pieceHeader {
+#menu #population caption {
   line-height: 1.4;
   padding: 4px 7px;
+  border: 1px solid #002f9f;
   background-color: #002f9f;
-  background-image: none;
   color: #ffffff;
 }
 #menu #population .pieceHeader h2{
@@ -340,20 +353,13 @@
   width: 100%;
   margin-bottom: 15px;
 }
-#topic .pieceHeader {
-  margin-bottom: 10px;
-  background-image: url(./images/bg-shinchaku-repeat.gif);
-  background-repeat: repeat-x;
-  background-position: left top;
-}
 #topic .pieceHeader h2 {
-  height: 30px;
-  line-height: 30px;
   margin-bottom: 10px;
-  padding-left: 10px;
-  background-image: url(./images/tl-shinchaku.gif);
-  background-repeat: no-repeat;
-  background-position: left top;
+  padding: 3px 10px;
+  background:#0952EB;
+  background: -moz-linear-gradient(top, #0952EB, #001C66);
+  background: -webkit-gradient(linear, center top, center bottom, from(#0952EB), to(#001C66));
+  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#0952EB', endColorstr='#001C69');
   color: #ffffff;
   font-weight: bold;
   font-size: 120%;
@@ -364,7 +370,7 @@
 #topic h3 {
   margin-bottom: 5px;
   padding-left: 180px;
-  color: #ff3366;
+  color: #f00000;
   font-weight: bold;
 }
 #topic p {
@@ -386,14 +392,14 @@
   padding: 5px 15px 0 15px;
 }
 #recentDocs .pieceHeader {
-  height: 30px;
-  line-height: 30px;
-  padding-left: 10px;
-  background-color: #001c66;
-  background-image: url("./images/tl-shinchaku.gif");
-  background-repeat: no-repeat;
-  background-position: left top;
+  margin-bottom: 10px;
+  padding: 3px 10px;
+  background:#0952EB;
+  background: -moz-linear-gradient(top, #0952EB, #001C66);
+  background: -webkit-gradient(linear, center top, center bottom, from(#0952EB), to(#001C66));
+  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#0952EB', endColorstr='#001C69');
   color: #ffffff;
+  font-weight: bold;
 }
 #recentDocs li:after {
   content: ".";
@@ -423,38 +429,12 @@
 #recentDocs li img {
   display: inline-block;
   float: left;
-  width: 120px;
-  height: 90px;
-  margin-right: 10px;
+  margin-right: 5px;
 }
 #recentDocs .feed {
   position: absolute;
   float: left;
-  top: 7px;
-  right: 10px;
-}
-#recentDocs .feed a {
-  display: inline-block;
-} 
-#recentDocs .feed a.feedRss {
-  width: 40px;
-  height: 0;
-  vertical-align: middle;
-  overflow: hidden;
-  margin-left: 15px;
-  padding-top: 13px;
-  background-image: url(../piece/images/bt-rss.gif);
-  background-repeat: no-repeat;
-} 
-#recentDocs .feed a.feedAtom {
-  width: 45px;
-  height: 0;
-  vertical-align: middle;
-  overflow: hidden;
-  margin-left: 5px;
-  padding-top: 13px;
-  background-image: url(../piece/images/bt-atom.gif);
-  background-repeat: no-repeat;
+  top: 3px;
 }
 #recentDocs .links {
   text-align: right;

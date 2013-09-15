@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Util::File
   def self.put(path, options ={})
     if options[:mkdir] == true
@@ -13,6 +14,7 @@ class Util::File
       f.write(options[:data] ? options[:data] : '')
       f.flock(File::LOCK_UN)
       f.close
+   
     elsif options[:src]
       return false unless FileTest.exist?(options[:src])
       FileUtils.cp options[:src], path

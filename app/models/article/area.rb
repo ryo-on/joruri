@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Article::Area < ActiveRecord::Base
   include Sys::Model::Base
   include Cms::Model::Base::Page

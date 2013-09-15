@@ -1,7 +1,7 @@
 # encoding: utf-8
 module LinkHelper
   def action_menu(type, link = nil, options = {})
-    action = @template.params[:action]
+    action = params[:action]
     
     if action =~ /index/
       return '' if [:index, :show, :edit, :destroy].index(type)
@@ -37,6 +37,8 @@ module LinkHelper
       :show      => '詳細',
       :new       => '新規作成',
       :edit      => '編集',
+      :rename    => '名称変更',
+      :move      => '移動',
       :duplicate => '複製',
       :delete    => '削除',
       :destroy   => '削除',
@@ -60,13 +62,13 @@ module LinkHelper
     addr.gsub!(/a/, '&#97;')
     text.gsub!(/@/, '&#64;')
     text.gsub!(/a/, '&#97;')
-    mail_to(text, addr)
+    mail_to(text.html_safe, addr.html_safe).html_safe
   end
   
   ## Tel
   def tel_to(tel, text = nil)
     text ||= tel
     return tel if tel.to_s !~ /^([\(]?)([0-9]+)([-\(\)]?)([0-9]+)([-\)]?)([0-9]+$)/
-    link_to text, "tel:#{tel}"
+    link_to text.html_safe, "tel:#{tel}"
   end
 end

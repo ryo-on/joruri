@@ -1,3 +1,4 @@
+# encoding: utf-8
 module Sys::Model::Auth::Free
   def readable
     return self

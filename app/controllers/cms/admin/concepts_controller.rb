@@ -13,7 +13,7 @@ class Cms::Admin::ConceptsController < Cms::Controller::Admin::Base
       })
       @parent.id = 0
     end
-    default_url_options :parent => @parent.id
+    #default_url_options[:parent] = @parent.id
   end
   
   def index

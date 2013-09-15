@@ -7,7 +7,7 @@ class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
   def pre_dispatch_piece
     return error_auth unless Core.user.has_auth?(:designer)
     return error_auth unless @piece = Cms::Piece.new.readable.find(params[:id])
-    default_url_options :piece => @piece
+    #default_url_options[:piece] = @piece
   end
   
   def model

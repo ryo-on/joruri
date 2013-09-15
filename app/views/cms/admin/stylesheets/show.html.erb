@@ -1,21 +1,23 @@
+<p class="form">基本情報</p>
+
 <table class="show">
   <%= concept_view(@item) if @item.directory? %>
   <tr>
     <th>ファイル名</td>
-    <td><%=h @item.name %></td>
+    <td><%= @item.name %> <% if @item.file? %>（<%= link_to "ダウンロード", "?do=download" %>）<% end %></td>
   </tr>
   <% if @item.file? %>
   <tr>
     <th>ファイル種別</td>
-    <td><%=h @item.mime_type %></td>
+    <td><%= @item.mime_type %></td>
   </tr><tr>
     <th>サイズ</td>
-    <td><%=h number_format(@item.size) %> Bytes</td>
+    <td><%= number_format(@item.size) %> Bytes</td>
   </tr>
   <% end %>
   <tr>
     <th>更新日時</td>
-    <td><%=h safe{@item.mtime.strftime('%Y-%m-%d %H:%M')} %></td>
+    <td><%= safe{@item.mtime.strftime('%Y-%m-%d %H:%M')} %></td>
   </tr>
 </table>
   
@@ -24,7 +26,7 @@
   <tr>
     <th>内容</td>
   </tr><tr>
-    <td class="pre monospace"><%=hbr @item.body.to_s rescue "#読み込みに失敗しました。" %></td>
+    <td class="pre monospace"><% begin %><%= @item.body.to_s %><% rescue %>読み込みに失敗しました。<% end %></td>
   </tr>
 </table>
 <% end %>

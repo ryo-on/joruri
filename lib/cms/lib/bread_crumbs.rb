@@ -35,6 +35,6 @@ class Cms::Lib::BreadCrumbs
       end
       h << "<div>#{links.join(' &gt; ')}</div>"
     end
-    h
+    h.html_safe
   end
 end

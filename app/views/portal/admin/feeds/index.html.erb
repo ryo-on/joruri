@@ -4,7 +4,7 @@
 
   <tr>
     <th style="width: 60px; text-align: center;">詳細</th>
-    <th style="width: 80px; text-align: center;">エントリ一覧</th>
+    <th style="width: 120px; text-align: center;">エントリ一覧</th>
     <th style="width: ;">フィードID</th>
     <th style="width: ;">フィード名</th>
     <th style="width: 120px; text-align: center;">更新日時</th>
@@ -12,7 +12,7 @@
   </tr>
 
   <% for item in @items %>
-  <tr <%= cycle '', 'class="cycle"' %>>
+  <tr class="<%= cycle '', 'cycle' %>">
     <td style="text-align: center;"><%= link_to :show, url_for(:action => :show, :id => item) %></td>
     <td style="text-align: center;"><%= link_to "エントリ一覧", portal_feed_entries_path(@content.id, item.id) %></td>
     <td><%= h(item.name) %></td>

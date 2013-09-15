@@ -25,7 +25,7 @@ class Bbs::Item < ActiveRecord::Base
   validate :validate_block_word
   validate :validate_block_ipaddr
   
-  apply_simple_captcha :message => "画像と文字が一致しません。", :add_to_base => true
+  apply_simple_captcha :message => "の画像と文字が一致しません。"
   
   after_save :save_thread_id,
     :if => %Q(parent_id == 0 && thread_id.nil?)
@@ -37,6 +37,21 @@ class Bbs::Item < ActiveRecord::Base
   
   def public_uri
     
+  end
+  
+  def search(params)
+    params.each do |n, v|
+      next if v.to_s == ''
+      
+      case n
+      when 's_id'
+        self.and :id, v
+      when 's_keyword'
+        self.and_keywords v, :name, :title, :body, :email, :uri
+      end
+    end if params.size != 0
+    
+    return self
   end
   
 protected
@@ -56,7 +71,7 @@ protected
       next if w.strip.blank?
       reg = Regexp.new("^" + Regexp.quote(w).gsub('\\*', '[0-9]+') + "$")
       if ipaddr =~ reg
-        errors.add_to_base "ご利用の環境からの投稿は禁止されています。"
+        errors.add :base, "ご利用の環境からの投稿は禁止されています。"
         return false
       end
     end
@@ -65,6 +80,6 @@ protected
   
   def save_thread_id
     self.thread_id = id
-    save(false)
+    save(:validate => false)
   end
 end

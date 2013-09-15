@@ -61,7 +61,7 @@ class Portal::Public::Node::EventEntriesController < Cms::Controller::Public::Ba
         date   = request.mobile? ?
           "#{day[:month]}月#{day[:day]}日(#{day[:wday_label]})" :
           "#{day[:month]}月#{day[:day]}日（#{day[:wday_label]}）"
-        anchor = %Q(<a id="day#{day[:day]}" name="day#{day[:day]}"></a>)
+        anchor = %Q(<a id="day#{day[:day]}" name="day#{day[:day]}"></a>).html_safe
       end
 
       feed_class = entry.feed ? " source#{entry.feed.name.camelize}" : ""

@@ -1,4 +1,6 @@
 # encoding: utf-8
+require 'nkf'
+require 'csv'
 class Enquete::Admin::FormAnswersController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   include Sys::Controller::Scaffold::Recognition
@@ -10,7 +12,7 @@ class Enquete::Admin::FormAnswersController < Cms::Controller::Admin::Base
     return error_auth unless @content = Cms::Content.find(params[:content])
     return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
     return error_auth unless @form = Enquete::Form.find(params[:form])
-    default_url_options :content => @content.id, :form => @form.id
+    #default_url_options :content => @content.id, :form => @form.id
     return redirect_to(request.env['PATH_INFO']) if params[:reset]
   end
 
@@ -36,8 +38,8 @@ class Enquete::Admin::FormAnswersController < Cms::Controller::Admin::Base
     @items = item.find(:all)
     
     columns = @form.public_columns.collect{|col| [col.id, col.name]}
-      
-    csv = FasterCSV.generate do |csv|
+    
+    csv = CSV.generate do |csv|
       row = []
       row << "No"
       row << "ID"

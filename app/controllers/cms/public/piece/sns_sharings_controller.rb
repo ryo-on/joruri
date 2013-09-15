@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Cms::Public::Piece::SnsSharingsController < Sys::Controller::Public::Base
   
   def index

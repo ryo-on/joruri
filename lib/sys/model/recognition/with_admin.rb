@@ -1,3 +1,4 @@
+# encoding: utf-8
 module Sys::Model::Recognition::WithAdmin
   def admin_info(user_id = nil)
     info = nil

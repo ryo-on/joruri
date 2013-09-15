@@ -1,34 +1,29 @@
 # encoding: utf-8
 
 ## ---------------------------------------------------------
-## methods
+## truncate
 
 def truncate_table(table)
-  puts "TRUNCATE TABLE #{table}"
+  puts "truncate table #{table}"
   ActiveRecord::Base.connection.execute "TRUNCATE TABLE #{table}"
 end
 
-def load_seed_file(file)
-  load "#{Rails.root}/db/seed/#{file}"
-end
-
-## ---------------------------------------------------------
-## truncate
-
-dir = "#{Rails.root}/db/seed/base" 
-Dir::entries(dir).each do |file|
+Dir::entries("#{Rails.root}/db/seed/base").each do |file|
   next if file !~ /\.rb$/
-  load_seed_file "base/#{file}"
+  load "#{Rails.root}/db/seed/base/#{file}"
 end
 
 ## ---------------------------------------------------------
 ## load config
 
-core_uri   = Util::Config.load :core, :uri
-core_title = Util::Config.load :core, :title
+core       = Util::Config.load(:core)
+core_uri   = core["uri"]
+core_title = core["title"]
 
 ## ---------------------------------------------------------
 ## sys
+
+puts "imported base data."
 
 Sys::Group.create({
   :parent_id => 0,
@@ -111,4 +106,4 @@ Cms::Node.create({
   :title        => core_title
 })
 
-puts "Imported base data."
+puts "-- seed/base success."

@@ -44,8 +44,10 @@ class Sys::Admin::MyAccountController < Cms::Controller::Admin::Base
     @item = Sys::User.new
     @item.current_password = params[:item][:current_password]
     
-    if params[:item][:current_password] != Core.user.password
-      @item.errors.add :current_password, :confirmation
+    if params[:item][:current_password].blank?
+      @item.errors.add :current_password, :empty
+    elsif params[:item][:current_password] != Core.user.password
+      @item.errors.add :current_password, :invalid
     elsif params[:item][:new_password].blank?
       @item.errors.add :new_password, :blank
     elsif params[:item][:new_password] != params[:item][:confirm_password]

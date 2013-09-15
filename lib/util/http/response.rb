@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Util::Http::Response
   attr_accessor :status, :header, :body
   

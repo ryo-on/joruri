@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Page
   cattr_accessor :site
   cattr_accessor :uri

@@ -3,13 +3,13 @@
 <table class="show">
   <tr>
     <th><%= @item.locale(:state) %></th>
-    <td><%=h safe{@item.status.name} %></td>
+    <td><%= safe{@item.status.name} %></td>
   </tr><tr>
     <th><%= @item.locale(:published_at) %></th>
-    <td><%=h @item.published_at.strftime("%Y-%m-%d %H:%M") %></td>
+    <td><%= @item.published_at.strftime("%Y-%m-%d %H:%M") %></td>
   </tr><tr>
     <th><%= @item.locale(:title) %></th>
-    <td><%=h @item.title %></td>
+    <td><%= @item.title %></td>
   </tr><tr>
     <th colspan="2"><%= @item.locale(:body) %></th>
   </tr><tr>

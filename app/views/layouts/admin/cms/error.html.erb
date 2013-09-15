@@ -7,13 +7,6 @@
 <meta http-equiv="Content-Script-Type" content="text/javascript" />
 <title><%= Core.title %></title>
 <%= stylesheet_link_tag '/_common/themes/admin/style', :media => 'all' %>
-<%= javascript_include_tag '/_common/js/prototype' %>
-<%= javascript_include_tag '/_common/modules/cms/js/admin/form.js' %>
-<%= javascript_include_tag '/_common/modules/cms/js/admin/navi.js' %>
-<%= stylesheet_link_tag '/_common/css/calendar_date_select/default.css' %>
-<%= javascript_include_tag '/_common/js/calendar_date_select/calendar_date_select.js' %>
-<%= javascript_include_tag '/_common/js/calendar_date_select/locale/ja.js' %>
-<%= javascript_include_tag '/_common/js/calendar_date_select/format_iso_date.js' %>
 </head>
 <body id="errorPage">
 
@@ -22,10 +15,10 @@
 <div id="header">
 <div id="headerContainer">
 
-  <h1><a href="/_admin">Joruri</a></h1>
+  <h1><a href="<%= Joruri.admin_uri %>">Joruri</a></h1>
   <div class="menu">
     <a class="user" href="<%= sys_my_account_path %>"><%= safe{Core.user_group.name} %>　<%= safe{Core.user.name_with_account} %></a>
-    <a class="logout" href="/_admin/logout">ログアウト</a>
+    <a class="logout" href="<%= Joruri.admin_uri %>/logout">ログアウト</a>
   </div>
 
 <!-- /#headerContainer --></div>

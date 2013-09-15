@@ -15,6 +15,6 @@ class Cms::Admin::EmbeddedFilesController < Cms::Controller::Admin::Base
       path = File.dirname(path) + "/thumb.dat"
     end
     
-    send_file path, :type => @file.mime_type, :filename => @file.name, :disposition => 'inline'
+    send_storage_file path, :type => @file.mime_type, :filename => @file.name
   end
 end

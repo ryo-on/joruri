@@ -4,6 +4,10 @@ module Cms::Controller::Layout
   @no_cache    = nil
   
   def render_public_as_string(path, options = {})
+    if path =~ /\.html\.r$/
+      return nil unless Joruri.config[:cms_use_kana]
+    end
+    
     Core.publish = true unless options[:preview]
     mode = Core.set_mode('preview')
     
@@ -19,16 +23,15 @@ module Cms::Controller::Layout
     Page.mobile = options[:mobile]
     
     begin
-      routes = ActionController::Routing::Routes
-      node   = Core.search_node(path)
-      env    = {}
-      opt    = routes.recognize_optimized(node, env)
-      opt    = qp.merge(opt)
-      ctl    = opt[:controller]
-      act    = opt[:action]
+      env  = {}
+      node = Core.search_node(path)
+      opt  = _routes.recognize_path(node, env)
+      opt  = qp.merge(opt)
+      ctl  = opt[:controller]
+      act  = opt[:action]
       opt[:authenticity_token] = params[:authenticity_token] if params[:authenticity_token]
       
-      body   = render_component_as_string :controller => ctl, :action => act, :params => opt
+      body   = render_component_into_view :controller => ctl, :action => act, :params => opt
       errstr = "Action Controller: Exception caught"
       raise(errstr) if body.index("<title>#{errstr}</title>")
     rescue => e
@@ -55,27 +58,34 @@ module Cms::Controller::Layout
       #response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
     end
     
-    Page.current_item = Page.current_node unless Page.current_item
-    
     return true if @performed_redirect
     return true if @skip_layout
     return true if params[:format] && params[:format] != 'html'
     return true if Page.error
     
+    Page.current_item = Page.current_node unless Page.current_item
+    
     ## content
     Page.content = response.body
+    self.response_body = nil
+    
+    if Page.ruby 
+      return http_error(404) unless Joruri.config[:cms_use_kana]
+    end
     
     #response.content_type = nil
-    erase_render_results
-    reset_variables_added_to_assigns
-    @template.instance_variable_set("@content_for_layout", '')
+    #erase_render_results
+    #reset_variables_added_to_assigns
+    #@template.instance_variable_set("@content_for_layout", '')
     
     ## concept
     concepts = Cms::Lib::Layout.inhertited_concepts
     
     ## layout
-    if Core.set_mode('preview') && params[:layout_id]
-      Page.layout = Cms::Layout.find(params[:layout_id])
+    if Page.layout
+      #
+    elsif Core.set_mode('preview') && params[:layout_id]
+     Page.layout = Cms::Layout.find(params[:layout_id]) # emergency
     elsif layout = Cms::Lib::Layout.inhertited_layout
       Page.layout    = layout.clone
       Page.layout.id = layout.id
@@ -96,7 +106,7 @@ module Cms::Controller::Layout
       begin
         next if item.content_id && !item.content
         mnames= item.model.underscore.pluralize.split('/')
-        data = render_component_as_string :params => params,
+        data = render_component_into_view :params => params,
           :controller => mnames[0] + '/public/piece/' + mnames[1], :action => 'index'
         if data =~ /^<html/ && Rails.env.to_s == 'production'
           # component error
@@ -167,7 +177,7 @@ module Cms::Controller::Layout
     
     ## ruby(kana)
     if Page.ruby
-      body = Cms::Lib::Navi::Ruby.convert(body)
+      body = Cms::Lib::Navi::Kana.convert(body)
     end
     
 #    ## for preview
@@ -200,6 +210,6 @@ module Cms::Controller::Layout
     html << %Q(<div class="pieceBody">#{body}</div>\n)
     html << %Q(</div>\n)
     html << %Q(<!-- end .piece --></div>\n)
-    html
+    html.html_safe
   end
 end

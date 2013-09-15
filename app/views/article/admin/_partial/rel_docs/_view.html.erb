@@ -7,7 +7,7 @@ return nil if item.rel_docs.size == 0
     <th>関連記事</th>
     <td>
       <% item.rel_docs.each do |doc| %>
-      <%=h doc.title %><br />
+      <%= doc.title %><br />
       <% end %>
     </td>
   </tr>

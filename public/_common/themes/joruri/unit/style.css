@@ -9,21 +9,13 @@
 
 /* shinchaku-ichiran
 ----------------------------------------------- */
-.contentArticleUnit .latest {
-  margin-bottom: 30px;
-  padding: 0;
-  background-image: url(./images/tl-shinchaku-repeat.gif);
-  background-repeat: repeat-x;
-  background-position: left top;
-}
 .contentArticleUnit .latest h2 {
-  height: 30px;
-  line-height: 30px;
   margin-bottom: 10px;
-  padding-left: 10px;
-  background-image: url(./images/tl-shinchaku.gif);
-  background-repeat: no-repeat;
-  background-position: left top;
+  padding: 3px 10px;
+  background:#0952EB;
+  background: -moz-linear-gradient(top, #0952EB, #001C66);
+  background: -webkit-gradient(linear, center top, center bottom, from(#0952EB), to(#001C66));
+  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#0952EB', endColorstr='#001C69');
   color: #ffffff;
   font-weight: bold;
   font-size: 120%;
@@ -48,35 +40,6 @@
 .more {
   padding: 0 5px 10px 0;
   text-align: right;
-}
-
-/* RSS Atom
------------------------------------------------ */
-.feed {
-  float: right;
-  position: relative;
-  top: -32px;
-  right: 10px;
-  height: 13px;
-  background-color: transparent;
-}
-.feed a.feedRss {
-  display: inline-block;
-  width: 40px;
-  height: 13px;
-  overflow: hidden;
-  background-image: url(./images/bt-rss.gif);
-  background-repeat: no-repeat;
-  text-indent: 50px;
-}
-.feed a.feedAtom {
-  display: inline-block;
-  width: 40px;
-  height: 13px;
-  overflow: hidden;
-  background-image: url(./images/bt-atom.gif);
-  background-repeat: no-repeat;
-  text-indent: 50px;
 }
 
 /* Soshiki Ichiran
@@ -150,17 +113,59 @@ table.unit tr.cycle {
 .contentArticleUnit td.name {
   width: 25%;
 }
-
-/* pagination
+/* Soshiki Ichiran date
 ----------------------------------------------- */
-.pagination {
-  text-align: center;
+.contentArticleUnit dl:after {
+  content: ".";
+  display: block;
+  clear: both;
+  height: 0;
+  visibility: hidden;
 }
-.pagination a {
-  padding: 0 6px;
+* html .contentArticleUnit dl {
+  height: 1%;
 }
-.pagination span.current {
-  padding: 0 3px;
-  font-weight: bold;
-  font-size: 150%;
+.contentArticleUnit dl {
+  clear: both;
+  display: block;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+.contentArticleUnit dl.cycle {
+  background: #eee;
+}
+.contentArticleUnit dl.department {
+  border: 1px solid #ccc;
+  background: #E3F0FA;
+}
+.contentArticleUnit dt {
+  float: left;
+  padding: 5px 10px;
+}
+.contentArticleUnit dd {
+  float: left;
+  padding: 5px 10px;
+}
+.contentArticleUnit dl {
+  display: block;
+  width: 100%;
+}
+.contentArticleUnit dt.name {
+  width: 15%;
+}
+.contentArticleUnit dd {
+  margin: 0;
+}
+.contentArticleUnit dd.outline {
+  display: table;
+  width: 30%;
+}
+.contentArticleUnit dd.page {
+  width: 15%;
+}
+.contentArticleUnit dd.email {
+  width: 25%;
+}
+.contentArticleUnit dd.tel {
+  width: 15%;
 }

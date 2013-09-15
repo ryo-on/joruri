@@ -10,7 +10,7 @@ class Enquete::Admin::FormColumnsController < Cms::Controller::Admin::Base
     return error_auth unless @content = Cms::Content.find(params[:content])
     return error_auth unless @form = Enquete::Form.find(params[:form])
     return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
-    default_url_options :content => @content
+    #default_url_options[:content] = @content
     return redirect_to(request.env['PATH_INFO']) if params[:reset]
   end
 
@@ -33,10 +33,12 @@ class Enquete::Admin::FormColumnsController < Cms::Controller::Admin::Base
   end
 
   def new
-    sql = "SELECT MAX(sort_no) FROM #{Enquete::FormColumn.table_name}" +
-      " WHERE form_id = #{@form.id}" 
-    rs = Enquete::FormColumn.connection.execute(sql)
-    sort_no = (rs.fetch_row[0] || 0).to_i + 1
+    sort_no = 1
+    
+    select  = 'MAX(sort_no) AS sort_no'
+    cond    = {:form_id => @form.id}
+    max_col = Enquete::FormColumn.find(:first, :select => select, :conditions => cond)
+    sort_no = (max_col.sort_no || 0) + 1 if max_col
     
     @item = Enquete::FormColumn.new({
       :state        => 'public',

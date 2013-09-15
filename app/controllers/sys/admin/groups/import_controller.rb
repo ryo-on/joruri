@@ -1,7 +1,7 @@
 # encoding: utf-8
+require 'csv'
 class Sys::Admin::Groups::ImportController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
-  require 'faster_csv'
 
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:manager)
@@ -34,12 +34,19 @@ class Sys::Admin::Groups::ImportController < Cms::Controller::Admin::Base
     Core.messages << "-- 更新 #{@results[1]}件"
     Core.messages << "-- 失敗 #{@results[2]}件"
 
-    flash[:notice] = 'インポートが終了しました。<br />' + Core.messages.join('<br />')
+    flash[:notice] = ('インポートが終了しました。<br />' + Core.messages.join('<br />')).html_safe
+    return redirect_to(:action => :index)
+    
+  rescue CSV::MalformedCSVError => e
+    flash[:notice] = "インポートに失敗しました。（不正なCSVデータ）"
+    return redirect_to(:action => :index)
+  rescue Exception => e
+    flash[:notice] = "インポートに失敗しました。（#{e}）"
     return redirect_to(:action => :index)
   end
 
   def import_groups(csv)
-    FasterCSV.parse(csv, :headers => true, :header_converters => :symbol) do |data|
+    CSV.parse(csv, :headers => true, :header_converters => :symbol) do |data|
       code        = data[:code]
       parent_code = data[:parent_code]
 
@@ -80,7 +87,7 @@ class Sys::Admin::Groups::ImportController < Cms::Controller::Admin::Base
   end
   
   def import_users(csv)
-    FasterCSV.parse(csv, :headers => true, :header_converters => :symbol) do |data|
+    CSV.parse(csv, :headers => true, :header_converters => :symbol) do |data|
       account     = data[:account]
       group_code  = data[:group_code]
 

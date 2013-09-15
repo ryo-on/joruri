@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'openssl'
 class Util::String::Crypt
   def self.encrypt(msg, pass = 'phrase', salt = nil)
@@ -8,7 +9,7 @@ class Util::String::Crypt
   rescue
     return false
   end
-   
+  
   def self.decrypt(msg, pass = 'phrase', salt = nil)
     dec = OpenSSL::Cipher::Cipher.new('aes-256-cbc')
     dec.decrypt

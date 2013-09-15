@@ -18,7 +18,7 @@ class Article::Public::Node::EventDocsController < Cms::Controller::Public::Base
     return http_error(404) if @calendar.errors
     
     ## calendar
-    base_uri = Page.current_node.public_uri
+    base_uri = @node.public_uri
     @calendar.year_uri  = "#{base_uri}:year/"
     @calendar.month_uri = "#{base_uri}:year/:month/"
     @calendar.day_uri   = "#{base_uri}:year/:month/#day:day"
@@ -49,7 +49,7 @@ class Article::Public::Node::EventDocsController < Cms::Controller::Public::Base
     prev   = nil
     item = Article::Doc.new.public
     item.agent_filter(request.mobile)
-    item.and :content_id, @content.id
+    item.and :content_id, Page.current_node.content.id
     #item.event_date_is(:year => @calendar.year, :month => @calendar.month)
     item.event_date_in(@sdate, @edate)
     docs = item.find(:all, :order => 'event_date')
@@ -93,6 +93,6 @@ class Article::Public::Node::EventDocsController < Cms::Controller::Public::Base
       date += %Q(<span class="from">～</span>) 
       date += %Q(<span class="closeDate">#{cdate.strftime('%-m月%-d日')}（#{wdays[cdate.wday]}）</span>)
     end
-    date
+    date.html_safe
   end
 end

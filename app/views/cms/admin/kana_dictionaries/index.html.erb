@@ -7,10 +7,10 @@
   </tr>
   
   <% @items.each do |item| %>
-  <tr <%= cycle '', 'class="cycle"' %>>
+  <tr class="<%= cycle '', 'cycle' %>">
     <td style="text-align: center;"><%= link_to :show, url_for(:action => :show, :id => item) %></td>
-    <td style="text-align: right;"><%=h item.id %></td>
-    <td><%=h item.name %></td>
+    <td style="text-align: right;"><%= item.id %></td>
+    <td><%= item.name %></td>
   </tr>
   <% end %>
 

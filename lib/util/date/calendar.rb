@@ -196,5 +196,6 @@ class Util::Date::Calendar
     html += '</div>' + "\n"
     
     html += '<!-- end .calendar --></div>'
+    html.html_safe
   end
 end

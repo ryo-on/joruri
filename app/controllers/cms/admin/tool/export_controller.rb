@@ -30,7 +30,7 @@ class Cms::Admin::Tool::ExportController < Cms::Controller::Admin::Base
         data = {}
         data[:layout] = layout
         
-        export[:layouts] << data
+        export[:layouts] << {:layout => data}
       end
     end
     
@@ -52,7 +52,7 @@ class Cms::Admin::Tool::ExportController < Cms::Controller::Admin::Base
           data[:link_items] = Cms::PieceLinkItem.find(:all, :conditions => cond)
         end
         
-        export[:pieces] << data
+        export[:pieces] << {:piece => data}
       end
       #export[:pieces] = @concept.pieces.to_json(:include => [:content])
     end

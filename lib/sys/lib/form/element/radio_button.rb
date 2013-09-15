@@ -1,5 +1,6 @@
 # encoding: utf-8
 class Sys::Lib::Form::Element::RadioButton < Sys::Lib::Form::Element::Base
+  
   def make_tag
     tag = %Q(<div #{attributes_string}>)
     select_options.each_with_index do |v, k|
@@ -11,7 +12,6 @@ class Sys::Lib::Form::Element::RadioButton < Sys::Lib::Form::Element::Base
       tag += "</div>"
     end
     tag += "</div>"
-    tag
+    tag.html_safe
   end
-  
 end

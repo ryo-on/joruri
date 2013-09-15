@@ -1,18 +1,19 @@
+# encoding: utf-8
 require 'mime/types'
 class Sys::Lib::File::NoUploadedFile
+  
   def initialize(path, options = {})
-    if path.class == Hash
-      options      = path
-      @data        = options[:data]
-      @mime_type   = options[:mime_type] if options[:mime_type]
-      @mime_type ||= MIME::Types.type_for(options[:filename])[0].to_s if options[:filename]
-    else
-      file         = ::File.new(path)
-      @data        = file.read
-      @mime_type   = options[:mime_type] if options[:mime_type]
-      @mime_type ||= MIME::Types.type_for(path)[0].to_s
-    end
-    @filename  = options[:filename]
+    # if path.class == Hash
+      # options      = path
+      # @data        = options[:data]
+      # @mime_type   = options[:mime_type] if options[:mime_type]
+      # @mime_type ||= MIME::Types.type_for(options[:filename])[0].to_s if options[:filename]
+    # else
+    # end
+    @data      = ::Storage.read(path)
+    @mime_type = options[:mime_type] || ::Storage.mime_type(path)
+    
+    @filename  = options[:filename] # dummy?
     @size      = @data.size if @data
     @image     = validate_image
   end

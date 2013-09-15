@@ -1,3 +1,4 @@
+# encoding: utf-8
 module Cms::Model::Auth::Content
   def creatable?
     return false unless Core.user.has_auth?(:designer)

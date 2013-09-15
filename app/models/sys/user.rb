@@ -15,13 +15,17 @@ class Sys::User < ActiveRecord::Base
   has_and_belongs_to_many :role_names, :association_foreign_key => :role_id,
     :class_name => 'Sys::RoleName', :join_table => 'sys_users_roles'
   
-  attr_accessor :in_group_id, :current_password, :new_password, :confirm_password
-  #attr_accessor :group, :group_id, :in_group_id
+#  attr_accessible :remember_token_expires_at, :remember_token
+  
+  attr_accessor :current_password, :new_password, :confirm_password
+#  attr_accessor :in_group_id, :current_password, :new_password, :confirm_password
   
   validates_uniqueness_of :account
-  validates_presence_of :state, :account, :name, :ldap
-  validates_presence_of :in_group_id, :if => %Q(in_group_id == '')
   
+  validates_presence_of :in_group_id, :if => %Q(in_group_id == '')
+  validates_presence_of :state, :account, :name, :ldap
+  
+  after_save :save_users_roles
   after_save :save_group, :if => %Q(@_in_group_id_changed)
 
   before_destroy :validate_destroy_admin,
@@ -98,15 +102,13 @@ class Sys::User < ActiveRecord::Base
   end
   
   def in_group_id
-    if read_attribute(:in_group_id).nil?
-      write_attribute(:in_group_id, (group ? group.id : nil))
-    end
-    read_attribute(:in_group_id)
+    @in_group_id = (group ? group.id : nil) if @in_group_id.nil?
+    @in_group_id
   end
   
   def in_group_id=(value)
     @_in_group_id_changed = true
-    write_attribute(:in_group_id, value.to_s)
+    @in_group_id = value.to_s
   end
   
   def has_auth?(name)
@@ -129,19 +131,20 @@ class Sys::User < ActiveRecord::Base
     return nil unless options[:item]
 
     item = options[:item]
-    if item.kind_of?(ActiveRecord::Base)
-      item = item.unid
-    end
+    item = item.unid if item.kind_of?(ActiveRecord::Base)
     
     cond = {:action => action.to_s, :item_unid => item}
-    roles = Sys::ObjectPrivilege.find(:all, :conditions => cond)
-    return false if roles.size == 0
+    priv = Sys::ObjectPrivilege.find(:all, :conditions => cond)
+    return false if priv.size == 0
     
-    cond = Condition.new do |c|
-      c.and :user_id, id
-      c.and :role_id, 'ON', roles.collect{|i| i.role_id}
-    end
-    Sys::UsersRole.find(:first, :conditions => cond.where)
+    rids = priv.collect{|p| p.role_id}
+    
+    rel = Sys::UsersRole.new
+    rel.and :user_id, id
+    rel.and :role_id, 'IN', rids
+    return true if rel.find(:first)
+    
+    return group.has_priv?(action, options) ? true : false
   end
 
   def delete_group_relations
@@ -189,11 +192,12 @@ class Sys::User < ActiveRecord::Base
 
   ## Authenticates a user by their account name and unencrypted password.  Returns the user or nil.
   def self.authenticate(in_account, in_password, encrypted = false)
-    crypt_pass  = Joruri.config.application["sys.crypt_pass"]
+    crypt_pass  = Joruri.config[:sys_crypt_pass]
     in_password = Util::String::Crypt.decrypt(in_password, crypt_pass) if encrypted
     
     user = nil
     self.new.enabled.find(:all, :conditions => {:account => in_account, :state => 'enabled'}).each do |u|
+      ## valid user
       if u.ldap == 1
         ## LDAP Auth
         next unless ou1 = u.groups[0]
@@ -205,7 +209,16 @@ class Sys::User < ActiveRecord::Base
         ## DB Auth
         next if in_password != u.password || u.password.to_s == ''
       end
-      user = u
+      
+      ## valid user group
+      valid = true
+      u.groups.each do |g|
+        valid = false if g.state != "enabled"
+        valid = false if g.parent && g.parent.state != "enabled"
+      end
+      valid = false if u.groups.size == 0
+      
+      user = u if valid == true
       break
     end
     return user
@@ -213,7 +226,7 @@ class Sys::User < ActiveRecord::Base
 
   def encrypt_password
     return if password.blank?
-    crypt_pass  = Joruri.config.application["sys.crypt_pass"]
+    crypt_pass  = Joruri.config[:sys_crypt_pass]
     Util::String::Crypt.encrypt(password, crypt_pass)
   end
   
@@ -224,13 +237,13 @@ class Sys::User < ActiveRecord::Base
   def remember_me
     self.remember_token_expires_at = 2.weeks.from_now.utc
     self.remember_token            = encrypt("#{email}--#{remember_token_expires_at}")
-    save(false)
+    save(:validate => false)
   end
 
   def forget_me
     self.remember_token_expires_at = nil
     self.remember_token            = nil
-    #save(false)
+    #save(:validate => false)
     update_attributes :remember_token_expires_at => nil, :remember_token => nil
   end
 

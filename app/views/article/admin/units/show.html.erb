@@ -3,24 +3,24 @@
 <table class="show">
   <tr>
     <th><%= @item.locale(:web_state) %></th>
-    <td><%=h safe{@item.web_status.name} %></td>
+    <td><%= safe{@item.web_status.name} %></td>
   </tr><tr>
     <th><%= @item.locale(:name) %></th>
-    <td><%=h @item.name %></td>
+    <td><%= @item.name %></td>
   </tr><tr>
     <th><%= @item.locale(:title) %></th>
-    <td><%=h @item.title %></td>
+    <td><%= @item.title %></td>
   </tr>
   <%= layout_view @item, :container => :tr %>
   <tr>
     <th><%= @item.locale(:email) %></th>
-    <td><%=h @item.email %></td>
+    <td><%= @item.email %></td>
   </tr><tr>
     <th><%= @item.locale(:tel) %></th>
-    <td><%=h @item.tel %></td>
+    <td><%= @item.tel %></td>
   </tr><tr>
     <th><%= @item.locale(:outline_uri) %></th>
-    <td><%=h @item.outline_uri %></td>
+    <td><%= @item.outline_uri %></td>
   </tr>
 </table>
 

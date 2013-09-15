@@ -1,5 +1,5 @@
+# encoding: utf-8
 module Article::Model::Rel::Doc::Tag
-  attr_accessor :in_tags
   
   def self.included(mod)
     mod.has_many :tags, :primary_key => 'unid', :foreign_key => 'unid', :class_name => 'Article::Tag',
@@ -17,12 +17,12 @@ module Article::Model::Rel::Doc::Tag
   end
   
   def in_tags
-    unless val = read_attribute(:in_tags)
+    unless val = @in_tags
       val = []
       tags.each {|tag| val << tag.word }
-      write_attribute(:in_tags, val)
+      @in_tags = val
     end
-    read_attribute(:in_tags)
+    @in_tags
   end
   
   def in_tags=(words)

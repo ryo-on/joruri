@@ -37,11 +37,11 @@ class Sys::Model::XmlRecord::Base
   end
   
   def self.model_name
-    @@_model_name[self]
+    @@_model_name[self] ? @@_model_name[self] : ActiveModel::Name.new(self)
   end
   
   def self.set_model_name(name)
-    @@_model_name[self] = name
+    @@_model_name[self] = ActiveModel::Name.new(name.camelize.split(/::/).inject(Object) {|c,name| c.const_get(name) })
   end
   
   def self.primary_key
@@ -97,8 +97,8 @@ class Sys::Model::XmlRecord::Base
     
   end
   
-  def self.human_attribute_name(name)
-    label = I18n.t name, :scope => [:activerecord, :attributes, model_name]
+  def self.human_attribute_name(name, options = {})
+    label = I18n.t name, :scope => [:activerecord, :attributes, model_name.to_s.underscore]
     label =~ /^translation missing:/ ? name.to_s.humanize : label
   end
   
@@ -149,7 +149,7 @@ class Sys::Model::XmlRecord::Base
   end
   
   def locale(name)
-    label = I18n.t name, :scope => [:activerecord, :attributes, self.class.model_name]
+    label = I18n.t name, :scope => [:activerecord, :attributes, self.class.model_name.to_s.underscore]
     label =~ /^translation missing:/ ? name.to_s.humanize : label
   end
   
@@ -165,7 +165,7 @@ class Sys::Model::XmlRecord::Base
   
   def errors
     return @_errors if @_errors
-    @_errors = ActiveRecord::Errors.new(self)
+    @_errors = ActiveModel::Errors.new(self)
   end
   
   def before_save
@@ -178,7 +178,7 @@ class Sys::Model::XmlRecord::Base
     end
     return false unless before_save
     eval("@_record.#{self.class.column_name} = build_xml.to_s")
-    return false unless @_record.save(false)
+    return false unless @_record.save(:validate => false)
     after_save
     return true
   end
@@ -198,7 +198,7 @@ class Sys::Model::XmlRecord::Base
   def destroy
     return false unless before_destroy
     eval("@_record.#{self.class.column_name} = build_xml(:destroy).to_s")
-    return false unless @_record.save(false)
+    return false unless @_record.save(:validate => false)
     after_destroy
     return true
   end

@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Sys::Task < ActiveRecord::Base
   include Sys::Model::Base
   

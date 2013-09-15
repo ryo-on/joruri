@@ -31,20 +31,45 @@ span {
 #commonHeader,
 #commonHeader .pieceContainer,
 #commonHeader .pieceBody {
-  background-color: #ececec;
+  background: none;
   color: #000;
+}
+#commonHeader {
+  border-top: none;
+  border-bottom: 1px solid #fff;
 }
 #navigationNotice {
   color: #000;
 }
+#commonHeader a.riyou {
+  color: #ffffff;
+}
+#commonHeader a.riyou:hover {
+  color: #ffffff;
+}
 
 /* banner style
 ----------------------------------------------- */
-#bannerContainer, #CommonBanner, #commonBanner .lowerMenu {
+#commonBanner .upperMenu .smart,
+#commonBanner .upperMenu .keitai {
   background-color: #000000;
+  border: 1px solid #fff;
 }
-#commonBanner .logo {
-  background-color: transparent;
+input#search-button, .lowerMenu .chiiki, .lowerMenu .soshiki {
+  border: 1px solid #ffffff;
+  background: none;
+  color: #ffffff;
+}
+/* globalNavi style
+----------------------------------------------- */
+#globalNavi a {
+  width: 12.23%;
+}
+#globalNavi a, #globalNavi a.bosai, #globalNavi a:hover, #globalNavi a.bosai:hover,
+#page-index #globalNavi a.top, #globalNavi a.current, #globalNavi a.current:hover {
+  border: 1px solid #ffffff;
+  background: none;
+  text-decoration: underline;
 }
 
 /* footer style
@@ -69,7 +94,10 @@ span {
 #menu ul {
   background-color: #000000;
 }
-#menu #population .pieceHeader {
+#bnMailmagazine .toroku:after {
+  display: none;
+}
+#menu #population caption {
   background-color: #000000;
   background-image: none;
   border: 1px solid #ffffff;
@@ -101,16 +129,27 @@ span {
   border: none;
   background-color: #000000;
   color: #ffffff;
+  text-align: center;
+}
+#menu #calendar .pieceHeader, #links #calendar .pieceHeader,
+#content #calendar .pieceHeader, #menu #calendarDailyLinks .pieceHeader,
+#links #calendarDailyLinks .pieceHeader, #content #calendarDailyLinks .pieceHeader {
+  display: block;
+  background-image: none;
+}
+#menu #calendar .pieceHeader h2, #links #calendar .pieceHeader h2,
+#content #calendar .pieceHeader h2, #menu #calendarDailyLinks .pieceHeader h2,
+#links #calendarDailyLinks .pieceHeader h2, #content #calendarDailyLinks .pieceHeader h2 {
+  background-image: none;
+  color: #ffffff;
 }
 #calendar .pieceBody {
   width: 100%;
   margin: 0;
   padding: 0;
+  background: none;
 }
 #calendar .pieceBody .links {
-  width: 166px;
-  border-bottom: 1px solid #b4b4b4;
-  border-left: 1px solid #b4b4b4;
   background-image: none;
 }
 #calendar .calendar {
@@ -119,6 +158,16 @@ span {
 }
 .sat, .sun, .holiday {
   color: #ffffff;
+}
+.january, .february, .march, .april, .may, .june,
+.july, .august, .september, .october, .november, .december
+{
+  padding-top: 0;
+  background: #000000;
+}
+#calendar .pieceContainer, #calendarDailyLinks .pieceContainer {
+  border: 1px solid #ffffff;
+  background: none;
 }
 
 /* page-title piece
@@ -153,7 +202,9 @@ span {
   background-image: none;
   color: #ffffff;
 }
-
+#ArticleCategory .category {
+  border: 1px solid #ffffff;
+}
 /* unit
 ----------------------------------------------- */
 table.department {
@@ -180,7 +231,11 @@ table.unit tr.cycle {
   background-color: #000000;
   color: #ffffff;
 }
-
+.contentArticleUnit dl.department, .contentArticleUnit dl.cycle {
+  background-color: #000000;
+  color: #ffffff;
+  font-weight: bold;
+}
 /* attribute
 ----------------------------------------------- */
 .attribute {
@@ -202,7 +257,7 @@ table.unit tr.cycle {
 
 /* area
 ----------------------------------------------- */
-table.ward {
+table.ward
   background-color: #000000;
   color: #ffffff;
 }
@@ -225,7 +280,10 @@ table.city tr.cycle {
   background-color: #000000;
   color: #ffffff;
 }
-
+.contentArticleArea dl.ward, .contentArticleArea dl.cycle {
+  background-color: #000000;
+  color: #ffffff;
+}
 /* shinchaku portal
 ----------------------------------------------- */
 #recentDocsTitle .pieceHeader {
@@ -244,14 +302,17 @@ table.city tr.cycle {
   color: #ffffff;
 }
 .attributeNyusatsu span,
-.attributeSaiyojoho span,
-.attributeKakusyushikakushiken span,
+.attributeSaiyo span,
+.attributeShikakushiken span,
 .attributeBosyu span,
-.attributeEventjoho span,
+.attributeEvent span,
 .attributeKyoka span {
   border: 1px solid #ffffff;
   background-color: #000000;
   color: #ffffff;
+}
+#calendarDailyLinks .pieceHeader {
+  border: none;
 }
 #calendarDailyLinks .pieceHeader {
   border: none;
@@ -274,6 +335,14 @@ table.city tr.cycle {
   background-color: #000000;
 }
 
+#calendar .calendar .days .sun,
+#calendar .calendar .days .holiday,
+#calendarDailyLinks .calendar .days .sun,
+#calendarDailyLinks .days .holiday,
+#calendar .calendar .days .sat,
+#calendarDailyLinks .calendar .days .sat {
+    color: #ffffff;
+}
 /* doc
 ----------------------------------------------- */
 .contentArticleDoc .header {
@@ -335,9 +404,13 @@ table.city tr.cycle {
   background-color: #000000;
 }
 .enqueteForm .errorExplanation {
+  background: #000000;
   color: #ffffff !important;
 }
-
+.enqueteSent .back a {
+  border: 1px solid #fff;
+  background: #000000;
+}
 /* sitemap
 ----------------------------------------------- */
 .level1 li, ul.level3, ul.level2, .level2 li {
@@ -373,7 +446,24 @@ ul.sitemap ul.level2 {
   border: 1px solid #ffffff;
   background: none;
 }
-  
+/* doc-tab
+----------------------------------------------- */
+#docTabPortal .tabs a, #docTab .tabs a,
+#docTabPortal .tabs a:hover, #docTab .tabs a:hover,
+#docTabPortal .tabs a.current, #docTab .tabs a.current,
+#docTabPortal .tabs a.bosai, #docTab .tabs a.bosai,
+#docTabPortal .tabs a.bosai:hover, #docTab .tabs a.bosai:hover,
+#docTabPortal .tabs a.bosai.current, #docTab .tabs a.current.bosai {
+  background: none;
+  color: #ffffff;
+}
+
+#docTabPortal .links .feed a.rss, #docTab .links .feed a.rss,
+#docTabPortal .links .feed a.atom, #docTab .links .feed a.atom,
+.feed a.feedRss, .feed a.feedAtom {
+  border: 1px solid #ffffff;
+  background: none;
+}
 /* topic
 ----------------------------------------------- */
 #topic .pieceHeader {
@@ -408,14 +498,14 @@ ul.sitemap ul.level2 {
   border: 1px solid #ffffff;
   background-image: none;
 }
-#lifeEvent li.pregnant p,
-#lifeEvent li.child p,
-#lifeEvent li.work p,
-#lifeEvent li.adult p,
-#lifeEvent li.moving p,
-#lifeEvent li.marriage p,
-#lifeEvent li.welfare p,
-#lifeEvent li.death p {
+#lifeEvent li.pregnant a,
+#lifeEvent li.child a,
+#lifeEvent li.work a,
+#lifeEvent li.adult a,
+#lifeEvent li.moving a,
+#lifeEvent li.marriage a,
+#lifeEvent li.welfare a,
+#lifeEvent li.death a {
   border: 1px solid #ffffff;
   background-color: #000000;
 }
@@ -462,6 +552,40 @@ ul.sitemap ul.level2 {
   border-bottom: #ffffff solid 1px;
   border-left: #ffffff solid 1px;
 }
+/* bn
+----------------------------------------------- */
+#bnMailmagazine, #bnFaq, #bnBbs, #application, #inquiry,
+#adBanner .pieceFooter, #bnEvent
+{
+  border: 1px solid #ffffff;
+  background: none;
+}
+#bnMailmagazine .pieceContainer,
+#bnMailmagazine .pieceBody,
+#bnMailmagazine a,
+#bnMailmagazine .toroku,
+#bnFaq .pieceContainer,
+#bnFaq .pieceBody,
+#bnFaq a,
+.bnFaqB,
+#bnBbs .pieceContainer,
+#bnBbs .pieceBody,
+#bnBbs a,
+#bnBbs .bbs,
+#application .pieceContainer,
+#application .pieceBody,
+#application a,
+#inquiry .pieceContainer,
+#inquiry .pieceBody,
+#inquiry a,
+#adBanner .pieceFooter a,
+#bnEvent .pieceContainer,
+#bnEvent .pieceBody,
+#bnEvent a
+{
+  background-color: transparent;
+  color: #ffffff;
+}
 
 /* headerÅEfotter pege
 ----------------------------------------------- */
@@ -501,7 +625,16 @@ ul.sitemap ul.level2 {
   border-left: 4px solid #ffffff;
   background-color: #000000;
 }
-
+.contentNewsletterForms h2.cornerTitle {
+  background: #000000;
+}
+.contentNewsletterForms .summary {
+  border: 1px solid #ffffff;
+  background: #000000;
+}
+.contentNewsletterForms .submitters {
+  background: none;
+}
 /* bbs
 ----------------------------------------------- */
 .contentBbsThreads .entryForm h2.formTitle {
@@ -543,6 +676,7 @@ ul.sitemap ul.level2 {
   border-color: #ffffff;
   border-style: none solid solid;
   border-right: 1px solid #ffffff;
+  background: #000000;
   color: #ffffff;
 }
 .errorExplanation h2 {
@@ -555,13 +689,15 @@ ul.sitemap ul.level2 {
 .contentBbsThreads .back a {
   background-color: #000000;
 }
+.field_with_errors input, .field_with_errors textarea, .field_with_errors select {
+  border: none;
+}
+.field_with_errors input[type="radio"] {
+  outline: none;
+}
 
 /* faq
 ----------------------------------------------- */
-#faqRecentDocs .pieceHeader {
-  border: 1px solid #ffffff;
-  background-image: none;
-}
 .contentFaqDoc .body.answer,
 .contentFaqDoc .question,
 .contentFaqDoc .header {
@@ -581,15 +717,16 @@ ul.sitemap ul.level2 {
   border: 1px solid #ffffff;
   background-color: #000000;
 }
-#recentFaqTitle .pieceHeader,
-#faqRecentDocs .pieceHeader {
+#recentFaqTitle .pieceHeader h2,
+#faqRecentDocs .pieceHeader h2,
+#faqSearch .pieceHeader h2 {
   border: 1px solid #ffffff;
-  background-image: none;
+  background: none;
 }
 #recentFaqTitle h2,
 #faqRecentDocs .pieceHeader h2,
 .contentFaqCategory .latest {
-  background-image: none;
+  background: none;
 }
 .contentFaqCategory .latest h2 {
   border: 1px solid #ffffff;
@@ -599,4 +736,15 @@ ul.sitemap ul.level2 {
   border: 1px solid #ffffff;
   background-color: #000000;
   color: #ffffff;
+}
+/* chiiki,soshiki
+----------------------------------------------- */
+.contentArticleUnit .department tr,
+.contentArticleArea .ward tr {
+  border: 1px solid #ffffff;
+}
+.contentArticleUnit .unit tr,
+.contentArticleArea .city tr {
+  border: 1px solid #ffffff;
+  border-top: none;
 }

@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Sys::Publisher < ActiveRecord::Base
   include Sys::Model::Base
   
@@ -7,20 +8,29 @@ class Sys::Publisher < ActiveRecord::Base
   before_save :check_path
   before_destroy :remove_files
   
-  def modify_path
-    self.path = path.gsub(/^#{Rails.root.to_s}/, '.')
+  def full_path
+    p = ::File.join(Rails.root, path)
+    p = p.gsub('/./', '/')
+    p
   end
   
   def remove_files(options = {})
     up_path = options[:path] || path
-    up_path = ::File.expand_path(path, Rails.root) if up_path.to_s.slice(0, 1) == '/'
-    FileUtils.rm(up_path) if FileTest.exist?(up_path)
-    FileUtils.rm("#{up_path}.mp3") if FileTest.exist?("#{up_path}.mp3")
-    FileUtils.rmdir(::File.dirname(path)) rescue nil
+    up_path = ::File.expand_path(path, Rails.root) if up_path.to_s =~ /^\//
+    up_path = ::File.join(Rails.root, up_path).gsub('/./', '/') if up_path =~ /^\.\//
+    
+    ::Storage.rm_rf(up_path) if ::Storage.exists?(up_path)
+    ::Storage.rm_rf("#{up_path}.mp3") if ::Storage.exists?("#{up_path}.mp3")
+    ::Storage.rmdir(::File.dirname(path)) rescue nil
     return true
   end
 
 protected
+  
+  def modify_path
+    self.path = path.gsub(/^#{Rails.root.to_s}/, '.')
+  end
+  
   def check_path
     remove_files(:path => path_was) if !path_was.blank? && path_changed?
     return true

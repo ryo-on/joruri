@@ -1,6 +1,6 @@
-<% form_for :item, :url => {:action => :create} do |f| %>
+<%= form_for :item, :url => {:action => :create} do |f| %>
 
-<%= f.error_messages %>
+<%= error_messages_for :item %>
 
 <%= render :partial => 'form', :locals => {:f => f} %>
 
@@ -10,7 +10,7 @@
 <span id="message"></span>
 </div>
 
-<%= f.submit '作成する', :onclick => "$('message').innerHTML='処理を開始しました。そのままでお待ちください。<br /><br />';" %>
+<%= f.submit '作成する', :onclick => "$('#message').html('処理を開始しました。しばらくお待ちください。<br /><br />');" %>
 
 </div>
 

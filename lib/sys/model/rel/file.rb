@@ -26,22 +26,32 @@ module Sys::Model::Rel::File
     return true if files.size == 0
     
     public_dir = public_files_path
+    file_paths = []
     
     files.each do |file|
       upload_path = file.upload_path
       upload_dir  = ::File.dirname(upload_path)
       
       paths = {
-        upload_path => "#{public_dir}/#{file.name}",
+        upload_path               => "#{public_dir}/#{file.name}",
         "#{upload_dir}/thumb.dat" => "#{public_dir}/thumb/#{file.name}"
       }
+      file_paths << "#{public_dir}/#{file.name}"
+      file_paths << "#{public_dir}/thumb/#{file.name}"
       
       paths.each do |fr, to|
-        next unless FileTest.exist?(fr)
-        next if FileTest.exist?(to) && ( File::stat(to).mtime >= File::stat(fr).mtime)
-        FileUtils.mkdir_p(::File.dirname(to)) unless FileTest.exist?(::File.dirname(to))
-        FileUtils.cp(fr, to)
+        next unless ::Storage.exists?(fr)
+        next if ::Storage.exists?(to) && ( ::Storage.mtime(to) >= ::Storage.mtime(fr) )
+        ::Storage.mkdir_p(::File.dirname(to)) unless ::Storage.exists?(::File.dirname(to))
+        ::Storage.cp(fr, to)
       end
+    end
+    
+    ## remove old files
+    ::Storage.find(public_dir) do |file|
+      next if ::Storage.directory?(file)
+      next if file_paths.index(file)
+      ::Storage.rm_rf(file)
     end
     
     return true
@@ -51,7 +61,7 @@ module Sys::Model::Rel::File
     #return true unless @save_mode == :close
     
     dir = public_files_path
-    FileUtils.rm_r(dir) if FileTest.exist?(dir)
+    ::Storage.rm_rf(dir) if ::Storage.exists?(dir)
     return true
   end
 end

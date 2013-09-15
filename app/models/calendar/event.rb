@@ -10,7 +10,7 @@ class Calendar::Event < ActiveRecord::Base
 
   belongs_to :status,         :foreign_key => :state,             :class_name => 'Sys::Base::Status'
 
-  embed_file_of :image_file_id
+  #embed_file_of :image_file_id
   
   validates_presence_of :state, :event_date, :title
   

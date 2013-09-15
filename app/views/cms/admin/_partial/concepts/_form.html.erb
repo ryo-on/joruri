@@ -1,7 +1,7 @@
 <%
 
 def error?(col)
-  @item.errors.invalid?(col) ? 'class="fieldWithErrors"' : ''
+  @item.errors[col].size > 0 ? 'class="field_with_errors"' : ''
 end
 
 @parent ||= 0
@@ -13,7 +13,7 @@ root   = Cms::Concept.find(:all, :conditions => cond, :order => :sort_no)
     <th>コンセプト</th>
     <td>
       <div <%= error?(:concept_id) %>>
-        <%= f.select_with_tree :concept_id, root, :conditions => {:state => 'public'}, :include_blank => true %></div>
+        <%= f.select_with_tree :concept_id, root, :conditions => {:state => 'public'}, :include_blank => "　" %></div>
     </td>
   </tr>
 <%

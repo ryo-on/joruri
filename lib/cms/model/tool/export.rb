@@ -1,6 +1,6 @@
 # encoding: utf-8
 class Cms::Model::Tool::Export < ActiveRecord::Base
-  set_table_name "cms_concepts" #dummy
+  self.table_name = "cms_concepts" #dummy
   
   attr_accessor :concept_id
   attr_accessor :target

@@ -6,26 +6,19 @@
 
 /* elements
 ----------------------------------------------- */
-* {
-  margin: 0;
-  padding: 0;
-  font-size: 1.0em;
-  font-size: 100%;
-  font-style: normal;
-}
 html {
   height: 100%;
-  font-size: 16px;
+  font-size: 85%;
 }
 body {
   height: 100%;
   border: 0;
   background-color: #ffffff;
-  font-size: 80%;
 }
 body, td, th, select, option {
-  font-family: "MS PGothic", "ＭＳ Ｐゴシック", Arial, Verdana, Osaka, sans-serif;
-  font-weight: lighter; 
+  font-family: "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", Meiryo, "メイリオ", "MS PGothic", "ＭＳ　Ｐゴシック", sans-serif;
+  font-weight: lighter;
+  letter-spacing: 0; 
 }
 input, textarea {
   font-size: 110%;
@@ -37,7 +30,6 @@ blockquote {
 }
 h1, h2, h3, h4, h5 {
   font-size: 120%;
-  font-family: verdana;
 }
 img {
   border-style: none;
@@ -73,7 +65,7 @@ a:visited {
   color: #660099;
 }
 a:hover {
-  color: #ff0000;
+  color: #CA0000;
   text-decoration: underline;
 }
 
@@ -120,40 +112,56 @@ ul.notices li {
 }
 .elementError {
   margin: 3px 0 0;
-  color: #ee0000;
+  color: #e00;
 }
 .errorExplanation {
-  margin: 0 10px 20px;
-  color: #ee0000;
+  margin: 20px 20px;
+  padding: 10px 15px;
+  border-radius: 8px;
+  background-color: #fff6f7;
+  color: #c20;
 }
 .errorExplanation h2 {
-  padding: 4px 6px;
+  margin: -10px -15px 10px;
+  padding: 5px 15px;
   font-weight: bold;
-  border: 1px solid #ee4;
-  background-color: #ffff99;
+  border-radius: 8px 8px 0px 0px;
+  background-color: #f56;
+  color: #fff;
 }
 .errorExplanation p {
-  margin: 15px 10px 10px;
+  margin: 0px 0px 5px;
+  font-size: 110%;
   font-weight: bold;
 }
 .errorExplanation ul {
-  margin: 10px 30px;
+  margin: 0px 20px;
   list-style-type: disc;
 }
 .errorExplanation li {
   padding: 1px 0px;
 }
 
-/* Form relation
+/* field with errors
 ----------------------------------------------- */
-div.submitters {
-  margin: 20px 10px;
+.field_with_errors {
+  display: inline;
 }
-div.submitters input, div.submitters a {
-  margin: 0 10px;
+.field_with_errors input,
+.field_with_errors textarea, 
+.field_with_errors select {
+  border: 1px solid #e00;
 }
-div.submitters input {
-  width: 100px;
+.field_with_errors input[type=radio] {
+  margin-right: 6px;
+  outline: 1px solid #e00;
+}
+.field_with_errors + .field_with_errors,
+.field_with_errors ~ .field_with_errors {
+  display: inline;
+}
+.field_with_errors input[type="hidden"] {
+  display: none;
 }
 
 /* Table for list
@@ -206,79 +214,156 @@ div.submitters input, div.submitters a {
   margin: 0 10px;
 }
 div.submitters input {
-  width: 100px;
+  padding: 2px 20px;
+}
+
+/* feed
+----------------------------------------------- */
+.feed {
+  position: relative;
+  top: -36px;
+  right: 0px;
+  float: right;
+  background-color: transparent;
+}
+.feed a, .feed a {
+  display: inline-block;
+} 
+.feed a.rss, .feed a.atom, a.feedRss, a.feedAtom {
+  margin-right: 5px;
+  padding: 0 5px;
+  border-top: 1px solid #EAA081;
+  border-right: 1px solid #B84000;
+  border-bottom: 1px solid #B84000;
+  border-left: 1px solid #EAA081;
+  background-color: #D64000;
+  color: #ffffff;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+/* pagination
+----------------------------------------------- */
+.pagination {
+  text-align: center;
+}
+.pagination a {
+  padding: 0 6px;
+}
+.pagination em {
+  padding: 0 3px;
+  font-weight: bold;
+  font-size: 150%;
+  font-style: normal;
 }
 
 /* Icons.
 ----------------------------------------------- */
 .iconFile, .iconDefault {
+  height: 40px;
   padding: 12px 5px 12px 42px;
+  line-height: 3.3;
   background-repeat: no-repeat;
   background-image: url(/_common/images/icons/default.gif);
-  line-height: 3.3;
-}
-
-.iconBmp,
-.iconCsv,
-.iconDoc,
-.iconDocx,
-.iconGif,
-.iconJpg,
-.iconJpe,
-.iconJpeg,
-.iconJtd,
-.iconLzh,
-.iconPdf,
-.iconPng,
-.iconPpt,
-.iconTxt,
-.iconXls,
-.iconXlsx,
-.iconZip {
-  height: 40px;
 }
 .iconBmp {
+  height: 40px;
+  padding: 12px 5px 12px 42px;
+  line-height: 3.3;
+  background-repeat: no-repeat;
   background-image: url(/_common/images/icons/bmp.gif);
 }
 .iconCsv {
+  height: 40px;
+  padding: 12px 5px 12px 42px;
+  line-height: 3.3;
+  background-repeat: no-repeat;
   background-image: url(/_common/images/icons/csv.gif); 
 }
 .iconDoc,
 .iconDocx {
+  height: 40px;
+  padding: 12px 5px 12px 42px;
+  line-height: 3.3;
+  background-repeat: no-repeat;
   background-image: url(/_common/images/icons/doc.gif); 
 }
 .iconGif {
+  height: 40px;
+  padding: 12px 5px 12px 42px;
+  line-height: 3.3;
+  background-repeat: no-repeat;
   background-image: url(/_common/images/icons/gif.gif); 
 }
 .iconJpg {
+  height: 40px;
+  padding: 12px 5px 12px 42px;
+  line-height: 3.3;
+  background-repeat: no-repeat;
   background-image: url(/_common/images/icons/jpg.gif); 
 }
 .iconJpe {
+  height: 40px;
+  padding: 12px 5px 12px 42px;
+  line-height: 3.3;
+  background-repeat: no-repeat;
   background-image: url(/_common/images/icons/jpg.gif); 
 }
 .iconJpeg {
+  height: 40px;
+  padding: 12px 5px 12px 42px;
+  line-height: 3.3;
+  background-repeat: no-repeat;
   background-image: url(/_common/images/icons/jpg.gif); 
 }
 .iconJtd {
+  height: 40px;
+  padding: 12px 5px 12px 42px;
+  line-height: 3.3;
+  background-repeat: no-repeat;
   background-image: url(/_common/images/icons/jtd.gif); 
 }
 .iconLzh {
+  height: 40px;
+  padding: 12px 5px 12px 42px;
+  line-height: 3.3;
+  background-repeat: no-repeat;
   background-image: url(/_common/images/icons/lzh.gif); 
 }
 .iconPdf {
+  height: 40px;
+  padding: 12px 5px 12px 42px;
+  line-height: 3.3;
+  background-repeat: no-repeat;
   background-image: url(/_common/images/icons/pdf.gif); 
 }
 .iconPng {
+  height: 40px;
+  padding: 12px 5px 12px 42px;
+  line-height: 3.3;
+  background-repeat: no-repeat;
   background-image: url(/_common/images/icons/png.gif); 
 }
 .iconPpt {
+  height: 40px;
+  padding: 12px 5px 12px 42px;
+  line-height: 3.3;
+  background-repeat: no-repeat;
   background-image: url(/_common/images/icons/ppt.gif); 
 }
 .iconTxt {
+  height: 40px;
+  padding: 12px 5px 12px 42px;
+  line-height: 3.3;
+  background-repeat: no-repeat;
   background-image: url(/_common/images/icons/txt.gif); 
 }
 .iconXls,
 .iconXlsx {
+  height: 40px;
+  padding: 12px 5px 12px 42px;
+  line-height: 3.3;
+  background-repeat: no-repeat;
   background-image: url(/_common/images/icons/xls.gif);
 }
 .iconZip {

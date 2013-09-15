@@ -49,7 +49,7 @@ class Sys::Admin::LdapSynchrosController < Cms::Controller::Admin::Base
       messages << "-- グループ #{@results[:group]}件"
       messages << "-- ユーザ #{@results[:user]}件"
       messages << "-- エラー #{@results[:error]}件" if @results[:error] > 0
-      flash[:notice] = messages.join('<br />')
+      flash[:notice] = messages.join('<br />').html_safe
       redirect_to url_for(:action => :show, :id => @version)
     else
       flash[:notice] = "中間データの作成に失敗しました。［ #{error} ］"
@@ -80,8 +80,8 @@ class Sys::Admin::LdapSynchrosController < Cms::Controller::Admin::Base
       return render :inline => "グループのRootが見つかりません。", :layout => true
     end
     
-    Sys::Group.update_all("ldap_version = NULL")
-    Sys::User.update_all("ldap_version = NULL")
+    #Sys::Group.update_all("ldap_version = NULL")
+    #Sys::User.update_all("ldap_version = NULL")
     
     @results = {:group => 0, :gerr => 0, :user => 0, :uerr => 0}
     @items.each {|group| do_synchro(group, parent)}
@@ -98,7 +98,7 @@ class Sys::Admin::LdapSynchrosController < Cms::Controller::Admin::Base
     messages << "-- 更新 #{@results[:user]}件"
     messages << "-- 削除 #{@results[:udel]}件" if @results[:udel] > 0
     messages << "-- 失敗 #{@results[:uerr]}件" if @results[:uerr] > 0
-    flash[:notice] = messages.join('<br />')
+    flash[:notice] = messages.join('<br />').html_safe
     
     redirect_to(:action => :index)
   end
@@ -106,49 +106,52 @@ class Sys::Admin::LdapSynchrosController < Cms::Controller::Admin::Base
 protected
   def do_synchro(group, parent = nil)
     ## group
-    sg                = Sys::Group.find_by_code(group.code) || Sys::Group.new
-    sg.code           = group.code
-    sg.parent_id      = parent.id
-    sg.state        ||= 'enabled'
-    sg.web_state    ||= 'public'
-    sg.name           = group.name
-    sg.name_en        = group.name_en if !group.name_en.blank?
-    sg.email          = group.email if !group.email.blank?
-    sg.level_no       = parent.level_no + 1
-    #sg.sort_no        = group.sort_no
-    sg.ldap         ||= 1
-    sg.ldap_version   = @version
+    sg = Sys::Group.find_by_code(group.code) || Sys::Group.new
+    sg.ldap ||= 1
     
     if sg.ldap == 1
-      if sg.save(false)
-        @results[:group] += 1
-      else
-        @results[:gerr] += 1
-        return false
+      sg.code        = group.code
+      sg.parent_id   = parent.id
+      sg.state     ||= 'enabled'
+      sg.web_state ||= 'public'
+      sg.name        = group.name
+      sg.name_en     = group.name_en if !group.name_en.blank?
+      sg.email       = group.email if !group.email.blank?
+      sg.level_no    = parent.level_no + 1
+      #sg.sort_no     = group.sort_no
+      
+      if sg.changed?
+        sg.ldap_version = @version
+        
+        if sg.save(:validate => false)
+          @results[:group] += 1
+        else
+          @results[:gerr] += 1
+          return false
+        end
       end
     end
     
     ## users
-    if group.users.size > 0
-      group.users.each do |user|
-        su                = Sys::User.find_by_account(user.code) || Sys::User.new
-        su.account        = user.code
-        su.state        ||= 'enabled'
-        su.auth_no      ||= 2
-        su.name           = user.name
-        su.name_en        = user.name_en
-        su.email          = user.email
-        su.ldap         ||= 1
-        su.ldap_version   = @version
-        su.in_group_id    = sg.id
-        
-        if su.ldap == 1
-          if su.save
-            @results[:user] += 1
-          else
-            @results[:uerr] += 1
-          end
-        end
+    group.users.each do |user|
+      su = Sys::User.find_by_account(user.code) || Sys::User.new
+      su.ldap ||= 1
+      next if su.ldap != 1
+      
+      su.account        = user.code
+      su.state        ||= 'enabled'
+      su.auth_no      ||= 2
+      su.name           = user.name
+      su.name_en        = user.name_en
+      su.email          = user.email
+      su.in_group_id    = sg.id
+      next if !su.changed?
+      
+      su.ldap_version = @version
+      if su.save
+        @results[:user] += 1
+      else
+        @results[:uerr] += 1
       end
     end
     

@@ -83,7 +83,7 @@ class Cms::Layout < ActiveRecord::Base
     tags.delete('')
     tag = tags.join("\n")
     tag = tag.gsub(/<link [^>]+>/i, '').gsub(/(\r\n|\n)+/, "\n") if request.mobile?
-    tag
+    tag.html_safe
   end
   
   def body_tag(request)
@@ -154,8 +154,8 @@ class Cms::Layout < ActiveRecord::Base
       path = m.gsub(/^@import ['"](.*?)['"];/, '\1')
       dir  = (path =~ /^\/_common\//) ? "#{Rails.root}/public" : site.public_path
       file = "#{dir}#{path}"
-      if FileTest.exist?(file)
-        m = ::File.new(file).read.toutf8.gsub(/(\r\n|\n|\r)/, "\n").gsub(/^@import ['"](.*?)['"];/) do |m2|
+      if ::Storage.exists?(file)
+        m = ::Storage.read(file).to_utf8.gsub(/(\r\n|\n|\r)/, "\n").gsub(/^@import ['"](.*?)['"];/) do |m2|
           p = m2.gsub(/.*?["'](.*?)["'].*/, '\1')
           p = ::File.expand_path(p, ::File.dirname(path)) if p =~ /^\./
           %Q(@import "#{p}";)
@@ -175,8 +175,8 @@ class Cms::Layout < ActiveRecord::Base
   end
   
   def extend_css(path)
-    return '' unless FileTest.exist?(path)
-    css = ::File.new(path).read
+    return '' unless ::Storage.exists?(path)
+    css = ::Storage.read(path)
     if css =~ /^@import/
       css.gsub!(/(^|\n)@import .*?(\n|$)/iom) do |m|
         src = m.gsub(/(^|\n)@import ["](.*)["].*?(\n|$)/, '\2')
@@ -195,28 +195,31 @@ class Cms::Layout < ActiveRecord::Base
   
   def put_css_files
     path = stylesheet_path
-    Util::File.put(path, :data => stylesheet.to_s, :mkdir => true)
+    ::Storage.mkdir_p(::File.dirname(path))
+    ::Storage.write(path, stylesheet.to_s)
     
     path = ::File.dirname(path) + '/mobile.css'
-    Util::File.put(path, :data => mobile_stylesheet.to_s, :mkdir => true)
+    ::Storage.mkdir_p(::File.dirname(path))
+    ::Storage.write(path, mobile_stylesheet.to_s)
     
     path = ::File.dirname(path) + '/smart_phone.css'
-    Util::File.put(path, :data => smart_phone_stylesheet.to_s, :mkdir => true)
+    ::Storage.mkdir_p(::File.dirname(path))
+    ::Storage.write(path, smart_phone_stylesheet.to_s)
     
     return true
   end
   
   def remove_css_files
     path = stylesheet_path
-    FileUtils.rm_f(path)
+    ::Storage.rm_rf(path)
     
     path = ::File.dirname(path) + '/mobile.css'
-    FileUtils.rm_f(path)
+    ::Storage.rm_rf(path)
     
     path = ::File.dirname(path) + '/smart_phone.css'
-    FileUtils.rm_f(path)
+    ::Storage.rm_rf(path)
     
-    FileUtils.rmdir(::File.dirname(path)) rescue nil
+    ::Storage.rmdir(::File.dirname(path)) rescue nil
     return true
   end
   
@@ -234,7 +237,7 @@ class Cms::Layout < ActiveRecord::Base
       item.title         = item.title.gsub(/^(【複製】)*/, "【複製】")
     end
     
-    return item.save(false)
+    return item.save(:validate => false)
   end
   
   def search(params)

@@ -3,16 +3,19 @@
   
   <p>
     <%= link_to :show, cms_concept_url(@parent.parent_id, @parent) if @parent.id != 0 %>
-    <%=h @parent.name %></p>
+    <%= @parent.name %></p>
   
   <div class="links">
-    <div>
-      <%= link_to :up, url_for(:parent => @parent.parent_id) if @parent.id != 0 %></div>
+    <% if @parent.id != 0 %>
+    <div class="menu"><%= link_to :up, url_for(:parent => @parent.parent_id) %></div>
+    <% end %>
     
     <% for item in @items %>
-    <%= link_to :show, url_for(:action => :show, :id => item) %>
-    <%= link_to item.name, url_for(:action => :index, :parent => item) %>
-    <span class="remark"><%= item.sort_no %></span><br />
+    <div>
+      <%= link_to :show, url_for(:action => :show, :id => item) %>
+      <%= link_to item.name, url_for(:action => :index, :parent => item) %>
+      <span class="remark"><%= item.sort_no %></span>
+    </div>
     <% end %>
   </div>
   
@@ -24,8 +27,8 @@
     <th><%= Cms::Content.new.locale(:name) %></th>
   </tr>
   <% @parent.contents.each do |item| %>
-  <tr <%= cycle '', 'class="cycle"' %>>
-    <td><%=h item.name %></td>
+  <tr class="<%= cycle '', 'cycle' %>">
+    <td><%= item.name %></td>
   </tr>
   <% end %>
   <% if @parent.contents.size == 0 %><tr><td colspan="2"><br /></td></tr><% end %>
@@ -39,9 +42,9 @@
     <th><%= Cms::Layout.new.locale(:title) %></th>
   </tr>
   <% @parent.layouts.each do |item| %>
-  <tr <%= cycle '', 'class="cycle"' %>>
-    <td><%=h item.name %></td>
-    <td><%=h item.title %></td>
+  <tr class="<%= cycle '', 'cycle' %>">
+    <td><%= item.name %></td>
+    <td><%= item.title %></td>
   </tr>
   <% end %>
   <% if @parent.layouts.size == 0 %><tr><td colspan="2"><br /></td></tr><% end %>
@@ -55,8 +58,8 @@
     <th><%= Cms::Piece.new.locale(:title) %></th>
   </tr>
   <% @parent.pieces.each do |item| %>
-  <tr <%= cycle '', 'class="cycle"' %>>
-    <td><%=h item.name %></td>
+  <tr class="<%= cycle '', 'cycle' %>">
+    <td><%= item.name %></td>
     <td><%= item.title %></td>
   </tr>
   <% end %>

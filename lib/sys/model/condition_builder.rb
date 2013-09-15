@@ -49,7 +49,7 @@ module Sys::Model::ConditionBuilder
     cb_extention[:joins] = [] unless cb_extention[:joins]
     case condition
     when Symbol
-      cb_extention[:joins] << "#{expand_join_query(condition)}"
+      cb_extention[:joins] << condition
     else
       cb_extention[:joins] << condition
     end

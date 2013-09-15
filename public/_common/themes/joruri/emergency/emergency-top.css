@@ -155,7 +155,7 @@
   color: #660099;
 }
 #footerNavi a:hover {
-  color: #ff0000;
+  color: #f00000;
 }
 
 /* qr-code
@@ -303,7 +303,7 @@
 #population.piece {
   margin: 0 0 10px;
 }
-#menu #population .pieceHeader {
+#menu #population caption {
   line-height: 1.4;
   padding: 4px 7px;
   background-color: #002f9f;
@@ -406,7 +406,7 @@
 #emergencyLinkLifeline .pieceHeader {
   line-height: 25px;
   padding: 0 5px;
-  background-color: #ff0000;
+  background-color: #f00000;
 }
 #emergencyLinkBousai h2,
 #emergencyLinkKasen h2,
@@ -420,7 +420,7 @@
 #emergencyLinkKasen ul,
 #emergencyLinkKoutsuu ul,
 #emergencyLinkLifeline ul {
-  border:1px solid #ff0000;
+  border:1px solid #f00000;
 }
 #emergencyEreaInformation a {
   padding: 0 3px ;

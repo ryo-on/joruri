@@ -2,7 +2,7 @@
 class Sys::Admin::AccountController < Sys::Controller::Admin::Base
   def login
     skip_layout
-    admin_uri = '/_admin'
+    admin_uri = "#{Joruri.admin_uri}"
     
     return redirect_to(admin_uri) if logged_in?
     
@@ -11,7 +11,7 @@ class Sys::Admin::AccountController < Sys::Controller::Admin::Base
     return unless request.post?
     
     unless new_login(params[:account], params[:password])
-      flash.now[:notice] = "ユーザＩＤ・パスワードを正しく入力してください"
+      flash.now[:notice] = "ユーザID・パスワードを正しく入力してください。"
       respond_to do |format|
         format.html { render }
         format.xml  { render(:xml => '<errors />') }
@@ -28,6 +28,7 @@ class Sys::Admin::AccountController < Sys::Controller::Admin::Base
     end
     
     cookies.delete :sys_login_referrer
+    Sys::OperationLog.log(request, :user => current_user)
     respond_to do |format|
       format.html { redirect_to @uri }
       format.xml  { render(:xml => current_user.to_xml) }
@@ -38,6 +39,8 @@ class Sys::Admin::AccountController < Sys::Controller::Admin::Base
     self.current_user.forget_me if logged_in?
     cookies.delete :auth_token
     reset_session
+    
+    Sys::OperationLog.log(request, :user => current_user)
     redirect_to('action' => 'login')
   end
 end

@@ -8,7 +8,7 @@
 <a class="kanko" href="/bunya/kanko/"><span>観光・魅力</span></a>
 <a class="sangyoshigoto" href="/bunya/sangyoshigoto/"><span>産業・しごと</span></a>
 <a class="gyoseimachizukuri" href="/bunya/gyoseimachizukuri/"><span>行政・まちづくり</span></a>
-<a class="bosai current" href="/bunya/bosaigai/"><span>防災</span></a>
+<a class="bosai currentB" href="/bunya/bosaigai/"><span>防災</span></a>
 </div>
 </div>
 </div>

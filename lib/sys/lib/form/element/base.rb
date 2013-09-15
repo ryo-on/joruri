@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Sys::Lib::Form::Element::Base
   attr_accessor :name, :label, :value, :options
   attr_accessor :message, :required, :select_options
@@ -52,7 +53,7 @@ class Sys::Lib::Form::Element::Base
   end
   
   def make_frozen_value
-    ERB::Util.html_escape(@value).gsub(/\r\n|\r|\n/, '<br />')
+    ERB::Util.html_escape(@value).gsub(/\r\n|\r|\n/, '<br />').html_safe
   end
   
   def freeze

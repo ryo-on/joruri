@@ -14,9 +14,9 @@
   </tr>
 
   <% for item in @items %>
-  <tr <%= cycle '', 'class="cycle"' %>>
+  <tr class="<%= cycle '', 'cycle' %>">
     <td style="text-align: center;"><%= link_to :show, url_for(:action => :show, :id => item) %></td>
-    <td style="text-align: right;"><%=h item.id %></td>
+    <td style="text-align: right;"><%= item.id %></td>
     <td><%= h(item.name) %></td>
     <td style="text-align: center;"><%= link_to "質問一覧", enquete_form_columns_path(@content.id, item.id) %></td>
     <td style="text-align: center;"><%= link_to "回答一覧", enquete_form_answers_path(@content.id, item.id) %></td>

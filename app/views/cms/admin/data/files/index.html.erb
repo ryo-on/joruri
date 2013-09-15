@@ -12,18 +12,18 @@
   </tr>
   
   <% for item in @items %>
-  <tr <%= cycle '', 'class="cycle"' %>>
-    <td style="text-align: center;"><%= link_to :show, url_for(:action => :show, :id => item) %></td>
+  <tr class="<%= cycle '', 'cycle' %>">
+    <td style="text-align: center;"><%= link_to :show, {:action => :show, :id => item, :concept => item.concept_id} %></td>
     <td style="text-align: center;">
       <% if item.image_file? %>
-        <a href="<%= url_for(:id => item, :action => :download, :_t => item.updated_at.to_i) %>" target="_blank">
-        <img src="<%= url_for(:id => item, :action => :thumbnail, :_t => item.updated_at.to_i) %>" 
-        style="<%= item.reduced_size(:width => 80, :height => 40, :css => true) %>" /></a>
+        <a href="<%= url_for(:id => item, :action => :download, :concept => item.concept_id, :_t => item.updated_at.to_i) %>" target="_blank">
+        <img src="<%= url_for(:id => item, :action => :thumbnail, :concept => item.concept_id, :_t => item.updated_at.to_i) %>" 
+          style="<%= item.reduce_size(:width => 80, :height => 40, :thumbnail => true, :css => true) %>" /></a>
       <% else %>
-        <a href="<%= url_for(:id => item, :action => :download) %>" class="<%= item.css_class %>" target="_blank">File</a>
+        <a href="<%= url_for(:id => item, :action => :download, :concept => item.concept_id) %>" class="<%= item.css_class %>" target="_blank">File</a>
       <% end %>
     </td>
-    <td><%=h "#{safe{item.node.name}} / " if item.node %><%=h item.name %><br /><%=h "（#{item.title}）" if item.name != item.title %></td>
+    <td><%= "#{safe{item.node.name}} / " if item.node %><%= item.name %><br /><%= "（#{item.title}）" if item.name != item.title %></td>
     <td style="text-align: center;"><%= item.eng_unit %><br /><%= item.image_size %></td>
     <td style="text-align: center;"><%= item.updated_at.strftime('%Y-%m-%d %H:%M')%></td>
     

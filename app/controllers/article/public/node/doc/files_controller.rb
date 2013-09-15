@@ -24,12 +24,12 @@ class Article::Public::Node::Doc::FilesController < Cms::Controller::Public::Bas
       file_path = "#{::File.dirname(@doc.public_path)}/files/#{dir}#{@file.name}"
     end
     
-    return http_error(404) unless FileTest.exists?(file_path)
+    return http_error(404) unless ::Storage.exists?(file_path)
     
     if img = @file.mobile_image(request.mobile, :path => file_path)
       return send_data(img.to_blob, :type => @file.mime_type, :filename => @file.name, :disposition => 'inline')
     end
     
-    send_file file_path, :type => @file.mime_type, :filename => @file.name, :disposition => 'inline'
+    send_storage_file file_path, :type => @file.mime_type, :filename => @file.name
   end
 end

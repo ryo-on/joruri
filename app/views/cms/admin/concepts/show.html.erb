@@ -3,16 +3,16 @@
 <table class="show">
   <tr>
     <th><%= @item.locale(:parent_id) %></th>
-    <td><%=h safe{@item.parent.name} %></td>
+    <td><%= safe{@item.parent.name} %></td>
   </tr><tr>
     <th><%= @item.locale(:name) %></th>
-    <td><%=h @item.name %></td>
+    <td><%= @item.name %></td>
   </tr><tr>
     <th><%= @item.locale(:state) %></th>
-    <td><%=h @item.status.name %></td>
+    <td><%= @item.status.name %></td>
   </tr><tr>
     <th><%= @item.locale(:sort_no) %></th>
-    <td><%=h @item.sort_no %></td>
+    <td><%= @item.sort_no %></td>
   </tr>
 </table>
 

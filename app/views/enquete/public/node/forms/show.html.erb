@@ -1,23 +1,24 @@
 <div class="enqueteForm">
 
-<% form_for :item, :url => "#{Page.current_node.public_uri}#{@item.id}/" do |f| %>
-
-<%= error_messages_for "form" %>
+<%= form_for :item, :url => "#{Page.current_node.public_uri}#{@item.id}/" do |f| %>
 
 <% if @confirm %>
 <div class="confirmMessage">下記の内容をご確認頂いて、「送信する」を押して下さい。</div>
 <% end %>
 
 <div class="form">
-  <h2 class="name"><%=h @item.name %></h2>
-  <% if !@item.body.blank? %><div class="body"><%= @item.body %></div><% end %>
+  <h2 class="name"><%= @item.name %></h2>
 </div>
+
+<%= error_messages_for "form" %>
+
+<% if !@item.body.blank? %><div class="body"><%== @item.body %></div><% end %>
 
 <div class="columns">
   <% @form.elements.each do |e| %>
-  <div class="column <%= e.name %>">
-    <div class="name"><%=h e.label %> <span class="required"><%= "※" if e.required %></span></div>
-    <% if e.message && !@confirm %><div class="body"><%= e.message %></div><% end %>
+  <div class="column">
+    <div class="name"><%= e.label %> <span class="required"><%= "※" if e.required %></span></div>
+    <% if e.message && !@confirm %><div class="body"><%== e.message %></div><% end %>
     <div class="field"><%= e.tag %></div>
   </div>
   <% end %>

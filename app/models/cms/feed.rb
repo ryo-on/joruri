@@ -11,7 +11,7 @@ class Cms::Feed < ActiveRecord::Base
   has_many   :entries,        :foreign_key => :feed_id,         :class_name => 'Cms::FeedEntry',
     :dependent => :destroy
 
-  validates_presence_of :name, :uri, :title
+  validates_presence_of :name, :title, :uri
 
   def public
     self.and "#{self.class.table_name}.state", 'public'
@@ -29,21 +29,20 @@ class Cms::Feed < ActiveRecord::Base
   end
 
   def request_feed
-     res = Util::Http::Request.send(uri)
+    res = Util::Http::Request.get(uri)
     if res.status != 200
-      errors.add_to_base "RequestError: #{uri}"
+      errors.add :base, "RequestError: #{uri}"
       return nil
     end
     return res.body
   end
 
-
   def update_feed(options = {})
     unless xml = request_feed
-      errors.add_to_base "FeedRequestError: #{uri}"
+      errors.add :base, "FeedRequestError: #{uri}"
       return false
     end
-    
+
     if options[:destroy] == true
       entries.destroy_all
     end
@@ -51,7 +50,6 @@ class Cms::Feed < ActiveRecord::Base
     require "rexml/document"
     doc  = REXML::Document.new(xml)
     root = doc.root
-    
     if root.name.downcase =~ /^(rss|rdf)$/
       return update_feed_rss(root)
     else
@@ -59,7 +57,7 @@ class Cms::Feed < ActiveRecord::Base
     end
     
   rescue => e
-    errors.add_to_base "Error: #{e.class}"
+    errors.add :base, "Error: #{e.class}"
     return false
   end
   
@@ -123,7 +121,7 @@ class Cms::Feed < ActiveRecord::Base
         latest << entry.id if entry.save
       end
     rescue Exception => e
-      errors.add_to_base "FeedEntryError: #{e}"
+      errors.add :base, "FeedEntryError: #{e}"
     end
 
     if latest.size > 0
@@ -209,7 +207,7 @@ class Cms::Feed < ActiveRecord::Base
         latest << entry.id if entry.save
       end
     rescue Exception => e
-      errors.add_to_base "FeedEntryError: #{e}"
+      errors.add :base, "FeedEntryError: #{e}"
     end
 
     if latest.size > 0

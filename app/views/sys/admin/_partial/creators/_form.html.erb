@@ -12,17 +12,15 @@ if !item.unid && !params[f.object_name]
   }
 end
 
-%><br />
-
-<p class="managerForm">作成者</p>
+%><p class="managerForm">作成者</p>
 
 <table class="show">
   <tr class="onlyManager">
     <th>グループ</th>
-    <td><%= f.select_with_tree "in_creator[group_id]", groups, :include_blank => true %></td>
+    <td><%= f.select_with_tree "in_creator[group_id]", groups, :include_blank => "　" %></td>
   </tr>
   <tr class="onlyManager">
     <th>ユーザ</th>
-    <td><%= f.array_select "in_creator[user_id]", users, :include_blank => true %></td>
+    <td><%= f.array_select "in_creator[user_id]", users, :include_blank => "　" %></td>
   </tr>
 </table>

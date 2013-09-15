@@ -1,7 +1,7 @@
-<p class="form">本文検索</p>
+<p class="form">キーワード検索</p>
 <div style="margin-bottom: 2px;">ページ本文、記事本文から文字列を検索します。</div>
 
-<% form_for :item, :html => {:method => :post} do |f| %>
+<%= form_for :item, :html => {:method => :post} do |f| %>
 <%= hidden_field_tag :do, 'search' %>
 <%= f.text_field :keyword, :style => "width: 400px;" %>
 <%= submit_tag '検索'    , :name => :search %>
@@ -9,7 +9,6 @@
 <% end %>
 
 <% if @items.size > 0 %>
-  <br />
   <p class="form">検索結果</p>
 <% end %>
 
@@ -21,9 +20,9 @@
     <th>タイトル</th>
   </tr>
   <% group[1].each do |c| %>
-  <tr>
-    <td style="text-align: right;"><%=h c[0] %></td>
-    <td><%=h c[1] %></td>
+  <tr class="<%= cycle '', 'cycle', :name => group[0] %>">
+    <td style="text-align: right;"><%= c[0] %></td>
+    <td><%= c[1] %></td>
   </tr>
   <% end %>
   <% if group[1].size == 0 %><tr><td style="text-align: right;">-</td><td>見つかりませんでした。</td></tr><% end %>

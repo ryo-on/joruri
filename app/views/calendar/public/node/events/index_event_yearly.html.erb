@@ -1,6 +1,6 @@
 <div class="calendarEvents calendarYearlyEvents">
 
-<h2><%=h sprintf("%d年", @year) %></h2>
+<h2><%= sprintf("%d年", @year) %></h2>
 
 <%= @pagination.to_links(:class => "pagination upperPagination") %>
 
@@ -12,7 +12,7 @@
     <h4 class="title"><%= item[:uri].blank? ? h(item[:title]) : link_to(item[:title], item[:uri]) %></h4>
     <div class="info">
       <% if item[:thumb] %>
-      <div class="thumb"><img src="<%=h item[:thumb_uri] %>" alt="" /></div>
+      <div class="thumb"><img src="<%= item[:thumb_uri] %>" alt="" /></div>
       <% end %>
       <% if !item[:body].blank? %><div class="body"><%=hbr item[:body] %></div><% end %>
     </div>

@@ -11,10 +11,10 @@
   value = item.value_name || "未設定"
   value = truncate(value, :length => 60)
   %>
-  <tr <%= cycle '', 'class="cycle"' %>>
+  <tr class="<%= cycle '', 'cycle' %>">
     <td style="text-align: center;"><%= link_to :edit, url_for(:action => :edit, :id => item.name) %></td>
     <td><%= item.config_name %></td>
-    <td><%=h value %></td>
+    <td><%= value %></td>
   </tr>
   <% end %>
 

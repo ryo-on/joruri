@@ -1,6 +1,7 @@
 # encoding: utf-8
 class Newsletter::Content::Setting < Cms::ContentSetting
   set_config :sender_address,     :name => "送信元メールアドレス"
+  set_config :use_captcha,        :name => "画像認証", :options => [["使用する", 1], ["使用しない", 0]]
   set_config :summary,            :name => "概要"
   set_config :addition_body,      :name => "説明（登録フォーム）"
   set_config :deletion_body,      :name => "説明（解除フォーム）"

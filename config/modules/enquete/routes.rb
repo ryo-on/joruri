@@ -1,44 +1,49 @@
-ActionController::Routing::Routes.draw do |map|
+Joruri::Application.routes.draw do
   mod = "enquete"
   
+  ## -------------------------------------------------------
   ## admin
-  map.namespace(mod, :namespace => '') do |ns|
-    ns.resources :forms,
-      :controller  => "admin/forms",
-      :path_prefix => "/_admin/#{mod}/:content"
-    ns.resources :form_columns,
-      :controller  => "admin/form_columns",
-      :path_prefix => "/_admin/#{mod}/:content/:form"
-    ns.resources :form_answers,
-      :controller  => "admin/form_answers",
-      :path_prefix => "/_admin/#{mod}/:content/:form"
+  
+  scope "#{Joruri.admin_uri}/#{mod}/c:concept", :module => mod, :as => mod do
     
+    resources :forms,
+      :controller => "admin/forms",
+      :path       => ":content/forms"
+    resources :form_columns,
+      :controller => "admin/form_columns",
+      :path       => ":content/:form/form_columns"
+    resources :form_answers,
+      :controller => "admin/form_answers",
+      :path       => ":content/:form/form_answers"
+    
+    ## -----------------------------------------------------
     ## content
-    ns.resources :content_base,
-      :controller => "admin/content/base",
-      :path_prefix => "/_admin/#{mod}"
-    ns.resources :content_settings,
-      :controller  => "admin/content/settings",
-      :path_prefix => "/_admin/#{mod}/:content"
     
+    resources :content_base,
+      :controller => "admin/content/base"
+    resources :content_settings,
+      :controller => "admin/content/settings",
+      :path       => ":content/content_settings"
+    
+    ## -----------------------------------------------------
     ## node
-    ns.resources :node_forms,
-      :controller  => "admin/node/forms",
-      :path_prefix => "/_admin/#{mod}/:parent"
     
+    resources :node_forms,
+      :controller => "admin/node/forms",
+      :path       => ":parent/node_forms"
+    
+    ## -----------------------------------------------------
     ## piece
+    
   end
   
+  ## -------------------------------------------------------
   ## public
-  map.namespace(mod, :namespace => '', :path_prefix => '/_public') do |ns|
-    ns.connect "node_forms/index.:format",
-      :controller => "public/node/forms",
-      :action     => :index
-    ns.connect "node_forms/:form/index.:format",
-      :controller => "public/node/forms",
-      :action     => :show
-    ns.connect "node_forms/:form/sent.:format",
-      :controller => "public/node/forms",
-      :action     => :sent
+  
+  scope "_public/#{mod}", :module => mod, :as => "" do
+    
+    match "node_forms/index.:format"       => "public/node/forms#index"
+    match "node_forms/:form/index.:format" => "public/node/forms#show"
+    match "node_forms/:form/sent.:format"  => "public/node/forms#sent"
   end
 end

@@ -1,5 +1,3 @@
-<h2>リンクチェック動作確認</h2>
-
 <% if @errors.size > 0 %>
 <div id="errorExplanation" class="errorExplanation">
   <p>次の項目を確認してください。</p>
@@ -9,7 +7,9 @@
 
 <%= @checker.notice_messages %>
 
-<% form_tag do %>
+<%= form_tag do %>
+
+<p class="form">リンクチェック</p>
 
 <table class="show">
   <tr>
@@ -17,7 +17,8 @@
   </tr><tr>
     <td>
       <%= text_area_tag "item[body]", @item[:body], :class => "body", :style => "height: 200px;" %><br />
-      Proxy: <%= Core.proxy.nil? ? "指定なし" : Core.proxy.to_s %>
+      HTTP Proxy: <%= Core.proxy %><br /> 
+      HTTPS Proxy: <%= Core.proxy(:https) %><br /> 
     </td>
   </tr>
 </table>

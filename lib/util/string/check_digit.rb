@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Util::String::CheckDigit
   def self.check(value)
     digit = 0

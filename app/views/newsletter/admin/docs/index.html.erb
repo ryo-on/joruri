@@ -12,12 +12,12 @@
   </tr>
 
   <% for item in @items %>
-  <tr <%= cycle '', 'class="cycle"' %>>
+  <tr class="<%= cycle '', 'cycle' %>">
     <td style="text-align: center;"><%= link_to :show, url_for(:action => :show, :id => item) %></td>
-    <td style="text-align: right;"><%=h item.id %></td>
-    <td><%=h item.title %></td>
+    <td style="text-align: right;"><%= item.id %></td>
+    <td><%= item.title %></td>
     <td style="text-align: center;"><%= safe{item.updated_at.strftime("%Y-%m-%d %H:%M")} %></td>
-    <td style="text-align: center;"><%= safe{item.delivery_status_name} %></td>
+    <td style="text-align: center;"><%= safe{item.delivery_status} %></td>
     <td style="text-align: center;"><%= safe{item.status.name} %></td>
   <% end %>
 

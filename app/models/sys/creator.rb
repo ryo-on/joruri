@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Sys::Creator < ActiveRecord::Base
   include Sys::Model::Base
   

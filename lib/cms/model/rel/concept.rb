@@ -1,6 +1,6 @@
+# encoding: utf-8
 module Cms::Model::Rel::Concept
   def self.included(mod)
-    #mod.has_one :concept, :primary_key => 'concept_id', :foreign_key => 'id', :class_name => 'Cms::Concept'
     mod.belongs_to :concept, :foreign_key => 'concept_id', :class_name => 'Cms::Concept'
   end
 

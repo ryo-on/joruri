@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Faq::Admin::Docs::RecognizeController < Faq::Admin::DocsController
   def index
     item = Faq::Doc.new

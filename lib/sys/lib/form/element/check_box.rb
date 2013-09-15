@@ -20,7 +20,7 @@ class Sys::Lib::Form::Element::CheckBox < Sys::Lib::Form::Element::Base
       tag += "</div>"
     end
     tag += "</div>"
-    tag
+    tag.html_safe
   end
   
   def make_frozen_tag
@@ -31,7 +31,7 @@ class Sys::Lib::Form::Element::CheckBox < Sys::Lib::Form::Element::Base
       next if v.blank?
       tag += @form.template.hidden_field_tag("#{tag_name}[#{k}]", v)
     end
-    tag
+    tag.html_safe
   end
   
   def make_frozen_value

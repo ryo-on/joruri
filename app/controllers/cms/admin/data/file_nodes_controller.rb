@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Cms::Admin::Data::FileNodesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   include Sys::Controller::Scaffold::Publication
@@ -10,7 +11,8 @@ class Cms::Admin::Data::FileNodesController < Cms::Controller::Admin::Base
   end
 
   def index
-    item = Cms::DataFileNode.new.readable
+    item = Cms::DataFileNode.new
+    item.readable if params[:s_target] != "all"
     item.search params
     item.page  params[:page], params[:limit]
     item.order params[:sort], 'name, id'

@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Cms::Admin::Node::BaseController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   include Sys::Controller::Scaffold::Recognition

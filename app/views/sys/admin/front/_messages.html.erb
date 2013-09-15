@@ -1,39 +1,22 @@
-<script type="text/javascript">
-function openMessage(id){
-  var elm = document.getElementById(id);
-  if (elm.style.display == 'block') {
-    elm.style.display = 'none';
-  } else {
-    elm.style.display = 'block';
-  }
-  return false;
-}
-</script>
+<div class="frontMessage frontMessageNews">
 
-<div id="messages" class="piace">
-<div class="piaceHeader">
-  <div class="title">お知らせ
-    <%= link_to '［管理］', sys_messages_path if Core.user.has_auth?(:manager)%></div>
+<div class="header">
+  お知らせ <%= link_to '[管理]', sys_messages_path if Core.user.has_auth?(:manager) %>
 </div>
 
-<div class="piaceBody">
 <ul>
   <% if @messages.size == 0 %>
-  <li>お知らせはありません</li>
+  <li><div class="title">お知らせはありません</div></li>
   <% end %>
   
   <% @messages.each do |item| %>
-  <% eid = "message#{item.id}" %>
   <li>
-    <p><a href="#" onclick="return openMessage('<%= eid %>');">
-      <%= item.title %></a> （<%= item.published_at.strftime('%Y-%m-%d %H:%M') %>）</p>
-    <div id="<%= eid %>" class="body"><%= item.body %></div>
+    <div class="title">
+      <a href="#" onclick="$('#frmsg<%= item.id %>').toggle(); return false;">
+        <%= item.title %></a>（<%= item.published_at.strftime('%Y-%m-%d %H:%M') %>）</div>
+    <div id="frmsg<%= item.id %>" class="body"><%== item.body %></div>
   </li>
   <% end %>
 </ul>
-</div>
-
-<div class="piaceFooter"></div>
-
 
 </div>

@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Sys::EditableGroup < ActiveRecord::Base
   include Sys::Model::Base
   

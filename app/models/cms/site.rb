@@ -45,8 +45,10 @@ class Cms::Site < ActiveRecord::Base
     full_uri.gsub(/^[a-z]+:\/\/([^\/]+)\/.*/, '\1')
   end
   
-  def publish_uri
-    "#{Core.full_uri}_publish/#{format('%08d', id)}/"
+  def admin_uri(options = {}) # full_uri
+    uri  = admin_full_uri.blank? ? Core.full_uri : admin_full_uri
+    uri += options[:path].gsub(/^\//, '') if options[:path]
+    uri
   end
   
   def has_mobile?
@@ -64,6 +66,7 @@ class Cms::Site < ActiveRecord::Base
     end
     if options[:include_self]
       sites << "#{full_uri}" if !full_uri.blank?
+      sites << "#{alias_full_uri}" if !alias_full_uri.blank?
       sites << "#{mobile_full_uri}" if !mobile_full_uri.blank?
     end
     sites
@@ -74,6 +77,7 @@ class Cms::Site < ActiveRecord::Base
       item = Cms::Site.new.public
       item.and Condition.new do |c|
         c.or :full_uri, 'LIKE', "http://#{_base}%"
+        c.or :alias_full_uri, 'LIKE', "http://#{_base}%"
         c.or :mobile_full_uri, 'LIKE', "http://#{_base}%"
       end
       item.find(:first, :order => :id)

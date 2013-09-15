@@ -1,4 +1,4 @@
-<h2><%=h @content.name %></h2>
+<h2><%= @content.name %></h2>
 
 <div class="actionMenu">
 <%= action_menu :new if Core.user.has_auth?(:designer) && Core.user.has_priv?(:create, :item => Core.concept) %>

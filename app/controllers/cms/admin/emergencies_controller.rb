@@ -54,18 +54,18 @@ class Cms::Admin::EmergenciesController < Cms::Controller::Admin::Base
     @item = Cms::SiteSetting::EmergencyLayout.new.current_site.find(params[:id])
     
     if @item.value.blank?
-      @item.errors.add_to_base "レイアウトが登録されていません。"
+      @item.errors.add :base, "レイアウトが登録されていません。"
     end
     unless layout = Cms::Layout.find_by_id(@item.value)
-      @item.errors.add_to_base "レイアウトが見つかりません。"
+      @item.errors.add :base, "レイアウトが見つかりません。"
     end
     unless @node
-      @item.errors.add_to_base "トップページが見つかりません。"
+      @item.errors.add :base, "トップページが見つかりません。"
     end
     
     if @item.errors.size == 0
       @node.layout_id = @item.value
-      @node.save(false)
+      @node.save(:validate => false)
       publish_page(@node)
     end
     
@@ -88,11 +88,11 @@ class Cms::Admin::EmergenciesController < Cms::Controller::Admin::Base
     uri  = item.public_uri
     uri  = (uri =~ /\?/) ? uri.gsub(/(.*\.html)\?/, '\\1') : "#{uri}"
     path = "#{item.public_path}"
-    item.publish_page(render_public_as_string(uri, :site => item.site), :path => path)
+    item.publish_page(render_public_as_string(uri, :site => item.site), :path => path, :uri => uri)
     
     uri  = item.public_uri
     uri  = (uri =~ /\?/) ? uri.gsub(/(.*\.html)\?/, '\\1.r?') : "#{uri}.r"
     path = "#{item.public_path}.r"
-    item.publish_page(render_public_as_string(uri, :site => item.site), :path => path, :dependent => :ruby)
+    item.publish_page(render_public_as_string(uri, :site => item.site), :path => path, :uri => uri, :dependent => :ruby)
   end
 end

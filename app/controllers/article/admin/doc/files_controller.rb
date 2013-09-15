@@ -1,14 +1,14 @@
+# encoding: utf-8
 class Article::Admin::Doc::FilesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   
   def pre_dispatch
     simple_layout
-    @parent = params[:parent]
-    @tmp    = true if @parent.size == 32
     
-    if params[:content]
-      @content = Article::Content::Doc.find_by_id(params[:content])
-    end
+    @parent  = params[:parent]
+    @tmp     = true if @parent.size == 32
+    @content = Article::Content::Doc.find_by_id(params[:content]) if params[:content]
+    
     return http_error(404) if @content.nil? || @content.model != 'Article::Doc'
   end
   
@@ -31,6 +31,7 @@ class Article::Admin::Doc::FilesController < Cms::Controller::Admin::Base
   def show
     @item = Sys::File.new.find(params[:id])
     return error_auth unless @item.readable?
+    
     _show @item
   end
 
@@ -96,9 +97,15 @@ class Article::Admin::Doc::FilesController < Cms::Controller::Admin::Base
     
     if params[:thumb]
       file_path = @file.upload_path(:type => :thumb)
-      file_path = @file.upload_path unless ::File.exists?(file_path)
     end
     
-    send_file file_path, :type => @file.mime_type, :filename => @file.name, :disposition => 'inline'
+    send_storage_file file_path, :type => @file.mime_type, :filename => @file.name
+  end
+  
+  def preview
+    return http_error(404) if params[:path].blank?
+    params[:thumb] = true if params[:path] =~ /\/thumb\//
+    params[:name]  = ::File.basename(params[:path])
+    download
   end
 end

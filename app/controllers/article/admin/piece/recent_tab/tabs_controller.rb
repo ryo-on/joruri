@@ -7,7 +7,7 @@ class Article::Admin::Piece::RecentTab::TabsController < Cms::Controller::Admin:
     return error_auth unless @piece = Cms::Piece.find(params[:piece])
     return error_auth unless @piece.editable?
     return error_auth unless @content = @piece.content
-    default_url_options :piece => @piece
+    #default_url_options[:piece] = @piece
   end
   
   def index

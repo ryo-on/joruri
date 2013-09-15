@@ -1,3 +1,5 @@
+<p class="form">基本情報</p>
+
 <table class="show">
   <tr>
     <th><%= @item.locale :state %></th>
@@ -6,10 +8,10 @@
   <%= concept_form f %>
   <tr>
     <th><%= @item.locale(:content_id) %></th>
-    <td><%= f.select :content_id, @contents, {}, :onchange => "onchangeConentId()" %></td>
+    <td><%= f.select :content_id, @contents, {}, :onchange2 => "onchangeConentId()" %></td>
   </tr><tr>
     <th><%= @item.locale(:model) %></th>
-    <td><%= f.select :model, @models, :include_blank => "" %></td>
+    <td><%= f.select :model, @models, :include_blank => "　" %></td>
   </tr><tr>
     <th><%= @item.locale :name %></th>
     <td><%= f.text_field :name, :class => 'id' %></td>
@@ -24,18 +26,9 @@
 
 <%= observe_field :item_concept_id, :update => :item_content_id, :with => 'concept_id',
   :url => {:action => :content_options} %>
-<%= observe_field(:item_concept_id, :update => :item_model, :with => "'content_id='",
+<%= observe_field(:item_concept_id, :update => :item_model, :with => 'content_id',
   :url => {:action => :model_options}) %>
-<%#= observe_field(:item_content_id, :update => :item_model, :with => 'content_id',
+<%= observe_field(:item_content_id, :update => :item_model, :with => 'content_id',
   :url => {:action => :model_options}) %>
-
-<script type="text/javascript">
-//<![CDATA[
-function onchangeConentId() {
-  var value = $('item_content_id').value;
-  new Ajax.Updater('item_model', '<%=h url_for(:action => :model_options) %>', {asynchronous:true, evalScripts:true, parameters:'content_id=' + encodeURIComponent(value) + '&authenticity_token=' + encodeURIComponent('<%=h form_authenticity_token %>')});
-}
-//]]>
-</script>
 
 <%= creator_form f %>

@@ -1,8 +1,8 @@
-<% form_for :item, :url => {:action => :update}, :html => {:method => :put} do |f| %>
+<%= form_for :item, :url => {:action => :update}, :html => {:method => :put} do |f| %>
   
-<%= f.error_messages %>
+<%= error_messages_for :item %>
 
-<%= render :partial => 'form', :locals => {:f => f} %>
+<%= render :partial => 'cms/admin/contents/form', :locals => {:f => f} %>
 
 <%= submit :edit %>
 

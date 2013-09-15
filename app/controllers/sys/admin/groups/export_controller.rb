@@ -1,7 +1,8 @@
 # encoding: utf-8
+require 'nkf'
+require 'csv'
 class Sys::Admin::Groups::ExportController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
-  require 'faster_csv'
   
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:manager)
@@ -31,7 +32,7 @@ class Sys::Admin::Groups::ExportController < Cms::Controller::Admin::Base
   end
 
   def export_groups
-    csv = FasterCSV.generate do |csv|
+    csv = CSV.generate do |csv|
       csv << [:code, :parent_code, :state, :web_state, :level_no, :sort_no,
         :layout_id, :ldap, :ldap_version, :name, :name_en, :tel, :outline_uri, :email]
       all_groups.each do |group|
@@ -54,14 +55,12 @@ class Sys::Admin::Groups::ExportController < Cms::Controller::Admin::Base
       end
     end
     
-    require 'nkf'
     csv = NKF.nkf('-s', csv)
-    
     send_data(csv, :type => 'text/csv', :filename => "sys_groups_#{Time.now.to_i}.csv")
   end
 
   def export_users
-    csv = FasterCSV.generate do |csv|
+    csv = CSV.generate do |csv|
       csv << [:account, :state, :name, :name_en, :email, :auth_no, :password, :ldap, :ldap_version,
         :group_code]
       Sys::User.find(:all, :order => :id).each do |user|
@@ -81,9 +80,7 @@ class Sys::Admin::Groups::ExportController < Cms::Controller::Admin::Base
       end
     end
     
-    require 'nkf'
     csv = NKF.nkf('-s', csv)
-    
     send_data(csv, :type => 'text/csv', :filename => "sys_users_#{Time.now.to_i}.csv")
   end
 end

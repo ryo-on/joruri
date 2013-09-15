@@ -31,6 +31,10 @@ class Cms::Concept < ActiveRecord::Base
     end
   end
   
+  def targets
+    [['現在のコンセプトから','current'], ['すべてのコンセプトから','all']]
+  end
+  
   def readable_children
     item = Cms::Concept.new
     item.has_priv(:read, :user => Core.user)
@@ -43,10 +47,11 @@ class Cms::Concept < ActiveRecord::Base
   def parent
     self.class.find_by_id(parent_id)
   end
-  
-  def contents
-    Cms::Content.find(:all, :conditions => {:concept_id => id}, :order => :name)
-  end
+
+  #contentsメソッドがあるとサイトの削除で delete_all エラーが出る
+#  def contents
+#    Cms::Content.find(:all, :conditions => {:concept_id => id}, :order => :name)
+#  end
   
   def self.find_by_path(path)
     return nil if path.to_s == ''

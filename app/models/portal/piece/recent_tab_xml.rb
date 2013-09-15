@@ -1,6 +1,6 @@
 # encoding: utf-8
 class Portal::Piece::RecentTabXml < Cms::Model::Base::PieceExtension
-  set_model_name  "portal/piece/doc_tab"
+  set_model_name  "portal/piece/recent_tab"
   set_column_name :xml_properties
   set_node_xpath  "groups/group"
   set_primary_key :name

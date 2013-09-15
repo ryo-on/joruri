@@ -10,4 +10,4 @@ ja:
         body: "内容"
         image_file_id: "画像"
       calendar/node/event:
-        list_type: "一覧表示形式"
+        list_type: "日別表示形式"

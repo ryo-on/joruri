@@ -1,19 +1,17 @@
 # encoding: utf-8
 class Cms::Piece::SnsSharing < Cms::Piece
   
-  attr_accessor :in_link_types
-  
   before_save :set_link_types
   
   def in_link_types
-    unless val = read_attribute(:in_link_types) 
-      write_attribute(:in_link_types, link_types_array)
+    unless val = @in_link_types 
+      @in_link_types = link_types_array
     end
-    read_attribute(:in_link_types)
+    @in_link_types
   end
   
   def in_link_types=(values)
-    write_attribute(:in_link_types, values.keys)
+    @in_link_types = values.keys
   end
   
   def link_type_options

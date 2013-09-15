@@ -20,7 +20,7 @@ checked = item.in_embedded_file && item.in_embedded_file["_delete_#{name}"] ? 'c
 </div>
 
 <% if thumb %>
-<img src="<%= embedded_thumbnail_path(file) %>" style="vertical-align: top; <%= file.reduced_size(:width => 60, :height => 40, :css => true) %>" />
+<img src="<%= embedded_thumbnail_path(file) %>" style="vertical-align: top; <%= file.reduce_size(:width => 60, :height => 40, :thumbnail => true, :css => true) %>" />
 <% end %>
 
 <label><input type="checkbox" name="<%= cbox_name %>" value="1" <%= checked %> />削除する</label>

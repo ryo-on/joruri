@@ -1,12 +1,12 @@
-<% form_for :item, :url => {:action => :update},
+<%= form_for :item, :url => {:action => :update},
   :html => {:method => :put, :multipart => true, :id => 'itemForm', :autocomplete => "off"} do |f| %>
   
-<%= f.error_messages %>
+<%= error_messages_for :item %>
 
 <% if @checker
 checkbox = check_box_tag(:link_check, 0, params[:link_check] == "0") +
-  %Q(<label for="link_check">エラーを無視する</label>)
-%><%= @checker.notice_messages(:checkbox => checkbox) %>
+  %Q(<label for="link_check">エラーを無視する</label>).html_safe
+%><%== @checker.notice_messages(:checkbox => checkbox) %>
 <% end %>
 
 <%= render :partial => 'form', :locals => {:f => f} %>

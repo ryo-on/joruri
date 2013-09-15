@@ -22,7 +22,7 @@ areas      = Article::Area.root_items(:content_id => @content.id)
       <table class="noDesign">
         <tr>
           <td>結合</td>
-          <td><%= f.select :condition, @item.condition_states, :include_blank => true %></td>
+          <td><%= f.select :condition, @item.condition_states, :include_blank => "　" %></td>
         </tr><tr>
           <td>組織</td>
           <td>

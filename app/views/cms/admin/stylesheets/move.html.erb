@@ -1,6 +1,8 @@
-<% form_for :item, :url => "?do=move", :html => {:method => :put} do |f| %>
+<%= form_for :item, :url => "?do=move", :html => {:method => :put} do |f| %>
   
-<%= f.error_messages %>
+<%= error_messages_for :item %>
+
+<p class="form">移動</p>
 
 <table class="show">
   <tr>

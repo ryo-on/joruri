@@ -70,14 +70,14 @@ class Cms::Admin::NodesController < Cms::Controller::Admin::Base
     @item.published_at = Core.now
     @item.directory    = (@item.model_type == :directory)
     @item.name         = "tmp" # for validation
-    @item.title        = @item.model_name.to_s.gsub(/.*\//, '')
+    @item.title        = (@item.model_name || "新規").to_s.gsub(/.*\//, '')
     
     @contents = content_options(false)
     @models   = model_options(false)
     
     _create(@item) do
       @item.name = nil # for validation
-      @item.save(false)
+      @item.save(:validate => false)
       respond_to do |format|
         format.html { return redirect_to(@item.admin_uri) }
       end

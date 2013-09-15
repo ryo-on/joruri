@@ -8,7 +8,8 @@ class Cms::Admin::Data::TextsController < Cms::Controller::Admin::Base
   end
   
   def index
-    item = Cms::DataText.new.readable
+    item = Cms::DataText.new
+    item.readable if params[:s_target] != "all"
     item.search params
     item.page  params[:page], params[:limit]
     item.order params[:sort], 'name, id'

@@ -17,13 +17,12 @@
   background-position: left top;
 }
 .contentArticleArea .latest h2 {
-  height: 30px;
-  line-height: 30px;
   margin-bottom: 10px;
-  padding-left: 10px;
-  background-image: url(./images/tl-shinchaku.gif);
-  background-repeat: no-repeat;
-  background-position: left top;
+  padding: 3px 10px;
+  background:#0952EB;
+  background: -moz-linear-gradient(top, #0952EB, #001C66);
+  background: -webkit-gradient(linear, center top, center bottom, from(#0952EB), to(#001C66));
+  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#0952EB', endColorstr='#001C69');
   color: #ffffff;
   font-weight: bold;
   font-size: 120%;
@@ -48,35 +47,6 @@
 .more {
   padding: 0 5px 10px 0;
   text-align: right;
-}
-
-/* RSS Atom
------------------------------------------------ */
-.feed {
-  position: relative;
-  top: -32px;
-  right: 10px;
-  float: right;
-  height: 13px;
-  background-color: transparent;
-}
-.feed a.feedRss {
-  display: inline-block;
-  width: 40px;
-  height: 13px;
-  overflow: hidden;
-  background-image: url(./images/bt-rss.gif);
-  background-repeat: no-repeat;
-  text-indent: 50px;
-}
-.feed a.feedAtom {
-  display: inline-block;
-  width: 40px;
-  height: 13px;
-  overflow: hidden;
-  background-image: url(./images/bt-atom.gif);
-  background-repeat: no-repeat;
-  text-indent: 50px;
 }
 
 /* Area Map
@@ -152,17 +122,62 @@ table.city tr.cycle {
 .contentArticleArea td.address {
   width: 25%;
 }
-
-/* pagination
+/* Soshiki Ichiran date
 ----------------------------------------------- */
-.pagination {
-  text-align: center;
+.contentArticleArea dl:after {
+  content: ".";
+  display: block;
+  clear: both;
+  height: 0;
+  visibility: hidden;
 }
-.pagination a {
-  padding: 0 6px;
+* html .contentArticleArea dl {
+  height: 1%;
 }
-.pagination span.current {
-  padding: 0 3px;
-  font-weight: bold;
-  font-size: 150%;
+.contentArticleArea dl {
+  clear: both;
+  display: block;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+.contentArticleArea dl.cycle {
+  background: #eee;
+}
+.contentArticleArea dl.ward {
+  border: 1px solid #ccc;
+  background: #E3F0FA;
+}
+.contentArticleArea dt {
+  float: left;
+  padding: 5px 10px;
+}
+.contentArticleArea dd {
+  float: left;
+  padding: 5px 10px;
+}
+.contentArticleArea dl {
+  display: block;
+  width: 100%;
+}
+.contentArticleArea dd {
+  margin: 0;
+}
+.contentArticleArea dt.name {
+  width: 10%;
+}
+.contentArticleArea dd.page {
+  display: table;
+  width: 15%;
+}
+.contentArticleArea dd.zipCode {
+  width: 10%;
+}
+.contentArticleArea dd.address {
+  width: 20%;
+}
+.contentArticleArea dd.tel {
+  width: 10%;
+}
+.contentArticleArea dd.formal {
+  width: 15%;
 }

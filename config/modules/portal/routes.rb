@@ -1,75 +1,71 @@
-ActionController::Routing::Routes.draw do |map|
+Joruri::Application.routes.draw do
   mod = "portal"
 
+  ## -------------------------------------------------------
   ## admin
-  map.namespace(mod, :namespace => '') do |ns|
-    ns.resources :feeds,
-      :controller  => "admin/feeds",
-      :path_prefix => "/_admin/#{mod}/:content"
-    ns.resources :feed_entries,
-      :controller  => "admin/feed_entries",
-      :path_prefix => "/_admin/#{mod}/:content/:feed"
-    ns.resources :categories,
-      :controller  => "admin/categories",
-      :path_prefix => "/_admin/#{mod}/:content/:parent"
+  
+  scope "#{Joruri.admin_uri}/#{mod}/c:concept", :module => mod, :as => mod do
+    
+    resources :feeds,
+      :controller => "admin/feeds",
+      :path       => ":content/feeds"
+    resources :feed_entries,
+      :controller => "admin/feed_entries",
+      :path       => ":content/:feed/feed_entries"
+    resources :categories,
+      :controller => "admin/categories",
+      :path       => ":content/:parent/categories"
 
+    ## -----------------------------------------------------
     ## content
-    ns.resources :content_base,
-      :controller => "admin/content/base",
-      :path_prefix => "/_admin/#{mod}"
-    ns.resources :content_settings,
-      :controller  => "admin/content/settings",
-      :path_prefix => "/_admin/#{mod}/:content"
+    
+    resources :content_base,
+      :controller => "admin/content/base"
+    resources :content_settings,
+      :controller => "admin/content/settings",
+      :path       => ":content/content_settings"
 
+    ## ---------------------------------------------------
     ## node
-    ns.resources :node_feed_entries,
-      :controller  => "admin/node/feed_entries",
-      :path_prefix => "/_admin/#{mod}/:parent"
-    ns.resources :node_event_entries,
-      :controller  => "admin/node/event_entries",
-      :path_prefix => "/_admin/#{mod}/:parent"
-    ns.resources :node_categories,
-      :controller  => "admin/node/categories",
-      :path_prefix => "/_admin/#{mod}/:parent"
+    
+    resources :node_feed_entries,
+      :controller => "admin/node/feed_entries",
+      :path       => ":parent/node_feed_entries"
+    resources :node_event_entries,
+      :controller => "admin/node/event_entries",
+      :path       => ":parent/node_event_entries"
+    resources :node_categories,
+      :controller => "admin/node/categories",
+      :path       => ":parent/node_categories"
 
+    ## -----------------------------------------------------
     ## piece
-    ns.resources :piece_feed_entries,
-      :controller  => "admin/piece/feed_entries",
-      :path_prefix => "/_admin/#{mod}"
-    ns.resources :piece_feed_entry_conditions,
-      :controller  => "admin/piece/feed_entry/conditions",
-      :path_prefix => "/_admin/#{mod}/:piece"
-    ns.resources :piece_recent_tabs,
-      :controller  => "admin/piece/recent_tabs",
-      :path_prefix => "/_admin/#{mod}"
-    ns.resources :piece_recent_tab_tabs,
-      :controller  => "admin/piece/recent_tab/tabs",
-      :path_prefix => "/_admin/#{mod}/:piece"
-    ns.resources :piece_calendars,
-      :controller  => "admin/piece/calendars",
-      :path_prefix => "/_admin/#{mod}"
-    ns.resources :piece_categories,
-      :controller  => "admin/piece/categories",
-      :path_prefix => "/_admin/#{mod}"
-
+    
+    resources :piece_feed_entries,
+      :controller => "admin/piece/feed_entries"
+    resources :piece_feed_entry_conditions,
+      :controller => "admin/piece/feed_entry/conditions",
+      :path       => ":piece/piece_feed_entry_conditions"
+    resources :piece_recent_tabs,
+      :controller => "admin/piece/recent_tabs"
+    resources :piece_recent_tab_tabs,
+      :controller => "admin/piece/recent_tab/tabs",
+      :path       => ":piece/piece_recent_tab_tabs"
+    resources :piece_calendars,
+      :controller => "admin/piece/calendars"
+    resources :piece_categories,
+      :controller => "admin/piece/categories"
   end
 
+  ## -------------------------------------------------------
   ## public
-  map.namespace(mod, :namespace => '', :path_prefix => '/_public') do |ns|
-    ns.connect "node_feed_entries/index.:format",
-      :controller => "public/node/feed_entries",
-      :action     => :index
-    ns.connect "node_event_entries/:year/:month/index.html",
-      :controller => "public/node/event_entries",
-      :action     => :month
-    ns.connect "node_event_entries/index.html",
-      :controller => "public/node/event_entries",
-      :action     => :month
-    ns.connect "node_categories/:name/:file.:format",
-      :controller => "public/node/categories",
-      :action     => :show
-    ns.connect "node_categories/index.html",
-      :controller => "public/node/categories",
-      :action     => :index
+  
+  scope "_public/#{mod}", :module => mod, :as => "" do
+    
+    match "node_feed_entries/index.:format"            => "public/node/feed_entries#index"
+    match "node_event_entries/:year/:month/index.html" => "public/node/event_entries#month"
+    match "node_event_entries/index.html"              => "public/node/event_entries#month"
+    match "node_categories/:name/:file.:format"        => "public/node/categories#show"
+    match "node_categories/index.html"                 => "public/node/categories#index"
   end
 end

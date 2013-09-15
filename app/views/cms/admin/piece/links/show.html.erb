@@ -4,7 +4,7 @@
   <%= piece_base_view @item, :container => :tr %>
 </table>
 
-<br /><p class="form">リンク設定</p>
+<p class="form">リンク設定</p>
 
 <div class="actionMenu">
   <%= link_to(:edit, cms_piece_link_items_path(@item.id)) if safe{@item.editable?} %>

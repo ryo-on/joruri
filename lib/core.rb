@@ -49,20 +49,9 @@ class Core
     return @@now = Time.now.to_s(:db)
   end
   
-  ## Absolute path.
-  def self.uri
-    return '/' unless @@config['uri'].match(/^[a-z]+:\/\/[^\/]+\//)
-    @@config['uri'].sub(/^[a-z]+:\/\/[^\/]+\//, '/')
-  end
-  
-  ## Full URI.
-  def self.full_uri
-    @@config['uri']
-  end
-  
   ## Proxy.
-  def self.proxy
-    @@config['proxy']
+  def self.proxy(schema = "http")
+    schema.to_s =~ /^https/ ? (@@config['https_proxy'] || @@config['http_proxy']) : @@config['http_proxy']
   end
   
   ## Parses query string.
@@ -75,6 +64,12 @@ class Core
     old = @@mode
     @@mode = mode
     return old
+  end
+  
+  ## URI
+  def self.full_uri
+    #@@env["SCRIPT_URI"].gsub(/^([a-z]+:\/\/[^\/]+\/).*/, '\\1')
+    "#{@@env['rack.url_scheme']}://#{@@env['HTTP_HOST']}/"
   end
   
   ## LDAP.
@@ -162,24 +157,19 @@ class Core
     key.nil? ? @@concept : @@concept.send(key)
   end
   
-  def self.set_concept(session, concept_id = nil)
-    if concept_id
-      @@concept = Cms::Concept.find_by_id(concept_id)
-      @@concept = Cms::Concept.new.readable_children[0] unless @@concept
-      session[:cms_concept] = (@@concept ? @@concept.id : nil)
-    else
-      concept_id = session[:cms_concept]
-      @@concept = Cms::Concept.find_by_id(concept_id)
-      @@concept = Cms::Concept.new.readable_children[0] unless @@concept
-    end
+  def self.concept_id=(concept_id)
+    @@concept = concept_id ? Cms::Concept.find_by_id(concept_id) : nil
+    @@concept = Cms::Concept.new.readable_children[0] unless @@concept
   end
   
 private
   def self.recognize_mode
-    if (@@request_uri =~ /^\/_[a-z]+(\/|$)/)
+    if @@request_uri =~ /^#{Regexp.escape(Joruri.admin_uri)}/
+      @@mode = "admin"
+    elsif @@request_uri =~ /^\/_[a-z]+(\/|$)/
       @@mode = @@request_uri.gsub(/^\/_([a-z]+).*/, '\1')
     else
-      @@mode = 'public'
+      @@mode = "public"
     end
   end
   
@@ -199,10 +189,15 @@ private
     when 'public'
       @@site         = Cms::Site.find_by_script_uri(@@script_uri)
       Page.site      = @@site
-      #if @@site.nil? && env['SCRIPT_URI'].index(Core.full_uri) == 0
-      #  @@site       = Cms::Site.find(:first, :order => :id)
-      #end
       @@internal_uri = search_node @@request_uri
+    when 'common'
+      @@site         = Cms::Site.find_by_script_uri(@@script_uri)
+      Page.site      = @@site
+      @@internal_uri = @@request_uri
+    when 'layouts'
+      @@site         = Cms::Site.find_by_script_uri(@@script_uri)
+      Page.site      = @@site
+      @@internal_uri = @@request_uri
     when 'files'
       @@site         = Cms::Site.find_by_script_uri(@@script_uri)
       Page.site      = @@site
@@ -224,10 +219,23 @@ private
     end
   end
   
-  def self.get_site_by_cookie
+  def self.get_site_by_cookie # admin
     site_id = self.get_cookie('cms_site')
     return Cms::Site.find_by_id(site_id) if site_id
-    return Cms::Site.find(:first, :order => :id)
+    
+    host = Cms::Site.connection.quote_string(@@env["HTTP_HOST"].to_s).gsub(/([_%])/, '\\\\\1')
+    
+    site = Cms::Site.new
+    site.and :admin_full_uri, "LIKE", "http://#{host}/%"
+    site = site.find(:first, :order => :id)
+    return site if site
+    
+    site = Cms::Site.new
+    site.and do |c|
+      c.or :admin_full_uri, "IS", nil
+      c.or :admin_full_uri, ""
+    end
+    return site.find(:first, :order => :id)
   end
   
   def self.get_cookie(name)

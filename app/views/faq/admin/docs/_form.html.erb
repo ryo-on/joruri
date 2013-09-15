@@ -1,7 +1,20 @@
 <script type="text/javascript" src="/_common/js/swfupload/swfupload.js"></script>
+<%= javascript_tag do %>
+// イベントカレンダー
+$(function() {
+  $('#item_event_date').change(function() {
+    if ($(this).val() != "") {
+      $('#item_event_state_visible').attr('checked', true);
+    } else {
+      $('#item_event_state_hidden').attr('checked', true);
+    }
+  });
+});
+<% end %>
+
 <%= disable_enter_key_js %>
 <% inline_id = @item.unid || params[:_tmp] %>
-<%= init_tiny_mce :document_base_url => "/_admin/sys/#{inline_id}/inline_files/" %>
+<%= init_tiny_mce :document_base_url => faq_preview_doc_file_path(:parent => inline_id, :path => '') %>
 
 <span class="note">※は必須項目です。</span>
 
@@ -25,7 +38,7 @@
     </td>
   </tr>
   <tr>
-    <th colspan="4">回答</th></tr><tr>
+    <th colspan="4">回答 <span class="note">※</span></th></tr><tr>
     <td colspan="4" class="mceEditor">
       <%= f.text_area :body, :class => 'body mceEditor', :style => 'height: 400px;' %>
     </td>
@@ -59,9 +72,9 @@
   </tr>
 </table>
 
-<br /><p class="form">携帯向け</p>
+<p class="form">携帯向け</p>
 
-<div style="margin: 10px;"><a id="map_disp" href="#" onclick="return $(this).toggleOpen('mobileForm');">開く▼</a></div>
+<div style="margin: 10px;"><a id="map_disp" href="#" onclick="return $(this).toggleOpen('#mobileForm');">開く▼</a></div>
 <table class="show" id="mobileForm" style="display: none;">
   <tr>
     <th><%= @item.locale(:mobile_body) %></th>
@@ -72,12 +85,14 @@
 <%#= google_map_form f %>
 <%= inquiry_form f %>
 
-<br />
 <p class="form">公開日時設定</p>
+
 <table class="show">
   <tr>
     <th>表示日時</th>
-    <td><%= f.calendar_date_select :published_at, :class => 'dateTime', :time=> true %></td>
+    <td>
+      <%= f.text_field :published_at, :class => 'datetime' %>
+  </td>
   </tr>
 </table>
 

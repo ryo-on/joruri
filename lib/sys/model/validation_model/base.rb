@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Sys::Model::ValidationModel::Base
   include Sys::Model::ValidationModel
   
@@ -9,7 +10,7 @@ class Sys::Model::ValidationModel::Base
     nil
   end
   
-  def self.human_attribute_name(name)
+  def self.human_attribute_name(name, options = {})
     label = I18n.t name, :scope => [:activerecord, :attributes, model_name.to_s.underscore]
     label =~ /^translation missing:/ ? name.to_s.humanize : label
   end

@@ -1,36 +1,22 @@
 # encoding: utf-8
 module Joruri
-  def self.version
-    "1.3.2"
-  end
   
-  def self.default_config
-    { "application" => {
-      "sys.crypt_pass"                => "joruri",
-      "cms.publish_more_pages"        => 0
-    }}
+  def self.version
+    "2.0.0"
   end
   
   def self.config
-    $joruri_config ||= {}
-    Joruri::Config
+    if !defined?($joruri_config)
+      $joruri_config = {}
+      YAML.load_file("#{Rails.root}/config/application.yml").each do |mod, v|
+        v.each {|key, val| $joruri_config["#{mod}_#{key}".to_sym] = val.blank? ? nil : val }
+      end
+    end
+    $joruri_config
   end
   
-  class Joruri::Config
-    def self.application
-      return $joruri_config[:imap_settings] if $joruri_config[:imap_settings]
-      
-      config = Joruri.default_config["application"]
-      file   = "#{Rails.root}/config/application.yml"
-      if ::File.exist?(file)
-        yml = YAML.load_file(file)
-        yml.each do |mod, values|
-          values.each do |key, value|
-            config["#{mod}.#{key}"] = value unless value.nil?
-          end if values
-        end if yml
-      end
-      $joruri_config[:application] = config
-    end
+  def self.admin_uri
+    Joruri.config[:sys_admin_uri]
   end
+  
 end

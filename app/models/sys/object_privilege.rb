@@ -10,13 +10,11 @@ class Sys::ObjectPrivilege < ActiveRecord::Base
   validates_presence_of :role_id, :item_unid
   validates_presence_of :action, :if => %Q(in_actions.blank?)
   
-  attr_accessor :in_actions
-  
   def in_actions
-    if read_attribute(:in_actions).nil?
-      write_attribute(:in_actions, actions)
+    if @in_actions.nil?
+      @in_actions = actions
     end
-    read_attribute(:in_actions)
+    @in_actions
   end
   
   def in_actions=(values)
@@ -24,9 +22,9 @@ class Sys::ObjectPrivilege < ActiveRecord::Base
     _values = []
     if values.class == Hash || values.class == HashWithIndifferentAccess
       values.each {|key, val| _values << key unless val.blank? }
-      write_attribute(:in_actions, _values)
+      @in_actions = _values
     else
-      write_attribute(:in_actions, values)
+      @in_actions = values
     end
   end
   

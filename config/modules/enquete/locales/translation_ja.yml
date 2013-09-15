@@ -3,7 +3,6 @@ ja:
     attributes: 
       enquete/content/base:
         email: "通知先メールアドレス"
-        
       enquete/form: 
         state: "状態"
         sort_no: "並び順"
@@ -11,6 +10,7 @@ ja:
         summary: "概要"
         body: "説明"
         sent_body: "送信後のメッセージ"
+        captcha: "画像認証"
       enquete/form_column: 
         state: "状態"
         sort_no: "並び順"

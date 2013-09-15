@@ -3,28 +3,26 @@ class Cms::Script::FeedsController < ApplicationController
   include Cms::Controller::Layout
 
   def read
-    success = 0
-    error   = 0
     feeds = Cms::Feed.find(:all, :conditions => { :state => 'public' })
-    #feeds = Cms::Feed.find(:all)
+    
+    Script.total feeds.size
+    
     feeds.each do |feed|
+      Script.current
+      
       begin
         if feed.update_feed
-          success += 1
+          Script.success
         else
-          raise 'DestroyFailed'
+          raise feed.uri
         end
+      rescue Script::InterruptException => e
+        raise e
       rescue => e
-        error += 1
+        Script.error e
       end
     end
 
-    if error > 0
-      puts "Finished. Success: #{success}, Error: #{error}"
-      render :text => "NG"
-    else
-      puts "Finished. Success: #{success}"
-      render :text => "OK"
-    end
+    render :text => "OK"
   end
 end

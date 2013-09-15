@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Cms::EmbeddedFile < ActiveRecord::Base
   include Sys::Model::Base
   include Sys::Model::Base::File
@@ -44,18 +45,24 @@ class Cms::EmbeddedFile < ActiveRecord::Base
     if state == "public"
       upl_path = upload_path
       pub_path = public_path
-      Util::File.put(pub_path, :src => upl_path, :mkdir => true) if FileTest.exist?(upl_path)
+      if ::Storage.exists?(upl_path)
+        ::Storage.mkdir_p(::File.dirname(upl_path))
+        ::Storage.cp(upl_path, pub_path)
+      end
       
       upl_path = ::File.dirname(upload_path) + "/thumb.dat"
       pub_path = ::File.dirname(public_path) + "/thumb/" + ::File.basename(public_uri)
-      Util::File.put(pub_path, :src => upl_path, :mkdir => true) if FileTest.exist?(upl_path)
+      if ::Storage.exists?(upl_path)
+        ::Storage.mkdir_p(::File.dirname(upl_path))
+        ::Storage.cp(upl_path, pub_path)
+      end
     end
     return true
   end
   
   def remove_public_file
     dir = ::File.dirname(public_path)
-    FileUtils.rm_rf(dir) if FileTest.exist?(dir)
+    ::Storage.rm_rf(dir) if ::Storage.exists?(dir)
     return true
   end
 end

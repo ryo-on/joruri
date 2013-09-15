@@ -1,23 +1,23 @@
+# encoding: utf-8
 module Article::Model::Rel::Doc::Area
-  attr_accessor :in_area_ids
   
   def in_area_ids
-    unless val = read_attribute(:in_area_ids)
-      write_attribute(:in_area_ids, area_ids.to_s.split(' ').uniq)
+    unless val = @in_area_ids
+      @in_area_ids = area_ids.to_s.split(' ').uniq
     end
-    read_attribute(:in_area_ids)
+    @in_area_ids
   end
   
   def in_area_ids=(ids)
     _ids = []
     if ids.class == Array
       ids.each {|val| _ids << val}
-      write_attribute(:area_ids, _ids.join(' '))
+      self.area_ids = _ids.join(' ')
     elsif ids.class == Hash || ids.class == HashWithIndifferentAccess
       ids.each {|key, val| _ids << key unless val.blank? }
-      write_attribute(:area_ids, _ids.join(' '))
+      self.area_ids = _ids.join(' ')
     else
-      write_attribute(:area_ids, ids)
+      self.area_ids = ids
     end
   end
   

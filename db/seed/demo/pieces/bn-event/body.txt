@@ -2,7 +2,7 @@
 <div class="pieceContainer">
 <div class="pieceBody">
 <a href="/calendar/">
-  <img title="年間行事" alt="年間行事" src="/_common/themes/joruri/top/images/bn-event.gif" /></a>
+年間行事</a>
 </div>
 </div>
 </div>

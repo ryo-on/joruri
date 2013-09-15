@@ -6,7 +6,7 @@ if fm
   fm_opt = fm[:options]
   value_form = eval("f.#{fm[:form]}(:value, #{fm_opt}#{',' if fm_opt} :style => '#{fm[:style]}', :class => '#{fm[:class]}' )")
 else
-  value_form = opt ? f.select(:value, opt, :include_blank => true) : f.text_field(:value, :style => "width: 400px;")
+  value_form = opt ? f.select(:value, opt, :include_blank => "　") : f.text_field(:value, :style => "width: 400px;")
 end
 
 %><%= init_tiny_mce %>
@@ -15,7 +15,7 @@ end
 <table class="show">
   <tr>
     <th>設定名</th>
-    <td><%=h @item.config_name %></td>
+    <td><%= @item.config_name %></td>
   </tr><tr>
     <th>設定値</th>
     <td><%= value_form %></td>

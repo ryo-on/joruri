@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Faq::Admin::Docs::PublishController < Faq::Admin::DocsController
   def index
     item = Faq::Doc.new.publishable

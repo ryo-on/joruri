@@ -9,10 +9,10 @@
     <th style="width: 60px; text-align: center;">プレビュー</th>
   </tr>
   <% for item in @items %>
-  <tr <%= cycle '', 'class="cycle"' %>>
-    <td style="text-align: center;"><%= link_to :show, url_for(:action => :show, :id => item) %></td>
-    <td><%=h item.name %></td>
-    <td><%=h item.title %></td>
+  <tr class="<%= cycle '', 'cycle' %>">
+    <td style="text-align: center;"><%= link_to :show, {:action => :show, :id => item, :concept => item.concept_id} %></td>
+    <td><%= item.name %></td>
+    <td><%= item.title %></td>
     <td style="text-align: center;"><%= item.updated_at.strftime('%Y-%m-%d %H:%M')%></td>
     <td style="text-align: center;"><% query = "layout_id=#{item.id}" %>
       <%= link_to "PC", "#{Core.site.root_node.preview_uri}*.html?#{query}", :target => "_blank" %>

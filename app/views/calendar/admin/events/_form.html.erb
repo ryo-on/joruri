@@ -8,10 +8,10 @@
     <td><%= f.radio_buttons :state, [["公開","public"],["非公開","closed"]], :class => 'states' %></td>
   </tr><tr>
     <th><%= @item.locale(:event_date) %> <span class="note">※</span></th>
-    <td><div class="fieldDatetime"><%= f.calendar_date_select :event_date, :class => 'date' %></div></td>
+    <td><%= f.text_field :event_date, :class => 'date' %></td>
   </tr><tr>
-    <th><%= @item.locale(:event_close_date) %> <span class="note">※</span></th>
-    <td><div class="fieldDatetime"><%= f.calendar_date_select :event_close_date, :class => 'date' %></div></td>
+    <th><%= @item.locale(:event_close_date) %></th>
+    <td><%= f.text_field :event_close_date, :class => 'date' %></td>
   </tr><tr>
     <th><%= @item.locale(:title) %> <span class="note">※</span></th>
     <td><%= f.text_area :title, :style => "width: 80%; height: 2.5em;" %></td>

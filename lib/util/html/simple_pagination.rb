@@ -7,8 +7,8 @@ class Util::Html::SimplePagination
   
   def initialize(params = {})
     @separator  = params[:separator] || '<span class="separator">|</span>'
-    @prev_label = params[:prev_label] || "&lt;前へ"
-    @next_label = params[:next_label] || "次へ&gt;"
+    @prev_label = params[:prev_label] || "<前へ"
+    @next_label = params[:next_label] || "次へ>"
     @prev_uri   = params[:prev_uri]
     @next_uri   = params[:next_uri]
   end
@@ -33,6 +33,6 @@ class Util::Html::SimplePagination
     end
     h += "\n"
     h += %Q(</div>)
-    h
+    h.html_safe
   end
 end

@@ -1,16 +1,16 @@
 <table class="show">
   <tr>
     <th>フォーム名</th>
-    <td><%=h @item.form.name %></td>
+    <td><%= @item.form.name %></td>
   </tr><tr>
     <th>回答日時</th>
     <td><%= safe{@item.created_at.strftime('%Y-%m-%d %H:%M')} %></td>
   </tr><tr>
     <th>IPアドレス</th>
-    <td><%=h @item.ipaddr %></td>
+    <td><%= @item.ipaddr %></td>
   </tr><tr>
     <th>ユーザエージェント</th>
-    <td><%=h @item.user_agent %></td>
+    <td><%= @item.user_agent %></td>
   </tr>
   
   <% @item.columns.each do |col| %>

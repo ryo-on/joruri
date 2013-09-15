@@ -8,7 +8,9 @@ else
   #layouts << ['// コンセプトが設定されていません', nil]
 end
 
-%><table class="show">
+%><p class="form">大規模災害レイアウト</p>
+
+<table class="show">
   <tr>
     <th><%= @item.locale :value %></th>
     <td><%= f.select(:value, layouts, :include_blank => '　　　　') %></td>

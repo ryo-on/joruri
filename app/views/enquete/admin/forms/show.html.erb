@@ -6,7 +6,7 @@
     <td><%= safe{@item.status.name} %></td>
   </tr><tr>
     <th><%= @item.locale(:name) %></th>
-    <td><%=h @item.name %></td>
+    <td><%= @item.name %></td>
   </tr><tr>
     <th><%= @item.locale(:summary) %></th>
     <td><%= text_area_tag 'viewSummary', @item.summary, :class => 'mceEditor', :style => 'height: 200px;' %></td>
@@ -18,7 +18,7 @@
     <td><%= text_area_tag 'viewSentBody', @item.sent_body, :class => 'mceEditor', :style => 'height: 200px;' %></td>
   </tr><tr>
     <th><%= @item.locale(:sort_no) %></th>
-    <td><%=h @item.sort_no %></td>
+    <td><%= @item.sort_no %></td>
   </tr>
 </table>
 

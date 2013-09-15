@@ -4,7 +4,6 @@
   <%= piece_base_view @item, :container => :tr %>
 </table>
 
-<br />
 <p class="form">詳細設定</p>
 
 <table class="show">
@@ -17,7 +16,6 @@
   </tr>
 </table>
 
-<br />
 <p class="form">タブ設定</p>
 
 <div class="actionMenu">
@@ -27,8 +25,8 @@
 <table class="show">
   <% Portal::Piece::RecentTabXml.find(:all, @piece).each_with_index do |item, idx| %>
   <tr>
-    <th>タブ <%=h idx + 1 %></th>
-    <td><%=h item.title %></td>
+    <th>タブ <%= idx + 1 %></th>
+    <td><%= item.title %></td>
   </tr>
   <% end %>
 </table>

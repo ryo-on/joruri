@@ -41,7 +41,7 @@ class Cms::Admin::Node::PagesController < Cms::Admin::Node::BaseController
     uri  = item.public_uri
     uri  = (uri =~ /\?/) ? uri.gsub(/(.*\.html)\?/, '\\1.r?') : "#{uri}.r"
     path = "#{item.public_path}.r"
-    item.publish_page(render_public_as_string(uri, :site => item.site), :path => path, :dependent => :ruby)
+    item.publish_page(render_public_as_string(uri, :site => item.site), :path => path, :uri => uri, :dependent => :ruby)
   end
   
   def publish(item)
@@ -51,7 +51,7 @@ class Cms::Admin::Node::PagesController < Cms::Admin::Node::BaseController
   
   def publish_by_update(item)
     item.public_uri = "#{item.public_uri}?node_id=#{item.id}"
-    if item.publish(render_public_as_string(item.public_uri))
+    if item.publish(render_public_as_string(item.public_uri), :uri => item.public_uri)
       publish_ruby(item)
       flash[:notice] = "公開処理が完了しました。"
     else
@@ -97,17 +97,22 @@ class Cms::Admin::Node::PagesController < Cms::Admin::Node::BaseController
   
 protected
   def send_recognition_request_mail(item, users = nil)
-    mail_fr = Core.user.email
-    mail_to = nil
-    subject = "ページ（#{item.site.name}）：承認依頼メール"
-    message = "#{Core.user.name}さんより「#{item.title}」についての承認依頼が届きました。\n" +
-      "次の手順により，承認作業を行ってください。\n\n" +
-      "１．PC用記事のプレビューにより文書を確認\n#{item.preview_uri(:params => {:node_id => item.id})}\n\n" +
-      "２．次のリンクから承認を実施\n" +
-      "#{url_for(:action => :show, :id => item)}\n"
+    body = []
+    body << "#{Core.user.name}さんより「#{item.title}」についての承認依頼が届きました。\n"
+    body << "次の手順により，承認作業を行ってください。\n\n"
+    body << "1. PC用記事のプレビューにより文書を確認\n"
+    body << "#{item.preview_uri(:params => {:node_id => item.id})}\n\n"
+    body << "2. 次のリンクから承認を実施\n"
+    body << "#{url_for(:action => :show, :id => item)}\n"
     
-    users ||= item.recognizers
-    users.each {|user| send_mail(mail_fr, user.email, subject, message) }
+    (users || item.recognizers).each do |user|
+      send_mail({
+        :to      => user.email,
+        :from    => Core.user.email,
+        :subject => "ページ 承認依頼メール | #{item.site.name}",
+        :body    => body.join
+      })
+    end
   end
 
   def send_recognition_success_mail(item)
@@ -115,14 +120,20 @@ protected
     return true unless item.recognition.user
     return true if item.recognition.user.email.blank?
 
-    mail_fr = Core.user.email
-    mail_to = item.recognition.user.email
+    task   = item.find_task_by_name('publish')
+    notice = task.blank? ? "" : "直ちに公開する場合は"
     
-    subject = "ページ（#{item.site.name}）：最終承認完了メール"
-    message = "「#{item.title}」についての承認が完了しました。\n" +
-      "次のＵＲＬをクリックして公開処理を行ってください。\n\n" +
-      "#{url_for(:action => :show, :id => item)}"
+    body = []
+    body << "「#{item.title}」についての承認が完了しました。\n"
+    body << "#{notice}次のURLをクリックして公開処理を行ってください。\n\n"
+    body << "#{url_for(:action => :show, :id => item)}\n\n"
+    body << "公開予定日時　#{task.strftime('%Y年%-m月%-d日 %H:%M')}\n" if !task.blank?
     
-    send_mail(mail_fr, mail_to, subject, message)
+    send_mail({
+      :from    => Core.user.email,
+      :to      => item.recognition.user.email,
+      :subject => "ページ 最終承認完了メール | #{item.site.name}",
+      :body    => body.join
+    })
   end
 end

@@ -200,7 +200,7 @@ p = create c_area, 0, 1, 4, l_area, doc, 'south'       , '南区'
 ## ---------------------------------------------------------
 ## article/docs
 
-def create(content_id, category_ids, attribute_ids, area_ids, rel_doc_ids, event_state, event_date, title, body = file('docs/002/body'))
+def create(content_id, category_ids, attribute_ids, area_ids, rel_doc_ids, event_state, event_date, title, body = read_data('docs/002/body'))
   Article::Doc.create(:content_id => content_id, :state => 'public',
     :recognized_at => Core.now, :published_at => Core.now, :language_id => 1,
     :category_ids => category_ids, :attribute_ids => attribute_ids, :area_ids => area_ids, :rel_doc_ids => rel_doc_ids,
@@ -217,7 +217,7 @@ def create_inquiry(unid)
 end
 
 ## article/docs ##サンプル記事
-d = create doc.id, 5 , 2  , 11 , nil, 'hidden' , nil       ,'ジョールリ市ホームページを公開しました。', file('docs/001/body')
+d = create doc.id, 5 , 2  , 11 , nil, 'hidden' , nil       ,'ジョールリ市ホームページを公開しました。', read_data('docs/001/body')
     create_inquiry(d.unid)
 d = create doc.id, 66, nil, nil, nil  , 'hidden' , nil     ,'サンプル記事　災害'
     create_inquiry(d.unid)

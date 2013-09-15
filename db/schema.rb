@@ -1,15 +1,17 @@
-# This file is auto-generated from the current state of the database. Instead of editing this file, 
-# please use the migrations feature of Active Record to incrementally modify your database, and
-# then regenerate this schema definition.
+# encoding: UTF-8
+# This file is auto-generated from the current state of the database. Instead
+# of editing this file, please use the migrations feature of Active Record to
+# incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your database schema. If you need
-# to create the application database on another system, you should be using db:schema:load, not running
-# all the migrations from scratch. The latter is a flawed and unsustainable approach (the more migrations
+# Note that this schema.rb definition is the authoritative source for your
+# database schema. If you need to create the application database on another
+# system, you should be using db:schema:load, not running all the migrations
+# from scratch. The latter is a flawed and unsustainable approach (the more migrations
 # you'll amass, the slower it'll run and the greater likelihood for issues).
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110803122623) do
+ActiveRecord::Schema.define(:version => 20130528121406) do
 
   create_table "article_areas", :force => true do |t|
     t.integer  "unid"
@@ -292,9 +294,8 @@ ActiveRecord::Schema.define(:version => 20110803122623) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name"
-    t.text     "body",        :limit => 2147483647
-    t.text     "ipadic_body", :limit => 2147483647
-    t.text     "unidic_body", :limit => 2147483647
+    t.text     "body",       :limit => 2147483647
+    t.text     "mecab_csv",  :limit => 2147483647
   end
 
   create_table "cms_layouts", :force => true do |t|
@@ -318,6 +319,15 @@ ActiveRecord::Schema.define(:version => 20110803122623) do
     t.text     "smart_phone_head"
     t.text     "smart_phone_body",       :limit => 2147483647
     t.text     "smart_phone_stylesheet", :limit => 2147483647
+  end
+
+  create_table "cms_link_checks", :force => true do |t|
+    t.string   "state",        :limit => 15
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "link_uri"
+    t.text     "source_uri",   :limit => 2147483647
+    t.integer  "source_count"
   end
 
   create_table "cms_map_markers", :force => true do |t|
@@ -457,7 +467,9 @@ ActiveRecord::Schema.define(:version => 20110803122623) do
     t.datetime "updated_at"
     t.string   "name"
     t.string   "full_uri"
+    t.string   "alias_full_uri"
     t.string   "mobile_full_uri"
+    t.string   "admin_full_uri"
     t.integer  "node_id"
     t.text     "related_site"
   end
@@ -475,6 +487,7 @@ ActiveRecord::Schema.define(:version => 20110803122623) do
     t.string   "dependent",    :limit => 64
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "published_at"
     t.text     "path"
     t.string   "content_hash"
   end
@@ -533,6 +546,39 @@ ActiveRecord::Schema.define(:version => 20110803122623) do
 
   add_index "enquete_forms", ["content_id", "sort_no"], :name => "content_id"
 
+  create_table "entity_conversion_logs", :force => true do |t|
+    t.integer  "content_id"
+    t.string   "env",        :limit => 15
+    t.string   "state",      :limit => 15
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.text     "body",       :limit => 2147483647
+  end
+
+  create_table "entity_conversion_units", :force => true do |t|
+    t.integer  "unid"
+    t.integer  "content_id"
+    t.string   "state",         :limit => 15
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "old_id"
+    t.integer  "old_parent_id"
+    t.integer  "move_id"
+    t.integer  "new_move_id"
+    t.integer  "parent_id"
+    t.integer  "new_parent_id"
+    t.string   "code"
+    t.string   "name"
+    t.string   "name_en"
+    t.string   "tel"
+    t.string   "outline_uri"
+    t.string   "email"
+    t.string   "web_state",     :limit => 15
+    t.integer  "layout_id"
+    t.integer  "ldap"
+    t.integer  "sort_no"
+  end
+
   create_table "faq_categories", :force => true do |t|
     t.integer  "unid"
     t.integer  "parent_id",                :null => false
@@ -581,24 +627,6 @@ ActiveRecord::Schema.define(:version => 20110803122623) do
     t.text     "word"
   end
 
-  create_table "newsletter_delivery_logs", :force => true do |t|
-    t.integer  "unid"
-    t.integer  "content_id"
-    t.string   "state",             :limit => 15
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "doc_id"
-    t.string   "letter_type",       :limit => 15
-    t.text     "title"
-    t.text     "body",              :limit => 2147483647
-    t.string   "delivery_state",    :limit => 15
-    t.integer  "delivered_count"
-    t.integer  "deliverable_count"
-    t.integer  "last_member_id"
-  end
-
-  add_index "newsletter_delivery_logs", ["content_id", "doc_id", "letter_type"], :name => "content_id"
-
   create_table "newsletter_docs", :force => true do |t|
     t.integer  "unid"
     t.integer  "content_id"
@@ -606,15 +634,31 @@ ActiveRecord::Schema.define(:version => 20110803122623) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "delivery_state", :limit => 15
+    t.datetime "started_at"
     t.datetime "delivered_at"
     t.string   "name"
     t.text     "title"
     t.text     "body",           :limit => 2147483647
     t.text     "mobile_title"
     t.text     "mobile_body",    :limit => 2147483647
+    t.integer  "total_count"
+    t.integer  "success_count"
+    t.integer  "error_count"
   end
 
   add_index "newsletter_docs", ["content_id", "updated_at"], :name => "content_id"
+
+  create_table "newsletter_logs", :force => true do |t|
+    t.integer  "content_id"
+    t.integer  "doc_id"
+    t.string   "state",       :limit => 15
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "member_id"
+    t.text     "email"
+    t.string   "letter_type", :limit => 15
+    t.text     "message"
+  end
 
   create_table "newsletter_members", :force => true do |t|
     t.integer  "unid"
@@ -632,20 +676,18 @@ ActiveRecord::Schema.define(:version => 20110803122623) do
 
   create_table "newsletter_requests", :force => true do |t|
     t.integer  "content_id"
-    t.string   "state",             :limit => 15
+    t.string   "state",        :limit => 15
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "request_state",     :limit => 15
-    t.string   "request_type",      :limit => 15
-    t.string   "letter_type",       :limit => 15
-    t.text     "subscribe_email"
-    t.text     "unsubscribe_email"
-    t.text     "token"
+    t.string   "request_type", :limit => 15
+    t.text     "email"
+    t.string   "letter_type",  :limit => 15
+    t.string   "ipaddr"
   end
 
-  add_index "newsletter_requests", ["content_id", "request_state", "request_type"], :name => "content_id"
+  add_index "newsletter_requests", ["content_id", "request_type"], :name => "content_id"
 
-  create_table "newsletter_tests", :force => true do |t|
+  create_table "newsletter_testers", :force => true do |t|
     t.integer  "unid"
     t.integer  "content_id"
     t.string   "state",       :limit => 15
@@ -672,6 +714,40 @@ ActiveRecord::Schema.define(:version => 20110803122623) do
   end
 
   add_index "portal_categories", ["parent_id", "content_id", "state"], :name => "parent_id"
+
+  create_table "sessions", :force => true do |t|
+    t.string   "session_id", :null => false
+    t.text     "data"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
+  add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
+
+  create_table "simple_captcha_data", :force => true do |t|
+    t.string   "key",        :limit => 40
+    t.string   "value",      :limit => 6
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "simple_captcha_data", ["key"], :name => "idx_key"
+
+  create_table "storage_files", :force => true do |t|
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
+    t.string   "path",                             :null => false
+    t.string   "dirname",                          :null => false
+    t.string   "basename",                         :null => false
+    t.boolean  "directory",                        :null => false
+    t.integer  "size",       :limit => 8
+    t.binary   "data",       :limit => 2147483647
+    t.string   "path_hash",  :limit => 32
+    t.string   "dir_hash",   :limit => 32
+  end
+
+  add_index "storage_files", ["path"], :name => "path", :unique => true
 
   create_table "sys_creators", :force => true do |t|
     t.datetime "created_at"
@@ -705,67 +781,6 @@ ActiveRecord::Schema.define(:version => 20110803122623) do
   end
 
   add_index "sys_files", ["parent_unid", "name"], :name => "parent_unid"
-
-  create_table "sys_group_change_groups", :force => true do |t|
-    t.integer "group_change_id"
-    t.integer "group_id"
-    t.integer "parent_id"
-    t.integer "old_group_id"
-  end
-
-  create_table "sys_group_change_items", :force => true do |t|
-    t.integer "item_id"
-    t.integer "item_unid"
-    t.integer "parent_item_id"
-    t.string  "model"
-    t.string  "owner_model"
-  end
-
-  add_index "sys_group_change_items", ["item_id", "model"], :name => "item_id"
-
-  create_table "sys_group_change_logs", :force => true do |t|
-    t.integer  "parent_id",                           :null => false
-    t.string   "state",         :limit => 15
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "level_no",                            :null => false
-    t.integer  "sort_no"
-    t.string   "execute_state", :limit => 15
-    t.datetime "executed_at"
-    t.text     "title"
-    t.text     "body",          :limit => 2147483647
-  end
-
-  create_table "sys_group_change_settings", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "name"
-    t.text     "value"
-    t.integer  "sort_no"
-  end
-
-  create_table "sys_group_changes", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "code"
-    t.string   "name"
-    t.string   "name_en"
-    t.string   "email"
-    t.integer  "level_no"
-    t.string   "parent_code"
-    t.string   "parent_name"
-    t.string   "change_division"
-    t.integer  "layout_id"
-    t.integer  "ldap",            :null => false
-    t.datetime "start_date"
-    t.string   "old_division"
-    t.integer  "old_id"
-    t.string   "old_code"
-    t.string   "old_name"
-    t.string   "old_name_en"
-    t.string   "old_email"
-    t.integer  "old_layout_id"
-  end
 
   create_table "sys_groups", :force => true do |t|
     t.integer  "unid"
@@ -841,16 +856,51 @@ ActiveRecord::Schema.define(:version => 20110803122623) do
 
   add_index "sys_object_privileges", ["item_unid", "action"], :name => "item_unid"
 
+  create_table "sys_operation_logs", :force => true do |t|
+    t.datetime "created_at"
+    t.integer  "user_id"
+    t.string   "user_name"
+    t.string   "ipaddr"
+    t.string   "uri"
+    t.string   "action"
+    t.string   "item_model"
+    t.integer  "item_id"
+    t.integer  "item_unid"
+    t.string   "item_name"
+  end
+
+  create_table "sys_processes", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "started_at"
+    t.datetime "closed_at"
+    t.integer  "user_id"
+    t.string   "state"
+    t.string   "name"
+    t.string   "interrupt"
+    t.integer  "total"
+    t.integer  "current"
+    t.integer  "success"
+    t.integer  "error"
+    t.text     "message",    :limit => 2147483647
+  end
+
   create_table "sys_publishers", :force => true do |t|
     t.integer  "unid"
-    t.string   "dependent",    :limit => 64
+    t.integer  "rel_unid"
+    t.integer  "site_id"
+    t.string   "dependent",      :limit => 64
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "path"
+    t.string   "uri"
     t.string   "content_hash"
+    t.text     "internal_links", :limit => 2147483647
+    t.text     "external_links", :limit => 2147483647
   end
 
-  add_index "sys_publishers", ["unid", "dependent"], :name => "unid"
+  add_index "sys_publishers", ["rel_unid"], :name => "rel_unid"
+  add_index "sys_publishers", ["unid"], :name => "unid"
 
   create_table "sys_recognitions", :force => true do |t|
     t.datetime "created_at"
@@ -937,17 +987,11 @@ ActiveRecord::Schema.define(:version => 20110803122623) do
   add_index "sys_users_groups", ["user_id", "group_id"], :name => "user_id"
 
   create_table "sys_users_roles", :primary_key => "rid", :force => true do |t|
+    t.integer "group_id"
     t.integer "user_id"
     t.integer "role_id"
   end
 
   add_index "sys_users_roles", ["user_id", "role_id"], :name => "user_id"
-
-  create_table "tool_simple_captcha_data", :force => true do |t|
-    t.string   "key",        :limit => 40
-    t.string   "value",      :limit => 6
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
 end

@@ -28,10 +28,12 @@ Cms::Site.new.public.find(:all, :order => :id).each do |site|
   concepts += make_candidates(args1, args2)
 end
 
-%><table class="show">
+%><p class="form">基本情報</p>
+
+<table class="show">
   <tr>
     <th><%= @item.locale(:item_unid) %></th>
-    <td><%= f.select :item_unid, concepts, :include_blank => true, :class => 'id' %></td>
+    <td><%= f.select :item_unid, concepts, :include_blank => "　", :class => 'id' %></td>
   </tr><tr>
     <th><%= @item.locale(:action) %></th>
     <td><%= f.check_boxes :in_actions, @item.action_labels, :class => 'name' %></td>

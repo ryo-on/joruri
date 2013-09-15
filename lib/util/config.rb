@@ -1,19 +1,21 @@
 class Util::Config
   @@cache = {}
   
-  def self.load(name, attribute = nil)
-    name = name.to_s
-    yml = self.read(name)
-    return yml unless attribute
-    return yml[attribute.to_s]
-  end
-  
-private
-  def self.read(filename)
-    unless @@cache[filename]
-      config = ::File.join(RAILS_ROOT, 'config', filename + '.yml')
-      @@cache[filename] = YAML.load_file(config)[Rails.env]
+  def self.load(filename, options = {})
+    filename = filename.to_s
+    
+    if !@@cache[filename]
+      file = "#{Rails.root}/config/#{filename}.yml"
+      @@cache[filename] = YAML.load(ERB.new(IO.read(file)).result)
     end
-    return @@cache[filename]
+    
+    section = options[:section]
+    if section == false
+      return @@cache[filename]
+    elsif section
+      return @@cache[filename][section]
+    else
+      return @@cache[filename][Rails.env]
+    end
   end
 end

@@ -1,16 +1,16 @@
 <table class="show">
   <tr>
-    <th><%=h @item.locale(:concept_id) %></th>
-    <td><%=h safe{@item.concept.name} %> </td>
+    <th><%= @item.locale(:concept_id) %></th>
+    <td><%= safe{@item.concept.name} %> </td>
   </tr><tr>
-    <th><%=h @item.locale(:state) %></th>
-    <td><%=h safe{@item.status.name} %> </td>
+    <th><%= @item.locale(:state) %></th>
+    <td><%= safe{@item.status.name} %> </td>
   </tr><tr>
-    <th><%=h @item.locale(:name) %></th>
-    <td><%=h @item.name %></td>
+    <th><%= @item.locale(:name) %></th>
+    <td><%= @item.name %></td>
   </tr><tr>
-    <th><%=h @item.locale(:title) %></th>
-    <td><%=h @item.title %></td>
+    <th><%= @item.locale(:title) %></th>
+    <td><%= @item.title %></td>
   </tr>
 </table>
 
