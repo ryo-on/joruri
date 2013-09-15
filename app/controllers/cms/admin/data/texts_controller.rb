@@ -28,6 +28,7 @@ class Cms::Admin::Data::TextsController < Cms::Controller::Admin::Base
   
   def create
     @item = Cms::DataText.new(params[:item])
+    @item.site_id = Core.site.id
     _create @item
   end
   

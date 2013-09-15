@@ -173,6 +173,7 @@ ActiveRecord::Schema.define(:version => 0) do
 
   create_table "cms_data_texts", :force => true do |t|
     t.integer  "unid"
+    t.integer  "site_id"
     t.integer  "concept_id"
     t.string   "state",        :limit => 15
     t.datetime "created_at"

@@ -132,18 +132,21 @@ class Sys::User < ActiveRecord::Base
   def self.authenticate(in_account, in_password, encrypted = false)
     in_password = Util::String::Crypt.decrypt(in_password) if encrypted
     
-    return false unless user = self.new.enabled.find(:first, :conditions => {:account => in_account})
-    
-    ## LDAP Auth
-    if user.ldap == 1
-      return false unless ou1 = user.groups[0]
-      return false unless ou2 = ou1.parent
-      dn = "uid=#{user.account},ou=#{ou1.ou_name},ou=#{ou2.ou_name},#{Core.ldap.base}"
-      return false unless Core.ldap.bind(dn, in_password)
+    user = nil
+    self.new.enabled.find(:all, :conditions => {:account => in_account}).each do |u|
+      if u.ldap == 1
+        ## LDAP Auth
+        next unless ou1 = u.groups[0]
+        next unless ou2 = ou1.parent
+        dn = "uid=#{u.account},ou=#{ou1.ou_name},ou=#{ou2.ou_name},#{Core.ldap.base}"
+        next unless Core.ldap.bind(dn, in_password)
+      else
+        ## DB Auth
+        next if in_password != u.password || u.password.to_s == ''
+      end
+      user = u
+      break
     end
-    
-    ## DB Auth
-    return false if in_password != user.password || user.password.to_s == ''
     return user
   end
 

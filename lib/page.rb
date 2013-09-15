@@ -28,7 +28,7 @@ class Page
   end
   
   def self.head_tag
-    return nil unless @@layout
+    return nil if !@@layout || !@@layout.id
     tag = @@layout.head_tag(mobile?)
     tag
   end

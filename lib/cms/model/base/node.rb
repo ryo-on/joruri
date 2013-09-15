@@ -38,7 +38,7 @@ module Cms::Model::Base::Node
       parent_id = current.route_id
       break if parent_id == 0
       break if (loop += 1) > 10
-    end
+    end if id != parent_id
     [routes]
   end
   

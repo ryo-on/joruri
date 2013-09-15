@@ -30,7 +30,7 @@ class Article::Doc < ActiveRecord::Base
   
   validates_presence_of :state, :recent_state, :list_state, :language_id,
     :if => %Q(state == "recognize")
-  validates_length_of :title,  :maximum => 100,
+  validates_length_of :title,  :maximum => 200,
     :if => %Q(state == "recognize")
   validates_length_of :body,  :maximum => 100000,
     :if => %Q(state == "recognize")

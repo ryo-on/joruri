@@ -64,6 +64,7 @@ module Cms::Controller::Layout
       name = name[0]
       Page.current_piece = item
       begin
+        next if item.content_id && !item.content
         mnames= item.model.underscore.pluralize.split('/')
         data = render_component_as_string :params => params,
           :controller => mnames[0] + '/public/piece/' + mnames[1], :action => 'index'
