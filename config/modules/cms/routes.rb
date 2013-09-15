@@ -89,6 +89,9 @@ ActionController::Routing::Routes.draw do |map|
     ns.resources :piece_link_items,
       :controller  => "admin/piece/link_items",
       :path_prefix => "/_admin/#{mod}/:piece"
+    ns.resources :piece_sns_sharings,
+      :controller  => "admin/piece/sns_sharings",
+      :path_prefix => "/_admin/#{mod}"
   end
   
   map.namespace(mod, :namespace => '', :path_prefix => '/_admin') do |ns|

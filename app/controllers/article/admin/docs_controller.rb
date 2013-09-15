@@ -41,7 +41,8 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
       :notice_state => 'hidden',
       :recent_state => 'visible',
       :list_state   => 'visible',
-      :event_state  => 'hidden'
+      :event_state  => 'hidden',
+      :sns_link_state => 'visible',
     })
     @item.in_inquiry = @item.default_inquiry
     @item.in_recognizer_ids = @content.setting_value(:default_recognizers)

@@ -10,6 +10,7 @@
 /* docs
 ----------------------------------------------- */
 .contentArticleDoc .header {
+  clear: both;
   margin-bottom: 30px;
   padding: 10px;
   border-top: 1px solid #232f92;
@@ -66,6 +67,19 @@
   border: 1px solid #999999;
   background-color: #ececec;
 }
+#snsShare {
+  float: right;
+  height: 20px;
+  margin-top: -30px;
+}
+.twitter-share-button, .fbLike, .fb-share-button, .gpShare {
+  float: left;
+  width: 127px !important;
+}
+.fb-share-button {
+  margin-top: 1px;
+  _margin-top: -12px;
+}
 
 /* docs ichiran
 ----------------------------------------------- */
@@ -96,7 +110,9 @@
   background-repeat: no-repeat;
   background-position: 0 7px;
 }
-
+#page-docs-index #snsShare {
+  display: none;
+}
 /* group-portal
 ----------------------------------------------- */
 .contentPortalCategory .category h2 {

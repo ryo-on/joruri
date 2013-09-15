@@ -57,7 +57,7 @@ class ActionView::Helpers::FormBuilder
     choices = @template.options_for_select(choices, options[:selected].to_s)
     if options[:include_blank]
       label = options[:include_blank].class == String ? options[:include_blank] : ''
-      choices = %Q(<option value="">#{label}</optoin>) + choices
+      choices = %Q(<option value="">#{label}</option>) + choices
       options.delete(:include_blank)
     end
     options.delete(:selected)
@@ -89,7 +89,7 @@ class ActionView::Helpers::FormBuilder
       choices = @template.options_for_select(choices, options[:selected].to_s)
       if options[:include_blank]
         label = options[:include_blank].class == String ? options[:include_blank] : ''
-        choices = %Q(<option value="">#{label}</optoin>) + choices
+        choices = %Q(<option value="">#{label}</option>) + choices
         options.delete(:include_blank)
       end
       options.delete(:selected)

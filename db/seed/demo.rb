@@ -194,6 +194,7 @@ end
   [ c_site.id , 'Cms::Free'         , 'recent-docs-title'    , '新着情報タイトル' ],
   [ c_site.id , 'Cms::Free'         , 'attract-information'  , '注目情報' ],
   [ c_site.id , 'Cms::Free'         , 'relation-link'        , '関連リンク' ],
+  [ c_site.id , 'Cms::SnsSharing'   , 'sns-share'            , 'SNS共有リンク' ],
   [ c_top.id  , 'Cms::Free'         , 'about'                , 'ジョールリ市の紹介' ],
   [ c_top.id  , 'Cms::Free'         , 'bn-event'             , '年間行事' ],
   [ c_top.id  , 'Cms::Free'         , 'bn-bbs'               , '掲示板' ],
@@ -250,6 +251,10 @@ end
   [ c_top.id  , 'Cms::Free'         , 'smart-topic'               , 'スマートフォン：トピック' ],
 ].each do |c|
   create_cms_piece :concept_id => c[0], :model => c[1], :name => c[2], :title => c[3]
+end
+
+if piece = Cms::Piece.find_by_name("sns-share")
+  Cms::PieceSetting.new(:piece_id => piece.id, :name => "link_types", :value => "tweet fb_share gp_share").save
 end
 
 ## ---------------------------------------------------------

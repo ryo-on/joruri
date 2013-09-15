@@ -72,6 +72,11 @@
       <%= safe{@item.event_status.name} %>
       <% if @item.event_date %>&nbsp; イベント日付 ： <%= @item.event_date.strftime("%Y-%m-%d") %><% end %>
     </td>
+  </tr><tr>
+    <th><%= @item.locale(:sns_link_state) %></th>
+    <td colspan="3">
+      <%= safe{@item.sns_link_status.name} %>
+    </td>
   </tr>
 </table>
 

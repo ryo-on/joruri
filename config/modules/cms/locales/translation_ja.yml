@@ -135,6 +135,8 @@ ja:
       ## piece
       cms/piece/bread_crumb:
         top_label: "TOPリンク文字"
+      cms/piece/sns_sharing:
+        link_types: "表示種別"
 
       ## tool
       cms/model/tool/export:

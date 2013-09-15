@@ -54,6 +54,8 @@ private
     case error
     when ActionController::InvalidAuthenticityToken
       http_error(422, "Invalid Authenticity Token")
+    when ActionView::MissingTemplate
+      RAILS_ENV == "production" ? http_error(404) : super
     else
       super
     end

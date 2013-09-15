@@ -28,6 +28,7 @@ class Article::Doc < ActiveRecord::Base
   belongs_to :recent_status,  :foreign_key => :recent_state,      :class_name => 'Sys::Base::Status'
   belongs_to :list_status,    :foreign_key => :list_state,        :class_name => 'Sys::Base::Status'
   belongs_to :event_status,   :foreign_key => :event_state,       :class_name => 'Sys::Base::Status'
+  belongs_to :sns_link_status,:foreign_key => :sns_link_state,    :class_name => 'Sys::Base::Status'
   belongs_to :language,       :foreign_key => :language_id,       :class_name => 'Sys::Language'
 
   attr_accessor :link_checker
@@ -121,6 +122,10 @@ class Article::Doc < ActiveRecord::Base
   end
 
   def event_states
+    [['表示','visible'],['非表示','hidden']]
+  end
+  
+  def sns_link_states
     [['表示','visible'],['非表示','hidden']]
   end
   

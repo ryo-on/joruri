@@ -61,8 +61,8 @@ ActiveRecord::Schema.define(:version => 20110803122623) do
   create_table "article_docs", :force => true do |t|
     t.integer  "unid"
     t.integer  "content_id"
-    t.string   "state",         :limit => 15
-    t.string   "agent_state",   :limit => 15
+    t.string   "state",          :limit => 15
+    t.string   "agent_state",    :limit => 15
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "recognized_at"
@@ -77,12 +77,13 @@ ActiveRecord::Schema.define(:version => 20110803122623) do
     t.text     "list_state"
     t.text     "event_state"
     t.date     "event_date"
+    t.string   "sns_link_state", :limit => 15
     t.string   "name"
     t.text     "title"
-    t.text     "head",          :limit => 2147483647
-    t.text     "body",          :limit => 2147483647
+    t.text     "head",           :limit => 2147483647
+    t.text     "body",           :limit => 2147483647
     t.text     "mobile_title"
-    t.text     "mobile_body",   :limit => 2147483647
+    t.text     "mobile_body",    :limit => 2147483647
   end
 
   add_index "article_docs", ["content_id", "published_at", "event_date"], :name => "content_id"

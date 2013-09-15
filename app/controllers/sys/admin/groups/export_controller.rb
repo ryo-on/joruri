@@ -53,6 +53,10 @@ class Sys::Admin::Groups::ExportController < Cms::Controller::Admin::Base
         csv << row
       end
     end
+    
+    require 'nkf'
+    csv = NKF.nkf('-s', csv)
+    
     send_data(csv, :type => 'text/csv', :filename => "sys_groups_#{Time.now.to_i}.csv")
   end
 
@@ -76,6 +80,10 @@ class Sys::Admin::Groups::ExportController < Cms::Controller::Admin::Base
         csv << row
       end
     end
+    
+    require 'nkf'
+    csv = NKF.nkf('-s', csv)
+    
     send_data(csv, :type => 'text/csv', :filename => "sys_users_#{Time.now.to_i}.csv")
   end
 end

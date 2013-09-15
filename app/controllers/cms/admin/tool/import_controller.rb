@@ -20,7 +20,9 @@ class Cms::Admin::Tool::ImportController < Cms::Controller::Admin::Base
     @concept = Cms::Concept.find_by_id(@item.concept_id)
     return unless @concept
     
-    import = ActiveSupport::JSON.decode @item.file.read
+    #import = ActiveSupport::JSON.decode @item.file.read
+    require "json"
+    import = JSON.parse @item.file.read
     @results << "インポートを開始しました。"
     
     ## layouts

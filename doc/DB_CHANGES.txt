@@ -1,3 +1,8 @@
+## Joruri CMS データベース更新履歴
+
+1.3.1
+  ALTER TABLE article_docs ADD sns_link_state VARCHAR(15) NULL AFTER event_date;
+
 1.2.5
   CREATE TABLE cms_stylesheets (
     id int(11) NOT NULL AUTO_INCREMENT,

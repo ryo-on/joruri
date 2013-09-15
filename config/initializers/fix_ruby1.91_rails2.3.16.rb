@@ -84,6 +84,7 @@ class ERB
       end
     end
     
+    alias h html_escape
     module_function :html_escape
   end
 end

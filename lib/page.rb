@@ -25,6 +25,10 @@ class Page
     @@error         = nil
   end
   
+  def self.full_uri
+    ::File.join(site.full_uri, uri)
+  end
+  
   def self.mobile?
     return true if @@mobile
     return nil unless @@site

@@ -145,6 +145,9 @@ function importUri() {
       <%= f.calendar_date_select :event_date, :class => 'date' %>
       </div>
     </td>
+  </tr><tr>
+    <th><%=h @item.locale(:sns_link_state) %></th>
+    <td><%= f.radio_buttons :sns_link_state, @item.sns_link_states, :class => 'status' %></td>
   </tr>
 </table>
 

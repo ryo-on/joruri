@@ -4,7 +4,7 @@ puts "== gem install rake"
 puts `gem install rake --no-ri --no-rdoc -v 0.8.7`
 
 puts "== gem install Rails"
-puts `gem install rails --no-ri --no-rdoc --include-dependencies -v 2.3.15`
+puts `gem install rails --no-ri --no-rdoc --include-dependencies -v 2.3.16`
 
 puts "== gem install Ruby/LDAP"
 puts `gem install ruby-ldap --no-ri --no-rdoc -v 0.9.10`
