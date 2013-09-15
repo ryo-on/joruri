@@ -23,9 +23,9 @@ class Cms::Controller::Script::Publication < ApplicationController
     ## ruby html
     uri = params[:uri]
     if uri =~ /\.html$/
-      uri += ".r"
+      uri << ".r"
     elsif uri =~ /\/$/
-      uri += "index.html.r"
+      uri << "index.html.r"
     elsif uri =~ /\/\?/
       uri = uri.gsub(/(\/)(\?)/, '\\1index.html.r\\2')
     elsif uri =~ /\.html\?/

@@ -98,6 +98,12 @@ ActionController::Routing::Routes.draw do |map|
     ns.connect "tool_search",
       :controller => "admin/tool/search",
       :action     => :index
+    ns.connect "tool_export",
+      :controller => "admin/tool/export",
+      :action     => :index
+    ns.connect "tool_import",
+      :controller => "admin/tool/import",
+      :action     => :index
   end
       
   ## public

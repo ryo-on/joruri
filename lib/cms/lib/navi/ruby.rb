@@ -91,14 +91,14 @@ class Cms::Lib::Navi::Ruby
         epos = kana[:data][1].to_i
         
         if str_arr[line] && str = slice(str_arr[line], pos, spos - pos)
-          kana_str += str
-          kana_str += "<ruby><rb>#{kana[:data][2]}</rb><rp>" +
+          kana_str << str
+          kana_str << "<ruby><rb>#{kana[:data][2]}</rb><rp>" +
             "(</rp><rt>#{kana[:data][3].tr('ァ-ン', 'ぁ-ん')}</rt><rp>)</rp></ruby>"
         end
         pos = epos
       end
       if str_arr[line] && str = slice(str_arr[line], pos, str_arr[line].bytesize - pos)
-        kana_str += str
+        kana_str << str
       end
       str_arr[line] = kana_str
     end

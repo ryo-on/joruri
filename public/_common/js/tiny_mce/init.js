@@ -83,7 +83,7 @@ function initTinyMCE(originalSettings) {
     }
   };
   for (var key in originalSettings) {
-　　settings[key] = originalSettings[key];
+    settings[key] = originalSettings[key];
   }
   tinyMCE.init(settings);
 };

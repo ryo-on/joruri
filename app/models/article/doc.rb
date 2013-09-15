@@ -258,14 +258,14 @@ class Article::Doc < ActiveRecord::Base
     if content = Article::Content::Doc.find_by_id(content_id)
       node = content.unit_node
       item = unit
-      if node && item
+      if node && item && item.web_state == 'public'
         c = node.bread_crumbs.crumbs[0]
         c << [unit.title, "#{node.public_uri}#{unit.name}/"]
         crumbs << c
       end
       
       node  = content.category_node
-      items = category_items
+      items = category_items(:state => "public")
       if node && items.size > 0
         c = node.bread_crumbs.crumbs[0]
         c << items.collect{|i| [i.title, "#{node.public_uri}#{i.name}/"]}
@@ -273,7 +273,7 @@ class Article::Doc < ActiveRecord::Base
       end
       
       node  = content.attribute_node
-      items = attribute_items
+      items = attribute_items(:state => "public")
       if node && items.size > 0
         c = node.bread_crumbs.crumbs[0]
         c << items.collect{|i| [i.title, "#{node.public_uri}#{i.name}/"]}
@@ -281,7 +281,7 @@ class Article::Doc < ActiveRecord::Base
       end
       
       node  = content.area_node
-      items = area_items
+      items = area_items(:state => "public")
       if node && items.size > 0
         c = node.bread_crumbs.crumbs[0]
         c << items.collect{|i| [i.title, "#{node.public_uri}#{i.name}/"]}
@@ -409,7 +409,7 @@ class Article::Doc < ActiveRecord::Base
     
     files.each do |f|
       file = Sys::File.new(f.attributes)
-      file.file        = Sys::Lib::File::NoUploadedFile.new(f.upload_path)
+      file.file        = Sys::Lib::File::NoUploadedFile.new(f.upload_path, :mime_type => file.mime_type)
       file.unid        = nil
       file.parent_unid = item.unid
       file.save

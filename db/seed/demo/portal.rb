@@ -14,7 +14,7 @@ def create(content, name, uri, title, count)
     :name => name, :uri => uri, :title => title, :entry_count => count
 end
 
-create portal, 'tokushimaken', 'http://www.pref.tokushima.jp/shinchaku/index.atom', '徳島県', 50
+#create portal, 'tokushimaken', 'http://www.pref.tokushima.jp/shinchaku/index.atom', '徳島県', 50
 
 ## ---------------------------------------------------------
 ## cms/layouts

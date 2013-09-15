@@ -174,19 +174,25 @@
   width: 95%;
 }
 .contentArticleTags table th {
+  display: inline-block;
   width: 35px;
   padding-right: 5px;
   vertical-align: middle;
+  text-align: right;
 }
 .contentArticleTags td {
-  width: auto;
+  display: inline-block;
+  width: 87%;
+
 }
 input#s_tag {
   width: 95% !important;
   height: 30px;
 }
 .contentArticleTags td.submitters {
-  width: 140px;
+  width: 55%;
+  padding: 10px 0 0 45px;
+
 }
 .contentArticleTags .hit {
   height: 30px;
@@ -213,18 +219,25 @@ input#s_tag {
 .contentArticleTags span.attributes {
   display: none;
 }
+input.send {
+  float: left;
+  margin-right: 5px;
+}
+input.reset {
+  float: left;
+}
 
 /* =========================================================
     group-portal
 ========================================================= */
-.dir-groupPortal .category h2 {
-      background-image: url("/_common/themes/joruri/smart/piece/images/ic-link.png");
-    background-position: 95% center;
-    background-repeat: no-repeat;
-    border-bottom: 1px solid #CCCCCC;
-    display: block;
-    height: 44px;
-    line-height: 44px;
-    padding: 0 30px 0 15px;
+.dir-groupPortal .category h2 a {
+  display: block;
+  background-image: url("/_common/themes/joruri/smart/piece/images/ic-link.png");
+  background-position: 95% center;
+  background-repeat: no-repeat;
+  border-bottom: 1px solid #CCCCCC;
+  height: 44px;
+  line-height: 44px;
+  padding: 0 30px 0 15px;
 }
 

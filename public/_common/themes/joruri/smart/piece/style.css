@@ -174,10 +174,10 @@
 /* pagination
 ----------------------------------------------- */
 .pagination {
+  padding: 0 6px;
   text-align: center;
 }
 .pagination a {
-  padding: 0 6px;
   text-decoration: underline;
 }
 .pagination span.current {

@@ -31,9 +31,9 @@ class Article::Public::Node::AreasController < Cms::Controller::Public::Base
     @limit = 10 if !@more
     
     doc = Article::Doc.new.public
-    doc.agent_filter(request.mobile)
-    doc.and :content_id, @content.id
+    #doc.and :content_id, @content.id
     request.mobile? ? doc.visible_in_list : doc.visible_in_recent
+    doc.agent_filter(request.mobile)
     doc.area_is @item
     doc.page @page, @limit
     @docs = doc.find(:all, :order => 'published_at DESC')
@@ -61,9 +61,9 @@ class Article::Public::Node::AreasController < Cms::Controller::Public::Base
 
     @item_docs = Proc.new do |city|
       doc = Article::Doc.new.public
-      doc.agent_filter(request.mobile)
-      doc.and :content_id, @content.id
+      #doc.and :content_id, @content.id
       doc.visible_in_list
+      doc.agent_filter(request.mobile)
       doc.area_is city
       doc.page @page, @limit
       @docs = doc.find(:all, :order => 'published_at DESC')
@@ -76,9 +76,9 @@ class Article::Public::Node::AreasController < Cms::Controller::Public::Base
 
     @item_docs = Proc.new do |attr|
       doc = Article::Doc.new.public
-      doc.agent_filter(request.mobile)
-      doc.and :content_id, @content.id
+      #doc.and :content_id, @content.id
       doc.visible_in_list
+      doc.agent_filter(request.mobile)
       doc.area_is @item
       doc.attribute_is attr
       doc.page @page, @limit
@@ -94,9 +94,9 @@ class Article::Public::Node::AreasController < Cms::Controller::Public::Base
     return http_error(404) unless @attr = attr.find(:first, :order => :sort_no)
     
     doc = Article::Doc.new.public
-    doc.agent_filter(request.mobile)
-    doc.and :content_id, @content.id
+    #doc.and :content_id, @content.id
     doc.visible_in_list
+    doc.agent_filter(request.mobile)
     doc.area_is @item
     doc.attribute_is @attr
     doc.page @page, @limit

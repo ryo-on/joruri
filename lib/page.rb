@@ -34,26 +34,26 @@ class Page
   
   def self.body_id
     return nil unless @@uri
-    id = @@uri.gsub(/^\/_.*?\/[0-9]+\//, '/')
-    id += 'index.html' if /\/$/ =~ id
-    id = id.slice(1, id.size)
-    id = id.gsub(/\..*$/, '')
-    id = id.gsub(/\.[0-9a-zA-Z]+$/, '')
-    id = id.gsub(/[^0-9a-zA-Z_\.\/]/, '_')
-    id = id.gsub(/(\.|\/)/, '-').camelize(:lower)
+    id  = @@uri.gsub(/^\/_.*?\/[0-9]+\//, '/')
+    id << 'index.html' if /\/$/ =~ id
+    id  = id.slice(1, id.size)
+    id  = id.gsub(/\..*$/, '')
+    id  = id.gsub(/\.[0-9a-zA-Z]+$/, '')
+    id  = id.gsub(/[^0-9a-zA-Z_\.\/]/, '_')
+    id  = id.gsub(/(\.|\/)/, '-').camelize(:lower)
     return %Q(id="page-#{id}")
   end
 
   def self.body_class
     return nil unless @@uri
-    cls = @@uri.gsub(/^\/_.*?\/[0-9]+\//, '/')
-    cls += 'index.html' if /\/$/ =~ cls
-    cls = ::File.dirname(cls)
-    cls = cls.slice(1, cls.size)
-    cls = cls.gsub(/\..*$/, '')
-    cls = cls.gsub(/\.[0-9a-zA-Z]+$/, '')
-    cls = cls.gsub(/[^0-9a-zA-Z_\.\/]/, '_')
-    cls = cls.gsub(/(\.|\/)/, '-').gsub(/\-$/, '')
+    cls  = @@uri.gsub(/^\/_.*?\/[0-9]+\//, '/')
+    cls << 'index.html' if /\/$/ =~ cls
+    cls  = ::File.dirname(cls)
+    cls  = cls.slice(1, cls.size)
+    cls  = cls.gsub(/\..*$/, '')
+    cls  = cls.gsub(/\.[0-9a-zA-Z]+$/, '')
+    cls  = cls.gsub(/[^0-9a-zA-Z_\.\/]/, '_')
+    cls  = cls.gsub(/(\.|\/)/, '-').gsub(/\-$/, '')
     return %Q(class="rootdir") if cls.blank?
     return %Q(class="dir-#{cls.camelize(:lower)}")
   end

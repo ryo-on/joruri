@@ -17,10 +17,13 @@ class Article::Public::Node::Doc::FilesController < Cms::Controller::Public::Bas
     item.and :name, "#{params[:file]}.#{params[:format]}"
     return http_error(404) unless @file = item.find(:first)
     
-    if img = @file.mobile_image(request.mobile, :path => @file.upload_path)
+    file_path = "#{::File.dirname(@doc.public_path)}/files/#{@file.name}"
+    return http_error(404) unless FileTest.exists?(file_path)
+    
+    if img = @file.mobile_image(request.mobile, :path => file_path)
       return send_data(img.to_blob, :type => @file.mime_type, :filename => @file.name, :disposition => 'inline')
     end
     
-    send_file @file.upload_path, :type => @file.mime_type, :filename => @file.name, :disposition => 'inline'
+    send_file file_path, :type => @file.mime_type, :filename => @file.name, :disposition => 'inline'
   end
 end

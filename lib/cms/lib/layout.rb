@@ -19,8 +19,8 @@ module Cms::Lib::Layout
     
     table = options.has_key?(:table_name) ? options[:table_name] + '.' : ''
     order = "CASE #{table}concept_id"
-    concepts.each_with_index {|c, i| order += " WHEN #{c.id} THEN #{i}"}
-    order += ' ELSE 100 END, id'
+    concepts.each_with_index {|c, i| order << " WHEN #{c.id} THEN #{i}"}
+    order << ' ELSE 100 END, id'
   end
   
   def self.find_design_pieces(html, concepts)

@@ -21,11 +21,12 @@ module Article::Model::Rel::Doc::Category
     end
   end
   
-  def category_items
+  def category_items(options = {})
     ids = category_ids.to_s.split(' ').uniq
     return [] if ids.size == 0
     item = Article::Category.new
     item.and :id, 'IN', ids
+    item.and :state, options[:state] if options[:state]
     item.find(:all)
   end
   

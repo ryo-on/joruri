@@ -59,6 +59,11 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
     @item.state      = "recognize" if params[:commit_recognize]
     @item.state      = "public"    if params[:commit_public]
     
+    ## convert sys urls
+    unid = params[:_tmp] || @item.unid
+    @item.body = @item.body.gsub(::File.join(Core.site.full_uri, sys_inline_files_path(unid)), '.')
+    
+    ## link check
     @checker = Sys::Lib::Form::Checker.new
     if params[:link_check] == "1"
       @checker.check_link @item.body
@@ -83,6 +88,11 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
     @item.state      = "recognize" if params[:commit_recognize]
     @item.state      = "public"    if params[:commit_public]
 
+    ## convert sys urls
+    unid = params[:_tmp] || @item.unid
+    @item.body = @item.body.gsub(::File.join(Core.site.full_uri, sys_inline_files_path(unid)), '.')
+    
+    ## link check
     @checker = Sys::Lib::Form::Checker.new
     if params[:link_check] == "1"
       @checker.check_link @item.body

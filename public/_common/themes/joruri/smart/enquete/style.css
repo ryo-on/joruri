@@ -76,11 +76,6 @@
 .enqueteForm .column .name .required {
   color: #ff0000;
 }
-#item_col2,
-#item_col3,
-#item_col7 {
-  width: 100% !important;
-}
 .radioButton,
 .checkBox {
   line-height: 2.5;

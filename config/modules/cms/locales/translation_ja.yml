@@ -132,3 +132,9 @@ ja:
       cms/node/sitemap:
         name: "ファイル名"
 
+      ## tool
+      cms/model/tool/export:
+        concept_id: "コンセプト"
+      cms/model/tool/import:
+        concept_id: "コンセプト"
+        file: "ファイル"

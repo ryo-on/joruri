@@ -1,13 +1,16 @@
+require 'mime/types'
 class Sys::Lib::File::NoUploadedFile
   def initialize(path, options = {})
     if path.class == Hash
-      options    = path
-      @data      = options[:data]
+      options      = path
+      @data        = options[:data]
+      @mime_type   = options[:mime_type] if options[:mime_type]
+      @mime_type ||= MIME::Types.type_for(options[:filename])[0].to_s if options[:filename]
     else
-      require 'mime/types'
-      file       = ::File.new(path)
-      @data      = file.read
-      @mime_type = MIME::Types.type_for(path)[0].to_s
+      file         = ::File.new(path)
+      @data        = file.read
+      @mime_type   = options[:mime_type] if options[:mime_type]
+      @mime_type ||= MIME::Types.type_for(path)[0].to_s
     end
     @filename  = options[:filename]
     @size      = @data.size if @data
@@ -23,7 +26,7 @@ class Sys::Lib::File::NoUploadedFile
   end
   
   def original_filename
-    @original_filename
+    @filename
   end
   
   def size
@@ -52,11 +55,12 @@ class Sys::Lib::File::NoUploadedFile
   
   def validate_image
     begin
-      require 'RMagick'
-      image = Magick::Image.from_blob(@data).shift
-      if image.format =~ /(GIF|JPEG|PNG)/
-        return image
+      if @filename.to_s =~ /\.(bmp|gif|jpg|jpeg|png)$/i
+        require 'RMagick'
+        image = Magick::Image.from_blob(@data).shift
+        return image if image.format =~ /(GIF|JPEG|PNG)/
       end
+      return nil
     rescue LoadError
       return nil
     rescue Magick::ImageMagickError

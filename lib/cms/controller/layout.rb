@@ -195,11 +195,11 @@ module Cms::Controller::Layout
     return body if piece.model == 'Cms::Free' && title.blank?
     
     html  = %Q(<div#{piece.css_attributes}>\n)
-    html += %Q(<div class="pieceContainer">\n)
-    html += %Q(<div class="pieceHeader"><h2>#{title}</h2></div>\n) if !title.blank?
-    html += %Q(<div class="pieceBody">#{body}</div>\n)
-    html += %Q(</div>\n)
-    html += %Q(<!-- end .piece --></div>\n)
+    html << %Q(<div class="pieceContainer">\n)
+    html << %Q(<div class="pieceHeader"><h2>#{title}</h2></div>\n) if !title.blank?
+    html << %Q(<div class="pieceBody">#{body}</div>\n)
+    html << %Q(</div>\n)
+    html << %Q(<!-- end .piece --></div>\n)
     html
   end
 end

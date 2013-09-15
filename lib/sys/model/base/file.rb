@@ -210,7 +210,9 @@ module Sys::Model::Base::File
     end
     
     if options[:css]
-      return "width: #{dst_w.ceil}px; height:#{dst_h.ceil}px;"
+      css  = "width: #{dst_w.ceil}px;"
+      css += " height: #{dst_h.ceil}px;" if !dst_h.nan?
+      return css
     end
     return {:width => dst_w.ceil, :height => dst_h.ceil}
   end
@@ -254,7 +256,7 @@ private
   ## filter/aftar_destroy
   def remove_internal_file
     return true unless FileTest.exist?(upload_path)
-    FileUtils.remove_entry_secure(upload_path)
+    FileUtils.remove_entry_secure(upload_path, true)
     return true
   end
 end

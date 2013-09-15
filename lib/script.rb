@@ -14,10 +14,14 @@ class Script
     end
     
     begin
+      time = Time.now
       puts "[ #{Time.now.strftime('%Y-%m-%d %H:%M:%S')} ]: Script.run('#{path}') started."
+      
       app = ActionController::Integration::Session.new
       app.get "/_script/sys/run/#{path}"
-      puts "[ #{Time.now.strftime('%Y-%m-%d %H:%M:%S')} ]: Script.run('#{path}') finished."
+      
+      time = sprintf('%.3f', Time.now - time)
+      puts "[ #{Time.now.strftime('%Y-%m-%d %H:%M:%S')} ]: Script.run('#{path}') finished. (#{time} sec)"
     rescue => e
       puts "ScriptError: #{e}"
     end

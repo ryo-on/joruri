@@ -30,7 +30,7 @@ class Cms::Lib::BreadCrumbs
           links << %Q(<a href="#{c[1]}">#{c[0]}</a>)
         end
       end
-      h += "<div>#{links.join(' &gt; ')}</div>"
+      h << "<div>#{links.join(' &gt; ')}</div>"
     end
     h
   end

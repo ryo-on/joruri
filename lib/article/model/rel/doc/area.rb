@@ -21,11 +21,12 @@ module Article::Model::Rel::Doc::Area
     end
   end
   
-  def area_items
+  def area_items(options = {})
     ids = area_ids.to_s.split(' ').uniq
     return [] if ids.size == 0
     item = Article::Area.new
     item.and :id, 'IN', ids
+    item.and :state, options[:state] if options[:state]
     item.find(:all)
   end
   

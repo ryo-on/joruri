@@ -57,6 +57,10 @@ class Faq::Admin::DocsController < Cms::Controller::Admin::Base
     @item.state      = "recognize" if params[:commit_recognize]
     @item.state      = "public"    if params[:commit_public]
     
+    ## convert sys urls
+    unid = params[:_tmp] || @item.unid
+    @item.body = @item.body.gsub(::File.join(Core.site.full_uri, sys_inline_files_path(unid)), '.')
+    
     _create @item do
       @item.fix_tmp_files(params[:_tmp])
       send_recognition_request_mail(@item) if @item.state == 'recognize'
@@ -71,6 +75,10 @@ class Faq::Admin::DocsController < Cms::Controller::Admin::Base
     @item.state      = "recognize" if params[:commit_recognize]
     @item.state      = "public"    if params[:commit_public]
 
+    ## convert sys urls
+    unid = params[:_tmp] || @item.unid
+    @item.body = @item.body.gsub(::File.join(Core.site.full_uri, sys_inline_files_path(unid)), '.')
+    
     _update(@item) do
       send_recognition_request_mail(@item) if @item.state == 'recognize'
       publish_by_update(@item) if @item.state == 'public'

@@ -116,7 +116,7 @@ class Core
       path = path.gsub(/\.p[0-9]+\.html$/, '.html')
     end
     if path =~ /\/$/
-      path += 'index.html'
+      path << 'index.html'
     end
     
     node     = nil
