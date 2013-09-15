@@ -47,6 +47,5 @@ end
 
 require 'action_controller/integration'
 require 'application.rb'
-require 'jpmobile'
 require 'passive_record'
 require "will_paginate"

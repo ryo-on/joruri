@@ -34,8 +34,10 @@ class Cms::KanaDictionary < ActiveRecord::Base
       
       ## ipadic
       category = Cms::Lib::Navi::Ruby.check_category(word)
-      self.ipadic_body += '(品詞 (' + category + '))' +
-        ' ((見出し語 (' + word+ ' 500)) (読み ' + kana + ') (発音 ' + kana + '))' + "\n"
+      if !category.blank?
+        self.ipadic_body += '(品詞 (' + category + '))' +
+          ' ((見出し語 (' + word+ ' 500)) (読み ' + kana + ') (発音 ' + kana + '))' + "\n"
+      end
       
       ## unidic
       goshu = '和'
@@ -47,11 +49,13 @@ class Cms::KanaDictionary < ActiveRecord::Base
       word.tr!("0-9a-zA-Z", "０-９ａ-ｚＡ-Ｚ")
       kana.gsub!(/[^ァ-ン]/, '')
       category = Cms::Lib::Navi::Gtalk.check_category(word)
-      self.unidic_body += '(POS (' + category + '))' +
-        ' ((LEX (' + word + ' 500)) (READING ' + kana + ') (PRON ' + kana + ')'+
-        ' (INFO "lForm=\"' + kana + '\" lemma=\"' + word + '\" orthBase=\"' + word + '\"' +
-        ' pronBase=\"' + kana + '\" kanaBase=\"' + kana + '\" formBase=\"' + kana + '\"' +
-        ' goshu=\"' + goshu + '\" aType=\"0\" aConType=\"C2\""))' + "\n"
+      if !category.blank?
+        self.unidic_body += '(POS (' + category + '))' +
+          ' ((LEX (' + word + ' 500)) (READING ' + kana + ') (PRON ' + kana + ')'+
+          ' (INFO "lForm=\"' + kana + '\" lemma=\"' + word + '\" orthBase=\"' + word + '\"' +
+          ' pronBase=\"' + kana + '\" kanaBase=\"' + kana + '\" formBase=\"' + kana + '\"' +
+          ' goshu=\"' + goshu + '\" aType=\"0\" aConType=\"C2\""))' + "\n"
+      end
     end
     return true
   end
