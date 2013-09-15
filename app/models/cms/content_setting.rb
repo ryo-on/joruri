@@ -43,6 +43,10 @@ class Cms::ContentSetting < ActiveRecord::Base
     config[:options] ? config[:options].collect {|e| [e[0], e[1].to_s] } : nil
   end
   
+  def style
+    config[:style] ? config[:style] : nil
+  end
+  
   def upper_text
     config[:upper_text] ? config[:upper_text] : nil
   end

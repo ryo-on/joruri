@@ -15,10 +15,15 @@ var docTabs<%= Page.current_piece.id %> = new ArticleDocTabs('<%= Page.current_p
 
   <div class="content">
     <% @tabs.each do |tab| %>
+    <% if tab[:docs].size > 0 %>
     <ul class="<%=h tab[:name] %>" <%= 'style="display: none;"' unless tab[:current] %>>
-      <% tab[:docs].each do |doc| %><li><%= link_to h(doc.title), doc.public_uri %><%= doc.date_and_unit %>
-      </li><% end %>
-    </ul><% end %>
+      <% tab[:docs].each do |doc| %>
+      <% li_class = (attr = doc.attribute_items[0]) ? "attr#{safe{attr.name.camelize}}" : nil %>
+      <li class="<%= li_class %>"><%= link_to h(doc.title), doc.public_uri %><%= doc.date_and_unit %></li>
+      <% end %>
+    </ul>
+    <% end %>
+    <% end %>
   </div>
 
   <div class="links">

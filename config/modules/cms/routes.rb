@@ -6,6 +6,14 @@ ActionController::Routing::Routes.draw do |map|
     
   ## admin
   map.namespace(mod, :namespace => '') do |ns|
+    ns.embedded_file "embedded_file/:id/:name.:format",
+      :controller  => "admin/embedded_files",
+      :path_prefix => "/_admin/#{mod}"
+    ns.embedded_thumbnail "embedded_file/:id/thumb/:name.:format",
+      :controller  => "admin/embedded_files",
+      :path_prefix => "/_admin/#{mod}",
+      :thumbnail   => true
+    
     ns.resources :tests,
       :controller  => "admin/tests",
       :path_prefix => "/_admin/#{mod}"
@@ -18,6 +26,9 @@ ActionController::Routing::Routes.draw do |map|
       :path_prefix => "/_admin/#{mod}"
     ns.resources :contents,
       :controller  => "admin/contents",
+      :path_prefix => "/_admin/#{mod}"
+    ns.resource :contents_rewrite,
+      :controller  => "admin/content/rewrite",
       :path_prefix => "/_admin/#{mod}"
     ns.resources :nodes,
       :controller  => "admin/nodes",
@@ -39,14 +50,14 @@ ActionController::Routing::Routes.draw do |map|
     ns.resources :data_files,
       :controller  => "admin/data/files",
       :path_prefix => "/_admin/#{mod}/:parent",
-      :member      => {:download => :get}
+      :member      => {:download => :get, :thumbnail => :get}
     ns.resources :data_file_nodes,
       :controller  => "admin/data/file_nodes",
       :path_prefix => "/_admin/#{mod}/:parent"
     ns.resources :inline_data_files,
       :controller  => "admin/inline/data_files",
       :path_prefix => "/_admin/#{mod}/:parent",
-      :member      => {:download => :get}
+      :member      => {:download => :get, :thumbnail => :get}
     ns.resources :inline_data_file_nodes,
       :controller  => "admin/inline/data_file_nodes",
       :path_prefix => "/_admin/#{mod}/:parent"

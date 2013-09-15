@@ -13,9 +13,17 @@ class Cms::DataFile < ActiveRecord::Base
   belongs_to :site   , :foreign_key => :site_id   , :class_name => 'Cms::Site'
   belongs_to :node   , :foreign_key => :node_id   , :class_name => 'Cms::DataFileNode'
   
+  attr_accessor :in_resize_size, :in_thumbnail_size
+  
   validates_presence_of :concept_id
   
+  before_save :set_published_at
+  after_save :upload_public_file
   after_destroy :remove_public_file
+  
+  def states
+    [['公開','public'],['非公開','closed']]
+  end
   
   def public_path
     return nil unless site
@@ -28,8 +36,17 @@ class Cms::DataFile < ActiveRecord::Base
     "/_files/#{dir}/#{escaped_name}"
   end
   
+  def public_thumbnail_uri
+    uri = public_uri
+    ::File.dirname(uri) + "/thumb/" + ::File.basename(uri)
+  end
+  
   def public_full_uri
     "#{site.full_uri}#{public_uri.sub(/^\//, '')}"
+  end
+  
+  def public_thumbnail_full_uri
+    "#{site.full_uri}#{public_thumbnail_uri.sub(/^\//, '')}"
   end
   
   def public
@@ -51,24 +68,28 @@ class Cms::DataFile < ActiveRecord::Base
     return published_at != nil
   end
   
-  def publish(options = {})
-    unless FileTest.exist?(upload_path)
-      errors.add_to_base 'ファイルデータが見つかりません。'
-      return false
-    end
-    self.state        = 'public'
-    self.published_at = Core.now
-    return false unless save(false)
-    remove_public_file
-    return upload_public_file
+  def has_thumbnail?
+    !thumb_size.blank?
   end
   
-  def close
-    self.state        = 'closed'
-    self.published_at = nil
-    return false unless save(false)
-    return remove_public_file
-  end
+  # def publish(options = {})
+    # unless FileTest.exist?(upload_path)
+      # errors.add_to_base 'ファイルデータが見つかりません。'
+      # return false
+    # end
+    # self.state        = 'public'
+    # self.published_at = Core.now
+    # return false unless save(false)
+    # remove_public_file
+    # return upload_public_file
+  # end
+#   
+  # def close
+    # self.state        = 'closed'
+    # self.published_at = nil
+    # return false unless save(false)
+    # return remove_public_file
+  # end
   
   def duplicated?
     file = self.class.new
@@ -99,14 +120,39 @@ class Cms::DataFile < ActiveRecord::Base
   end
 
 private
+  def set_published_at
+    self.published_at = (state == "public") ? Core.now : nil
+  end
+  
   def upload_public_file
-    return false unless FileTest.exist?(upload_path)
-    Util::File.put(public_path, :src => upload_path, :mkdir => true)
+    remove_public_file
+    
+    if state == "public"
+      upl_path = upload_path
+      pub_path = public_path
+      Util::File.put(pub_path, :src => upl_path, :mkdir => true) if FileTest.exist?(upl_path)
+      
+      upl_path = ::File.dirname(upload_path) + "/thumb.dat"
+      pub_path = ::File.dirname(public_path) + "/thumb/" + ::File.basename(public_uri)
+      Util::File.put(pub_path, :src => upl_path, :mkdir => true) if FileTest.exist?(upl_path)
+    end
+    return true
   end
   
   def remove_public_file
-    return true unless FileTest.exist?(public_path)
-    FileUtils.remove_entry_secure(public_path)
+    dir = ::File.dirname(public_path)
+    FileUtils.rm_rf(dir) if FileTest.exist?(dir)
     return true
   end
+  
+  # def upload_public_file
+    # return false unless FileTest.exist?(upload_path)
+    # Util::File.put(public_path, :src => upload_path, :mkdir => true)
+  # end
+#   
+  # def remove_public_file
+    # return true unless FileTest.exist?(public_path)
+    # FileUtils.remove_entry_secure(public_path)
+    # return true
+  # end
 end

@@ -15,7 +15,7 @@ class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
     mclass = self.class.to_s.gsub(/^(\w+)::Admin/, '\1').gsub(/Controller$/, '').singularize
     eval(mclass)
     @model_class = eval(mclass)
-  rescue
+  rescue => e
     @model_class = Cms::Piece
   end
   

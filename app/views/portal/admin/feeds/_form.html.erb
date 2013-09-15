@@ -7,18 +7,18 @@
   </tr><tr>
     <th><%= @item.locale(:name) %> <span class="note">※</span></th>
     <td><%= f.text_field :name, :class => 'id' %></td>
-  </tr>
-  <tr>
+  </tr><tr>
     <th><%= @item.locale(:title) %> <span class="note">※</span></th>
     <td><%= f.text_field :title, :class => 'name' %></td>
-  </tr>
-  <tr>
+  </tr><tr>
     <th><%= @item.locale(:uri) %> <span class="note">※</span></th>
     <td><%= f.text_field :uri, :class => 'title' %></td>
-  </tr>
-  <tr>
+  </tr><tr>
     <th><%= @item.locale(:entry_count) %></th>
     <td><%= f.text_field :entry_count, :class => "number" %></td>
+  </tr><tr>
+    <th><%= @item.locale(:fixed_categories_xml) %></th>
+    <td><%= f.text_area :fixed_categories_xml, :style => "width: 98%; height: 100px;" %></td>
   </tr>
 </table>
 

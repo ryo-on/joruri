@@ -28,14 +28,22 @@ class Calendar::Public::Piece::DailyLinksController < Sys::Controller::Public::B
     
     item = Calendar::Event.new.public
     item.and :content_id, @content.id
-    item.and :event_date, ">=", @sdate.to_s
-    item.and :event_date, "<", @edate.to_s
-    item.and :event_date, "IS NOT", nil
+    item.event_date_in(@sdate, @edate)
     events = item.find(:all, :order => 'event_date ASC, id ASC')
     
+    sdate = Date.strptime(@sdate, "%Y-%m-%d")
+    edate = Date.strptime(@edate, "%Y-%m-%d")
     dates = []
     (events + event_docs).each do |ev|
       dates << ev.event_date
+      next if ev.event_close_date.blank?
+      
+      date = [sdate, ev.event_date].max
+      term = [edate, ev.event_close_date].min
+      while date <= term
+        dates << date
+        date = date + 1
+      end
     end
     @calendar.day_link = dates
     
@@ -56,7 +64,7 @@ protected
     doc = Article::Doc.new.public
     doc.agent_filter(request.mobile)
     doc.and :content_id, content_id
-    doc.event_date_is(:year => @year, :month => @month)
+    doc.event_date_in(@sdate, @edate)
     doc.find(:all, :order => 'event_date')
   end
 end

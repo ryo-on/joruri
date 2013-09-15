@@ -4,6 +4,7 @@ class Sys::File < ActiveRecord::Base
   include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
   
+  attr_accessor :in_resize_size, :in_thumbnail_size
   #validates_presence_of :name
   
   ## garbage collect

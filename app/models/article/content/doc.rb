@@ -1,5 +1,15 @@
 # encoding: utf-8
 class Article::Content::Doc < Cms::Content
+  def rewrite_configs
+    conf = []
+    if node = doc_node
+      line  = "RewriteRule ^#{node.public_uri}" + '((\d{4})(\d\d)(\d\d)(\d\d)(\d\d)(\d).*)'
+      line += " #{public_path.gsub(/.*(\/_contents\/)/, '\\1')}/docs/$2/$3/$4/$5/$6/$1 [L]"
+      conf << line
+    end
+    conf
+  end
+  
   def doc_node
     return @doc_node if @doc_node
     item = Cms::Node.new.public

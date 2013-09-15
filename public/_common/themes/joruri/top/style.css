@@ -374,3 +374,91 @@
   margin-top: 20px;
   text-align: right;
 }
+
+/* recent-docs
+------------------------------------- */
+#recentDocs {
+  position: relative;
+  width: 100%;
+  margin-bottom: 15px;
+}
+#recentDocs .pieceBody {
+  padding: 5px 15px 0 15px;
+}
+#recentDocs .pieceHeader {
+  height: 30px;
+  line-height: 30px;
+  padding-left: 10px;
+  background-color: #001c66;
+  background-image: url("./images/tl-shinchaku.gif");
+  background-repeat: no-repeat;
+  background-position: left top;
+  color: #ffffff;
+}
+#recentDocs li:after {
+  content: ".";
+  display: block;
+  clear: both;
+  height: 0;
+  visibility: hidden;
+}
+* html #recentDocs li {
+  height: 1%;
+}
+#recentDocs li {
+  display: block;
+  clear: both;
+  min-height: 90px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #cccccc;
+}
+#recentDocs li .title {
+  margin-bottom: 5px;
+  padding-left: 10px;
+  background-image: url("../piece/images/ic-list-shinchaku.gif");
+  background-repeat: no-repeat;
+  background-position: left 7px;
+}
+#recentDocs li img {
+  display: inline-block;
+  float: left;
+  width: 120px;
+  height: 90px;
+  margin-right: 10px;
+}
+#recentDocs .feed {
+  position: absolute;
+  float: left;
+  top: 7px;
+  right: 10px;
+}
+#recentDocs .feed a {
+  display: inline-block;
+} 
+#recentDocs .feed a.feedRss {
+  width: 40px;
+  height: 0;
+  vertical-align: middle;
+  overflow: hidden;
+  margin-left: 15px;
+  padding-top: 13px;
+  background-image: url(../piece/images/bt-rss.gif);
+  background-repeat: no-repeat;
+} 
+#recentDocs .feed a.feedAtom {
+  width: 45px;
+  height: 0;
+  vertical-align: middle;
+  overflow: hidden;
+  margin-left: 5px;
+  padding-top: 13px;
+  background-image: url(../piece/images/bt-atom.gif);
+  background-repeat: no-repeat;
+}
+#recentDocs .links {
+  text-align: right;
+}
+#recentDocs .links .more {
+  padding: 0;
+}

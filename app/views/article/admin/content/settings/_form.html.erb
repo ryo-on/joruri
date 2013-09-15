@@ -7,7 +7,8 @@ when :select
 when :text
   value_form = f.text_area(:value, :style => "width: 600px; height: 160px;")
 else
-  value_form = f.text_field(:value, :style => "width: 400px;")
+  style = @item.style || "width: 400px;"
+  value_form = f.text_field(:value, :style => style)
 end
 
 upper_text = @item.upper_text ? %Q(<div style="margin: 5px; line-height: 1.2;">#{@item.upper_text}</div>) : ""

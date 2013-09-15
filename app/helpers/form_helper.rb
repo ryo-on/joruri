@@ -44,4 +44,9 @@ module FormHelper
     end
     h += '</div>'
   end
+  
+  def disable_enter_key_js
+    render :partial => 'sys/admin/_partial/disable_enter_key/js'
+  end
+  
 end

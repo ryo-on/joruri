@@ -113,7 +113,7 @@ td.attribute.attributeEvent {
   vertical-align: middle;
   padding: 15px 10px;
 }
-td.attribute.attributeEvent span {
+td.attribute.attributeEvent span, p.attributeEvent {
   background-color: #ffcc00;
 }
 td.attribute.attributeEvent span.attribute {
@@ -135,4 +135,31 @@ td.title {
   margin-bottom: 20px;
   background-color: #f1f1f1;
   font-size: 120%;
+}
+.calendar li:after {
+  content: ".";
+  display: block;
+  clear: both;
+  height: 0;
+  visibility: hidden;
+}
+* html .calendar li {
+  height: 1%;
+}
+.calendar li {
+  display: block;
+  clear: both;
+  padding: 0 10px 10px;
+}
+.calendar li:last-child {
+  border-bottom: 1px solid #ccc;
+}
+.calendar li img {
+  float: left;
+  margin-right: 10px;
+}
+p.attribute {
+  width: 130px;
+  margin-left: 130px;
+  text-align: center;
 }

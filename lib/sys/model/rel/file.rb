@@ -25,19 +25,25 @@ module Sys::Model::Rel::File
     #return true unless @save_mode == :publish
     return true if files.size == 0
     
-    dir = public_files_path
-    FileUtils.mkdir_p(dir) unless FileTest.exist?(dir)
+    public_dir = public_files_path
     
     files.each do |file|
-      next unless FileTest.exist?(file.upload_path)
-      new_file = dir + '/' + file.name
-      if FileTest.exist?(new_file)
-        if File::stat(new_file).mtime >= File::stat(file.upload_path).mtime
-          next
-        end
+      upload_path = file.upload_path
+      upload_dir  = ::File.dirname(upload_path)
+      
+      paths = {
+        upload_path => "#{public_dir}/#{file.name}",
+        "#{upload_dir}/thumb.dat" => "#{public_dir}/thumb/#{file.name}"
+      }
+      
+      paths.each do |fr, to|
+        next unless FileTest.exist?(fr)
+        next if FileTest.exist?(to) && ( File::stat(to).mtime >= File::stat(fr).mtime)
+        FileUtils.mkdir_p(::File.dirname(to)) unless FileTest.exist?(::File.dirname(to))
+        FileUtils.cp(fr, to)
       end
-      FileUtils.cp(file.upload_path, dir + '/' + file.name) if FileTest.exist?(file.upload_path)
     end
+    
     return true
   end
   

@@ -1,5 +1,7 @@
 # encoding: utf-8
 class Article::Public::Piece::RecentDocsController < Sys::Controller::Public::Base
+  helper Article::DocHelper
+  
   def index
     @content = Article::Content::Doc.find(Page.current_piece.content_id)
     @node    = @content.recent_node

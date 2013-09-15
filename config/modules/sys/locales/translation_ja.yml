@@ -56,6 +56,9 @@ ja:
         group_id: "グループ"
         in_group_id: "グループ"
         role_name: "ロール権限"
+        current_password: "現在のパスワード"
+        new_password: "新しいパスワード"
+        confirm_password: "新しいパスワード（確認用）"
       
       sys/role_name: 
         name: "ロールID"

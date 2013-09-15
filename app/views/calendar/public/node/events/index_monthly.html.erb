@@ -9,7 +9,8 @@
   <div class="<%= day[:class] %>">
     <%= day[:day] %>日（<%= day[:wday_label] %>）
   </div>
-  <% if @items[day[:date]].size > 0 || day[:holiday] %><ul class="events">
+  <% if @items[day[:date]].size > 0 || day[:holiday] %>
+  <ul class="events typeDateList">
     <% if day[:holiday] %><li class="holiday"><%= day[:holiday] %></li><% end %>
     <% @items[day[:date]].each do |item| %>
     <li class="event">
@@ -20,7 +21,8 @@
       <% end %>
     </li>
     <% end %>
-  </ul><% end %>
+  </ul>
+  <% end %>
 </div>
 <% end %>
 

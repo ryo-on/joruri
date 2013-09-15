@@ -15,7 +15,7 @@ class Sys::User < ActiveRecord::Base
   has_and_belongs_to_many :role_names, :association_foreign_key => :role_id,
     :class_name => 'Sys::RoleName', :join_table => 'sys_users_roles'
   
-  attr_accessor :in_group_id
+  attr_accessor :in_group_id, :current_password, :new_password, :confirm_password
   #attr_accessor :group, :group_id, :in_group_id
   
   validates_uniqueness_of :account
@@ -24,6 +24,19 @@ class Sys::User < ActiveRecord::Base
   
   after_save :save_group, :if => %Q(@_in_group_id_changed)
 
+  before_destroy :validate_destroy_admin,
+    :if => %Q(auth_no == 5)
+  
+  def validate_destroy_admin
+    item = self.class.new
+    item.and :auth_no, 5
+    item.and :id, '!=', id
+    if item.find(:first)
+      return true
+    end
+    return false
+  end
+  
   def readable
     self
   end

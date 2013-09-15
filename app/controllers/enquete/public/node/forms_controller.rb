@@ -27,8 +27,8 @@ class Enquete::Public::Node::FormsController < Cms::Controller::Public::Base
     @form = form(@item)
     
     ## post
-    return false unless request.post?
     @form.submit_values = params[:item]
+    return false unless request.post?
     
     ## edit
     return false if params[:edit]

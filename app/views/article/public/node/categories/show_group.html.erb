@@ -7,11 +7,13 @@
     <%= link_to 'Atom', "index.atom", :class => 'feedAtom' %>
   </div>
   
-  <% if @docs.size > 0 %><ul>
-    <% @docs.each do |doc| %><li>
-      <%= link_to h(doc.title), doc.public_uri %><%= doc.date_and_unit %>
-    </li><% end %>
-  </ul><% end %>
+  <% if @docs.size > 0 %>
+  <ul>
+    <% @docs.each do |doc| %>
+    <li><%= article_doc_list doc, :list_type => @node.setting_value(:list_type) %></li>
+    <% end %>
+  </ul>
+  <% end %>
   <% if !@more && @docs.size > 0 %>
   <div class="more"><%= link_to '&gt;&gt;新着記事一覧', "more.html" %></div>
   <% end %>

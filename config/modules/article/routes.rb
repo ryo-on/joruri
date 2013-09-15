@@ -110,6 +110,9 @@ ActionController::Routing::Routes.draw do |map|
     ns.connect "node_docs/:name/index.html",
       :controller => "public/node/docs",
       :action     => :show
+    ns.connect "node_docs/:name/files/:type/:file.:format",
+      :controller => "public/node/doc/files",
+      :action     => :show
     ns.connect "node_docs/:name/files/:file.:format",
       :controller => "public/node/doc/files",
       :action     => :show
@@ -122,6 +125,9 @@ ActionController::Routing::Routes.draw do |map|
     ns.connect "node_event_docs/:year/:month/index.:format",
       :controller => "public/node/event_docs",
       :action     => :month
+    ns.connect "node_event_docs/schedule.:format",
+      :controller => "public/node/event_docs",
+      :action     => :schedule
     ns.connect "node_event_docs/index.:format",
       :controller => "public/node/event_docs",
       :action     => :month

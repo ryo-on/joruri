@@ -36,15 +36,16 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
 
   def new
     @item = Article::Doc.new({
-      :content_id   => @content.id,
-      :state        => 'recognize',
-      :notice_state => 'hidden',
-      :recent_state => 'visible',
-      :list_state   => 'visible',
-      :event_state  => 'hidden',
+      :content_id     => @content.id,
+      :state          => 'recognize',
+      :notice_state   => 'hidden',
+      :recent_state   => 'visible',
+      :list_state     => 'visible',
+      :event_state    => 'hidden',
       :sns_link_state => 'visible',
     })
-    @item.in_inquiry = @item.default_inquiry
+    state = @content.setting_value(:inquiry_default_state)
+    @item.in_inquiry = @item.default_inquiry(:state => (state.blank? ? "visible" : state))
     @item.in_recognizer_ids = @content.setting_value(:default_recognizers)
     
     ## add tmp_id
@@ -70,7 +71,7 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
       @checker.check_link @item.body
       return render :action => :new
     elsif @item.state =~ /(recognize|public)/
-      if Joruri.config.application["sys.auto_link_check"] == true && params[:link_check] != "0"
+      if @content.setting_value(:auto_link_check) != "disabled" && params[:link_check] != "0"
         @item.link_checker = @checker
       end
     end
@@ -99,7 +100,7 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
       @checker.check_link @item.body
       return render :action => :edit
     elsif @item.state =~ /(recognize|public)/
-      if Joruri.config.application["sys.auto_link_check"] == true && params[:link_check] != "0"
+      if @content.setting_value(:auto_link_check) != "disabled" && params[:link_check] != "0"
         @item.link_checker = @checker
       end
     end

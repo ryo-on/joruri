@@ -74,7 +74,7 @@ class Cms::Admin::KanaDictionariesController < Cms::Controller::Admin::Base
       @result = Cms::Lib::Navi::Ruby.convert(params[:body])
     elsif params[:talk_kana]
       @mode = '音声テキスト'
-      @result = Cms::Lib::Navi::Gtalk.make_text(params[:body])
+      @result = ERB::Util.html_escape(Cms::Lib::Navi::Gtalk.make_text(params[:body]))
     elsif params[:talk_file]
       @skip_layout = true
       gtalk = Cms::Lib::Navi::Gtalk.new

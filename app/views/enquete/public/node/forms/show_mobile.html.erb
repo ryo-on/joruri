@@ -15,7 +15,7 @@
 
 <div class="columns">
   <% @form.elements.each do |e| %>
-  <div class="column">
+  <div class="column <%= e.name %>">
     <div class="name"><%=h e.label %> <span class="required"><%= "※" if e.required %></span></div>
     <% if e.message && !@confirm %><div class="body"><%= e.message %></div><% end %>
     <div class="field"><%= e.tag %></div>

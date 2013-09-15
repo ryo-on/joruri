@@ -38,7 +38,13 @@ class Sys::Admin::GroupUsersController < Cms::Controller::Admin::Base
   def update
     @item = Sys::User.new.find(params[:id])
     @item.attributes = params[:item]
-    _update(@item, :location => sys_groups_path(@parent))
+    old_password = @item.password_was
+    
+    _update(@item, :location => sys_groups_path(@parent)) do
+      if Core.user.id == @item.id && @item.password != old_password
+        new_login @item.account, @item.password
+      end
+    end
   end
   
   def destroy

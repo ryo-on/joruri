@@ -367,6 +367,13 @@ ul.sitemap ul.level2 {
   background-image: none;
 }
 
+/* recent-docs
+----------------------------------------------- */
+#recentDocs .pieceHeader {
+  border: 1px solid #ffffff;
+  background: none;
+}
+
 /* topic
 ----------------------------------------------- */
 #topic .pieceHeader {

@@ -14,11 +14,14 @@ class Portal::Admin::FeedEntriesController < Cms::Controller::Admin::Base
   end
 
   def index
+    return update_entries if params[:do] == "update_entries"
+    return delete_entries if params[:do] == "delete_entries"
+    
     item = Portal::FeedEntry.new
     item.and :feed_id, @feed.id
     item.search params
     item.page  params[:page], params[:limit]
-    item.order params[:sort], 'entry_updated ASC, id DESC'
+    item.order params[:sort], 'entry_updated DESC, id DESC'
     @items = item.find(:all)
     _index @items
   end
@@ -37,7 +40,9 @@ class Portal::Admin::FeedEntriesController < Cms::Controller::Admin::Base
   end
 
   def update
-    return error_auth
+    @item = Portal::FeedEntry.new.find(params[:id])
+    @item.attributes = params[:item]
+    _update @item
   end
 
   def destroy
@@ -45,4 +50,22 @@ class Portal::Admin::FeedEntriesController < Cms::Controller::Admin::Base
   end
 
 protected
+
+  def update_entries
+    if @feed.update_feed(:destroy => true)
+      flash[:notice] = "エントリを更新しました。"
+    else
+      flash[:notice] = "エントリの更新に失敗しました。"
+    end
+    redirect_to portal_feed_entries_path
+  end
+
+  def delete_entries
+    if @feed.entries.destroy_all
+      flash[:notice] = "エントリを削除しました。"
+    else
+      flash[:notice] = "エントリの削除に失敗しました。"
+    end
+    redirect_to portal_feed_entries_path
+  end
 end

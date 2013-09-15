@@ -80,6 +80,7 @@ class Portal::FeedEntry < Cms::FeedEntry
                 ", #{_feed_tbl}.summary" +
                 ", #{_feed_tbl}.link_alternate" +
                 ", #{_feed_tbl}.categories " +
+                ", #{_feed_tbl}.categories_xml " +
                 ", #{_feed_tbl}.entry_id" +
                 ", #{_feed_tbl}.author_name" +
                 ", #{_feed_tbl}.author_email" +
@@ -104,6 +105,7 @@ class Portal::FeedEntry < Cms::FeedEntry
                ", body AS summary" +
                ", NULL AS link_alternate" +
                ", NULL AS categories " +
+               ", NULL AS categories_xml " +
                ", NULL AS entry_id" +
                ", NULL AS author_name" +
                ", NULL AS author_email" +

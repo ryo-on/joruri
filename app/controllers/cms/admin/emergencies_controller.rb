@@ -6,8 +6,8 @@ class Cms::Admin::EmergenciesController < Cms::Controller::Admin::Base
     return error_auth unless Core.user.has_auth?(:designer)
     
     @parent   = Core.site.root_node
-    @node     = @parent.children.find(:first, :conditions => {:name => 'index.html'})
-    @node   ||= @parent.children.find(:first, :conditions => {:name => 'index.htm'})
+    @node     = @parent.children.find(:first, :conditions => {:state => "public", :name => 'index.html'})
+    @node   ||= @parent.children.find(:first, :conditions => {:state => "public", :name => 'index.htm'})
   end
   
   def index
@@ -66,6 +66,7 @@ class Cms::Admin::EmergenciesController < Cms::Controller::Admin::Base
     if @item.errors.size == 0
       @node.layout_id = @item.value
       @node.save(false)
+      publish_page(@node)
     end
     
     if @item.errors.size == 0
@@ -81,5 +82,17 @@ class Cms::Admin::EmergenciesController < Cms::Controller::Admin::Base
         format.xml  { render(:xml => @item.errors, :status => :unprocessable_entity) }
       end
     end
+  end
+  
+  def publish_page(item)
+    uri  = item.public_uri
+    uri  = (uri =~ /\?/) ? uri.gsub(/(.*\.html)\?/, '\\1') : "#{uri}"
+    path = "#{item.public_path}"
+    item.publish_page(render_public_as_string(uri, :site => item.site), :path => path)
+    
+    uri  = item.public_uri
+    uri  = (uri =~ /\?/) ? uri.gsub(/(.*\.html)\?/, '\\1.r?') : "#{uri}.r"
+    path = "#{item.public_path}.r"
+    item.publish_page(render_public_as_string(uri, :site => item.site), :path => path, :dependent => :ruby)
   end
 end

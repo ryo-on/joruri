@@ -61,8 +61,8 @@ ActiveRecord::Schema.define(:version => 20110803122623) do
   create_table "article_docs", :force => true do |t|
     t.integer  "unid"
     t.integer  "content_id"
-    t.string   "state",          :limit => 15
-    t.string   "agent_state",    :limit => 15
+    t.string   "state",            :limit => 15
+    t.string   "agent_state",      :limit => 15
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "recognized_at"
@@ -77,13 +77,14 @@ ActiveRecord::Schema.define(:version => 20110803122623) do
     t.text     "list_state"
     t.text     "event_state"
     t.date     "event_date"
-    t.string   "sns_link_state", :limit => 15
+    t.date     "event_close_date"
+    t.string   "sns_link_state",   :limit => 15
     t.string   "name"
     t.text     "title"
-    t.text     "head",           :limit => 2147483647
-    t.text     "body",           :limit => 2147483647
+    t.text     "head",             :limit => 2147483647
+    t.text     "body",             :limit => 2147483647
     t.text     "mobile_title"
-    t.text     "mobile_body",    :limit => 2147483647
+    t.text     "mobile_body",      :limit => 2147483647
   end
 
   add_index "article_docs", ["content_id", "published_at", "event_date"], :name => "content_id"
@@ -116,14 +117,15 @@ ActiveRecord::Schema.define(:version => 20110803122623) do
   create_table "calendar_events", :force => true do |t|
     t.integer  "unid"
     t.integer  "content_id"
-    t.string   "state",        :limit => 15
+    t.string   "state",            :limit => 15
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "published_at"
     t.date     "event_date"
+    t.date     "event_close_date"
     t.string   "event_uri"
     t.text     "title"
-    t.text     "body",         :limit => 2147483647
+    t.text     "body",             :limit => 2147483647
   end
 
   add_index "calendar_events", ["content_id", "published_at", "event_date"], :name => "content_id"
@@ -193,6 +195,9 @@ ActiveRecord::Schema.define(:version => 20110803122623) do
     t.integer  "image_is"
     t.integer  "image_width"
     t.integer  "image_height"
+    t.integer  "thumb_width"
+    t.integer  "thumb_height"
+    t.integer  "thumb_size"
   end
 
   add_index "cms_data_files", ["concept_id", "node_id", "name"], :name => "concept_id"
@@ -210,6 +215,26 @@ ActiveRecord::Schema.define(:version => 20110803122623) do
     t.text     "body",         :limit => 2147483647
   end
 
+  create_table "cms_embedded_files", :force => true do |t|
+    t.integer  "unid"
+    t.integer  "site_id"
+    t.string   "state",        :limit => 15
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "published_at"
+    t.datetime "deleted_at"
+    t.string   "name"
+    t.text     "title"
+    t.text     "mime_type"
+    t.integer  "size"
+    t.integer  "image_is"
+    t.integer  "image_width"
+    t.integer  "image_height"
+    t.integer  "thumb_width"
+    t.integer  "thumb_height"
+    t.integer  "thumb_size"
+  end
+
   create_table "cms_feed_entries", :force => true do |t|
     t.integer  "feed_id"
     t.integer  "content_id"
@@ -224,6 +249,7 @@ ActiveRecord::Schema.define(:version => 20110803122623) do
     t.text     "link_alternate"
     t.text     "link_enclosure"
     t.text     "categories"
+    t.text     "categories_xml"
     t.text     "author_name"
     t.string   "author_email"
     t.text     "author_uri"
@@ -237,7 +263,7 @@ ActiveRecord::Schema.define(:version => 20110803122623) do
     t.text     "state"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "name",           :null => false
+    t.string   "name",                 :null => false
     t.text     "uri"
     t.text     "title"
     t.string   "feed_id"
@@ -246,6 +272,7 @@ ActiveRecord::Schema.define(:version => 20110803122623) do
     t.text     "feed_title"
     t.text     "link_alternate"
     t.integer  "entry_count"
+    t.text     "fixed_categories_xml"
   end
 
   create_table "cms_inquiries", :force => true do |t|
@@ -330,6 +357,17 @@ ActiveRecord::Schema.define(:version => 20110803122623) do
     t.text     "point5_lat"
     t.text     "point5_lng"
   end
+
+  create_table "cms_node_settings", :force => true do |t|
+    t.integer  "node_id",    :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "name"
+    t.text     "value"
+    t.integer  "sort_no"
+  end
+
+  add_index "cms_node_settings", ["node_id"], :name => "node_id"
 
   create_table "cms_nodes", :force => true do |t|
     t.integer  "unid"
@@ -661,6 +699,9 @@ ActiveRecord::Schema.define(:version => 20110803122623) do
     t.integer  "image_is"
     t.integer  "image_width"
     t.integer  "image_height"
+    t.integer  "thumb_width"
+    t.integer  "thumb_height"
+    t.integer  "thumb_size"
   end
 
   add_index "sys_files", ["parent_unid", "name"], :name => "parent_unid"
@@ -837,6 +878,14 @@ ActiveRecord::Schema.define(:version => 20110803122623) do
   end
 
   add_index "sys_sequences", ["name", "version"], :name => "name"
+
+  create_table "sys_settings", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "name"
+    t.text     "value"
+    t.integer  "sort_no"
+  end
 
   create_table "sys_tasks", :force => true do |t|
     t.integer  "unid"

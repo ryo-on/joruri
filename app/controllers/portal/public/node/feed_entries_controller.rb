@@ -1,6 +1,7 @@
 # encoding: utf-8
 class Portal::Public::Node::FeedEntriesController < Cms::Controller::Public::Base
   include Portal::Controller::Feed
+  helper Portal::DocHelper
 
   def pre_dispatch
     return http_error(404) unless content = Page.current_node.content

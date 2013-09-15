@@ -95,6 +95,7 @@ ja:
         module: "モジュール"
 
       cms/data_file:
+        state: "状態"
         concept_id: "コンセプト"
         node_id: "フォルダ"
         file: "ファイル"
@@ -117,6 +118,7 @@ ja:
         feed_title: "フィード文書名"
         link_alternate: "代替URL"
         entry_count: "記事取込数"
+        fixed_categories_xml: "カテゴリXML（固定）"
       
       cms/stylesheet:
         path: "パス"

@@ -23,6 +23,7 @@ class Page
     @@mobile        = nil
     @@ruby          = nil
     @@error         = nil
+    @@body_class    = nil
   end
   
   def self.full_uri
@@ -45,10 +46,11 @@ class Page
     id  = id.gsub(/\.[0-9a-zA-Z]+$/, '')
     id  = id.gsub(/[^0-9a-zA-Z_\.\/]/, '_')
     id  = id.gsub(/(\.|\/)/, '-').camelize(:lower)
-    return %Q(id="page-#{id}")
+    return %Q(page-#{id})
   end
 
   def self.body_class
+    return @@body_class if @@body_class
     return nil unless @@uri
     cls  = @@uri.gsub(/^\/_.*?\/[0-9]+\//, '/')
     cls << 'index.html' if /\/$/ =~ cls
@@ -58,8 +60,12 @@ class Page
     cls  = cls.gsub(/\.[0-9a-zA-Z]+$/, '')
     cls  = cls.gsub(/[^0-9a-zA-Z_\.\/]/, '_')
     cls  = cls.gsub(/(\.|\/)/, '-').gsub(/\-$/, '')
-    return %Q(class="rootdir") if cls.blank?
-    return %Q(class="dir-#{cls.camelize(:lower)}")
+    return @@body_class = %Q(rootdir) if cls.blank?
+    return @@body_class = %Q(dir-#{cls.camelize(:lower)})
+  end
+  
+  def self.add_body_class(str)
+    @@body_class = "#{body_class} #{str}"
   end
   
   def self.title

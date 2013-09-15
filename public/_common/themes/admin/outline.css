@@ -43,13 +43,13 @@
   padding-top: 25px;
   text-align: right;
 }
-#header .menu * {
+#header .menu a {
   margin: 0px 20px 0px 0px;
   color: #fff;
   text-decoration: none;
 }
-#header .menu a: hover {
-  color: #FFCC00;
+#header .menu a:hover {
+  color: #ff0;
 }
 
 /* Banner

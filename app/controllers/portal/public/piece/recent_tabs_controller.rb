@@ -1,6 +1,7 @@
 # encoding: utf-8
 class Portal::Public::Piece::RecentTabsController < Sys::Controller::Public::Base
   include Portal::Controller::Feed
+  helper Portal::DocHelper
 
   def pre_dispatch
     @piece   = Page.current_piece

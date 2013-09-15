@@ -1,9 +1,11 @@
 # encoding: utf-8
 class Article::Public::Node::RecentDocsController < Cms::Controller::Public::Base
   include Article::Controller::Feed
+  helper Article::DocHelper
   
   def index
-    @content = Page.current_node.content
+    @node    = Page.current_node
+    @content = @node.content
     
     doc = Article::Doc.new.public
     doc.agent_filter(request.mobile)

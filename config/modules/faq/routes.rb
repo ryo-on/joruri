@@ -38,6 +38,9 @@ ActionController::Routing::Routes.draw do |map|
     ns.resources :node_recent_docs,
       :controller  => "admin/node/recent_docs",
       :path_prefix => "/_admin/#{mod}/:parent"
+    ns.resources :node_search_docs,
+      :controller  => "admin/node/search_docs",
+      :path_prefix => "/_admin/#{mod}/:parent"
     ns.resources :node_tag_docs,
       :controller  => "admin/node/tag_docs",
       :path_prefix => "/_admin/#{mod}/:parent"
@@ -48,6 +51,9 @@ ActionController::Routing::Routes.draw do |map|
     ## piece
     ns.resources :piece_recent_docs,
       :controller  => "admin/piece/recent_docs",
+      :path_prefix => "/_admin/#{mod}"
+    ns.resources :piece_search_docs,
+      :controller  => "admin/piece/search_docs",
       :path_prefix => "/_admin/#{mod}"
     ns.resources :piece_categories,
       :controller  => "admin/piece/categories",
@@ -67,6 +73,9 @@ ActionController::Routing::Routes.draw do |map|
       :action     => :index
     ns.connect "node_recent_docs/index.:format",
       :controller => "public/node/recent_docs",
+      :action     => :index
+    ns.connect "node_search_docs/index.:format",
+      :controller => "public/node/search_docs",
       :action     => :index
     ns.connect "node_tag_docs/:tag",
       :controller => "public/node/tag_docs",

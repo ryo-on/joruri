@@ -180,12 +180,31 @@
 .contentArticleRecentDocs .docs ul {
   margin: 0 0 25px 7px;
 }
+.contentArticleRecentDocs .docs li:after {
+  content: ".";
+  display: block;
+  clear: both;
+  height: 0;
+  visibility: hidden;
+}
+* html .contentArticleRecentDocs .docs li {
+  height: 1%;
+}
 .contentArticleRecentDocs .docs li {
-  margin: 0;
+  display: block;
+  clear: both;
   padding: 0 0 5px 10px;
   background-image: url(./images/ic-list-shinchaku.gif);
   background-repeat: no-repeat;
   background-position: 0 7px;
+}
+.contentArticleRecentDocs .docs li .title {
+  margin: 0;
+  padding-bottom: 5px;
+}
+.contentArticleRecentDocs li img {
+  float: left;
+  margin-right: 10px;
 }
 
 /* pagination

@@ -24,6 +24,7 @@ class Article::Admin::Doc::FilesController < Cms::Controller::Admin::Base
     @item.page  params[:page], params[:limit]
     @item.order params[:sort], :name
     @items = @item.find(:all)
+    
     _index @items
   end
   
@@ -35,7 +36,16 @@ class Article::Admin::Doc::FilesController < Cms::Controller::Admin::Base
 
   def new
     @item = Sys::File.new({
+      :in_resize_size    => @content.setting_value(:attachment_resize_size),
+      :in_thumbnail_size => @content.setting_value(:attachment_thumbnail_size),
     })
+    if @tmp
+      @item.and :tmp_id, @parent
+      @item.and :parent_unid, 'IS', nil
+    else
+      @item.and :tmp_id, 'IS', nil
+      @item.and :parent_unid, @parent
+    end
   end
   
   def create
@@ -46,7 +56,9 @@ class Article::Admin::Doc::FilesController < Cms::Controller::Admin::Base
       @item.parent_unid = @parent
     end
     
-    @item.allowed_type = @content.setting_value(:allowed_attachment_type)
+    @item.allowed_type  = @content.setting_value(:allowed_attachment_type)
+    @item.use_resize @item.in_resize_size
+    @item.use_thumbnail @content.setting_value(:attachment_thumbnail_size)
     
     _create @item
   end
@@ -80,6 +92,13 @@ class Article::Admin::Doc::FilesController < Cms::Controller::Admin::Base
     end
     return http_error(404) unless @file = item.find(:first)
     
-    send_file @file.upload_path, :type => @file.mime_type, :filename => @file.name, :disposition => 'inline'
+    file_path = @file.upload_path
+    
+    if params[:thumb]
+      file_path = @file.upload_path(:type => :thumb)
+      file_path = @file.upload_path unless ::File.exists?(file_path)
+    end
+    
+    send_file file_path, :type => @file.mime_type, :filename => @file.name, :disposition => 'inline'
   end
 end

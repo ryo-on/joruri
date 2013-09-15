@@ -207,6 +207,10 @@ private
       @@site         = Cms::Site.find_by_script_uri(@@script_uri)
       Page.site      = @@site
       @@internal_uri = @@request_uri
+    when 'emfiles'
+      @@site         = Cms::Site.find_by_script_uri(@@script_uri)
+      Page.site      = @@site
+      @@internal_uri = @@request_uri
     when 'tools'
       @@site         = Cms::Site.find_by_script_uri(@@script_uri)
       Page.site      = @@site

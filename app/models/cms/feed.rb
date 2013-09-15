@@ -38,33 +38,120 @@ class Cms::Feed < ActiveRecord::Base
   end
 
 
-  def update_feed
+  def update_feed(options = {})
     unless xml = request_feed
       errors.add_to_base "FeedRequestError: #{uri}"
       return false
     end
-
+    
+    if options[:destroy] == true
+      entries.destroy_all
+    end
+    
     require "rexml/document"
     doc  = REXML::Document.new(xml)
     root = doc.root
+    
+    if root.name.downcase =~ /^(rss|rdf)$/
+      return update_feed_rss(root)
+    else
+      return update_feed_atom(root)
+    end
+    
+  rescue => e
+    errors.add_to_base "Error: #{e.class}"
+    return false
+  end
+  
+  def update_feed_rss(root)
+    require 'date/format'
+    latest = []
+    
+    channel = root.elements['channel']
+    self.feed_id        = nil
+    self.feed_type      = root.name.downcase
+    self.feed_updated   = Core.now
+    self.feed_title     = channel.elements['title'].text
+    self.link_alternate = channel.elements['link'].text
+    self.entry_count ||= 20
+    self.save
+    
+    ## entries
+    begin
+      path = root.elements["item"]  ? "item" : "channel/item"
+      root.elements.each(path) do |e|
+        entry_id      = e.elements['link'].text
+        entry_updated = (e.elements['pubDate'] || e.elements['dc:date']).text
+        
+        cond  = {:feed_id => self.id, :entry_id => entry_id}
+        if entry = Cms::FeedEntry.find(:first, :conditions => cond)
+          arr = Date._parse(entry_updated, false).values_at(:year, :mon, :mday, :hour, :min, :sec, :zone, :wday)
 
+          newt = Time::local(*arr[0..-3]).strftime('%s').to_i
+          oldt = entry.entry_updated.strftime('%s').to_i
+          if newt <= oldt
+            latest << entry.id
+            next
+          end
+        else
+          entry = Cms::FeedEntry.new
+        end
+        
+        ## base
+        entry.content_id       = self.content_id
+        entry.feed_id          = self.id
+        entry.state          ||= 'public'
+        entry.entry_id         = entry_id
+        entry.entry_updated    = entry_updated
+        entry.title            = safe{e.elements['title'].texts.join}
+        entry.summary          = safe{e.elements['description'].texts.join}
+        entry.link_alternate   = e.elements['link'].text
+        
+        ## category xml
+        if fixed_categories_xml.blank?
+          cates = []
+          e.each_element('category') {|c| cates << c.to_s }
+          entry.categories_xml = cates.join("\n")
+        else
+          entry.categories_xml = fixed_categories_xml
+        end
+        
+        ## category
+        set_entry_category(entry)
+        
+        ## save
+        latest << entry.id if entry.save
+      end
+    rescue Exception => e
+      errors.add_to_base "FeedEntryError: #{e}"
+    end
+
+    if latest.size > 0
+      cond = Condition.new
+      cond.and "NOT id", "IN", latest
+      cond.and :feed_id, self.id
+      Cms::FeedEntry.destroy_all(cond.where)
+    end
+    return errors.size == 0
+  end
+  
+  def update_feed_atom(root)
+    require 'date/format'
+    latest = []
+    
     ## feed
     self.feed_id      = root.elements['id'].text
-    self.feed_type    = nil
+    self.feed_type    = "atom"
     self.feed_updated = root.elements['updated'].text
     self.feed_title   = root.elements['title'].text
     root.each_element('link') do |l|
       self.link_alternate = l.attribute('href').to_s if l.attribute('rel').to_s == 'alternate'
     end
     self.entry_count ||= 20
-    save
+    self.save
 
     ## entries
     begin
-      #require 'parsedate'
-      require 'date/format'
-      latest = []
-
       root.get_elements('entry').each_with_index do |e, i|
         break if i >= self.entry_count
 
@@ -73,12 +160,10 @@ class Cms::Feed < ActiveRecord::Base
 
         cond  = {:feed_id => self.id, :entry_id => entry_id}
         if entry = Cms::FeedEntry.find(:first, :conditions => cond)
-          #arr = ParseDate::parsedate(entry_updated)
-          arr = Date._parse(entry_updated, false).values_at(:year, :mon, :mday, :hour, :min, :sec, :zone, :wday)
-
-          new = Time::local(*arr[0..-3]).strftime('%s').to_i
-          old = entry.entry_updated.strftime('%s').to_i
-          if new <= old
+          arr  = Date._parse(entry_updated, false).values_at(:year, :mon, :mday, :hour, :min, :sec, :zone, :wday)
+          newt = Time::local(*arr[0..-3]).strftime('%s').to_i
+          oldt = entry.entry_updated.strftime('%s').to_i
+          if newt <= oldt
             latest << entry.id
             next
           end
@@ -100,37 +185,28 @@ class Cms::Feed < ActiveRecord::Base
           entry.link_alternate = l.attribute('href').to_s if l.attribute('rel').to_s == 'alternate'
           entry.link_enclosure = l.attribute('href').to_s if l.attribute('rel').to_s == 'enclosure'
         end
-
-        ## categories, event_date
-        categories = []
-        event_date = nil
-        e.each_element('category') do |c|
-          cate_label = c.attribute('label').to_s.gsub(/ /, '_')
-
-          if c.attribute('term').to_s == 'event'
-            _year, _month, _day = /(^|\n)イベント\/([0-9]{4})-([0-9]{2})-([0-9]{2})T/.match(cate_label).to_a.values_at(2, 3, 4)
-            if _year && _month && _day
-              begin
-                event_date = Date.new(_year.to_i, _month.to_i, _day.to_i)
-              rescue
-              end
-            end
-          end
-          categories << cate_label
+        
+        ## category xml
+        if fixed_categories_xml.blank?
+          cates = []
+          e.each_element('category') {|c| cates << c.to_s }
+          entry.categories_xml = cates.join("\n")
+        else
+          entry.categories_xml = fixed_categories_xml
         end
-        entry.categories = categories.join("\n")
-        entry.event_date = event_date
-
+        
+        ## category
+        set_entry_category(entry)
+        
         ## author
         if author = e.elements['author']
           entry.author_name    = safe{author.elements['name'].text}
           entry.author_email   = safe{author.elements['email'].text}
           entry.author_uri     = safe{author.elements['uri'].text}
         end
-
-        if entry.save
-          latest << entry.id
-        end
+        
+        ## save
+        latest << entry.id if entry.save
       end
     rescue Exception => e
       errors.add_to_base "FeedEntryError: #{e}"
@@ -143,9 +219,22 @@ class Cms::Feed < ActiveRecord::Base
       Cms::FeedEntry.destroy_all(cond.where)
     end
     return errors.size == 0
-
-  rescue => e
-    errors.add_to_base "Error: #{e.class}"
-    return false
+  end
+  
+  def set_entry_category(entry)
+    labels = []
+    entry.categories_xml.to_s.scan(/<category [^>]*?label=['"](.*?)['"][^>]+>/) do |m|
+      labels << m[0].to_s.gsub(/ /, '_')
+    end
+    entry.categories = labels.join("\n")
+    
+    entry.event_date = nil
+    entry.categories_xml.to_s.scan(/<category [^>]*term=['"]event['"].*>/) do |m|
+      next if m !~ /イベント\/\d{4}-\d{2}-\d{2}T/
+      year, month, day = m.match(/イベント\/(\d{4})-(\d{2})-(\d{2})T/).to_a.values_at(1, 2, 3)
+      if year && month && day
+        entry.event_date = Date.new(year.to_i, month.to_i, day.to_i) rescue nil
+      end
+    end
   end
 end

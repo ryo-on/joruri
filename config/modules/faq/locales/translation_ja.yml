@@ -32,6 +32,10 @@ ja:
         updated_at: "更新日時"
         sort_no: "並び順"
       
+      faq/node/doc:
+        show_concept_id: "詳細画面コンセプト"
+        show_layout_id: "詳細画面レイアウト"
+      
       ## content
       faq/content/doc:
         unit_uri: "組織URL"

@@ -27,6 +27,10 @@ class Cms::Site < ActiveRecord::Base
     "#{Rails.public_path}_#{format('%08d', id)}"
   end
   
+  def rewrite_config_path
+    "#{Rails.root}/config/rewrite/#{format('%08d', id)}.conf"
+  end
+  
   def uri
     return '/' unless full_uri.match(/^[a-z]+:\/\/[^\/]+\//)
     full_uri.sub(/^[a-z]+:\/\/[^\/]+\//, '/')

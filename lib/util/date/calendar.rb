@@ -141,11 +141,21 @@ class Util::Date::Calendar
   end
   
   def prev_month_uri
+    return false if @_prev_month_uri == false
     @month_uri.gsub(':year', @py.to_s).gsub(':month', sprintf('%02d', @pm))
   end
   
+  def prev_month_uri=(uri)
+    @_prev_month_uri = uri
+  end
+  
   def next_month_uri
+    return false if @_next_month_uri == false
     @month_uri.gsub(':year', @ny.to_s).gsub(':month', sprintf('%02d', @nm))
+  end
+  
+  def next_month_uri=(uri)
+    @_next_month_uri = uri
   end
   
   def day_uri(day)

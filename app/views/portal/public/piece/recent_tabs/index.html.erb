@@ -15,10 +15,14 @@ var feedTabs<%= Page.current_piece.id %> = new ArticleDocTabs('<%= Page.current_
 
   <div class="content">
     <% @tabs.each do |tab| %>
+    <% if tab[:docs].size > 0 %>
     <ul class="<%=h tab[:name] %>" <%= 'style="display: none;"' unless tab[:current] %>>
-      <% tab[:docs].each do |doc| %><li><%= link_to h(doc.title), doc.public_uri, :target => doc.link_target %><%= doc.date_and_site %>
-      </li><% end %>
-    </ul><% end %>
+      <% tab[:docs].each do |doc| %>
+      <li class="<%= doc_attr_css_class(doc) %>"><%= link_to h(doc.title), doc.public_uri, :target => doc.link_target %><%= doc.date_and_site %></li>
+      <% end %>
+    </ul>
+    <% end %>
+    <% end %>
   </div>
 
   <div class="links">

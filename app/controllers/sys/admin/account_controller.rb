@@ -40,13 +40,4 @@ class Sys::Admin::AccountController < Sys::Controller::Admin::Base
     reset_session
     redirect_to('action' => 'login')
   end
-  
-  def info
-    skip_layout
-    
-    respond_to do |format|
-      format.html { render }
-      format.xml  { render :xml => Core.user.to_xml(:root => 'item', :include => :groups) }
-    end
-  end
 end

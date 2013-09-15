@@ -45,16 +45,18 @@ class Cms::Admin::Data::FilesController < Cms::Controller::Admin::Base
     @item = Cms::DataFile.new(params[:item])
     @item.site_id = Core.site.id
     @item.state   = 'public'
-    _create @item do
-      @item.publish if @item.state == 'public'
-    end
+    @item.use_resize(@item.in_resize_size.blank? ? false : @item.in_resize_size)
+    
+    _create @item
   end
 
   def update
     @item = Cms::DataFile.new.find(params[:id])
     @item.attributes = params[:item]
     @item.node_id    = nil if @item.concept_id_changed?
-    @item.skip_upload
+    @item.use_resize(@item.in_resize_size.blank? ? false : @item.in_resize_size)
+    
+    @item.skip_upload if @item.file.blank?
     _update @item
   end
 
@@ -69,5 +71,17 @@ class Cms::Admin::Data::FilesController < Cms::Controller::Admin::Base
     return error_auth unless @file = item.find(:first)
     
     send_file @file.upload_path, :type => @file.mime_type, :filename => @file.name, :disposition => 'inline'
+  end
+  
+  def thumbnail
+    item = Cms::DataFile.new.readable
+    item.and :id, params[:id]
+    return error_auth unless @file = item.find(:first)
+    
+    upload_path = @file.upload_path
+    thumb_path  = ::File.dirname(@file.upload_path) + "/thumb.dat"
+    upload_path = thumb_path if FileTest.exist?(thumb_path)
+    
+    send_file upload_path, :type => @file.mime_type, :filename => @file.name, :disposition => 'inline'
   end
 end

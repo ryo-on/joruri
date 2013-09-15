@@ -22,15 +22,16 @@ class Article::Doc < ActiveRecord::Base
   include Cms::Model::Auth::Concept
   include Sys::Model::Auth::EditableGroup
 
-  belongs_to :content,        :foreign_key => :content_id,        :class_name => 'Article::Content::Doc'
-  belongs_to :status,         :foreign_key => :state,             :class_name => 'Sys::Base::Status'
-  belongs_to :notice_status,  :foreign_key => :notice_state,      :class_name => 'Sys::Base::Status'
-  belongs_to :recent_status,  :foreign_key => :recent_state,      :class_name => 'Sys::Base::Status'
-  belongs_to :list_status,    :foreign_key => :list_state,        :class_name => 'Sys::Base::Status'
-  belongs_to :event_status,   :foreign_key => :event_state,       :class_name => 'Sys::Base::Status'
-  belongs_to :sns_link_status,:foreign_key => :sns_link_state,    :class_name => 'Sys::Base::Status'
-  belongs_to :language,       :foreign_key => :language_id,       :class_name => 'Sys::Language'
+  belongs_to :content,         :foreign_key => :content_id,     :class_name => 'Article::Content::Doc'
+  belongs_to :status,          :foreign_key => :state,          :class_name => 'Sys::Base::Status'
+  belongs_to :notice_status,   :foreign_key => :notice_state,   :class_name => 'Sys::Base::Status'
+  belongs_to :recent_status,   :foreign_key => :recent_state,   :class_name => 'Sys::Base::Status'
+  belongs_to :list_status,     :foreign_key => :list_state,     :class_name => 'Sys::Base::Status'
+  belongs_to :event_status,    :foreign_key => :event_state,    :class_name => 'Sys::Base::Status'
+  belongs_to :sns_link_status, :foreign_key => :sns_link_state, :class_name => 'Sys::Base::Status'
+  belongs_to :language,        :foreign_key => :language_id,    :class_name => 'Sys::Language'
 
+  attr_accessor :concept_id, :layout_id
   attr_accessor :link_checker
   
   validates_presence_of :title
@@ -55,9 +56,26 @@ class Article::Doc < ActiveRecord::Base
     :if => %Q(state == "recognize")
   validate :validate_links,
     :if => %Q(link_checker)
+  validate :validates_event_date,
+    :if => %Q(!event_date.blank? && !event_close_date.blank?)
   
   before_save :check_digit
   before_save :modify_attributes
+  
+  def concept
+    concept_id ? Cms::Concept.find_by_id(concept_id) : nil
+  end
+  
+  def layout
+    layout_id ? Cms::Layout.find_by_id(layout_id) : nil
+  end
+  
+  def validates_event_date
+    if event_date >= event_close_date
+      errors.add :event_close_date, :greater_than, :count => locale(:event_date)
+      return false
+    end
+  end
   
   def validate_word_dictionary
     dic = content.setting_value(:word_dictionary)
@@ -153,6 +171,30 @@ class Article::Doc < ActiveRecord::Base
     "#{node.public_full_uri}#{name}/"
   end
   
+  def summary_body
+    require 'hpricot'
+    Hpricot.uxs self.body.to_s.gsub(/<("[^"]*"|'[^']*'|[^'">])*>/, "").gsub(/(\r\n|\r|\n)+/, ' ')
+  end
+  
+  def thumbnail_file
+    return @_thumbnail_file if @_thumbnail_file
+    if body =~ /<img [^>]+src="(\.\/)?files\/[^"]+"/i
+      body.scan(/<img [^>]+src="(?:\.\/)?files\/(?:thumb\/)?([^"]+)"/i) do |m|
+        files.each do |file|
+          return @_thumbnail_file = file if file.name == m[0] && file.has_thumbnail?
+        end
+      end
+    end
+    nil
+  end
+  
+  def thumbnail_uri
+    if file = thumbnail_file
+      return "#{public_uri}files/thumb/#{file.name}"
+    end
+    return nil
+  end
+  
   def mobile_page?
     agent_state == 'mobile'
   end
@@ -186,6 +228,25 @@ class Article::Doc < ActiveRecord::Base
     self
   end
 
+  def event_date_in(sdate, edate)
+    self.and :language_id, 1
+    self.and :event_state, 'visible'
+    self.and :event_date, 'IS NOT', nil
+    
+    self.and Condition.new do |c|
+      c.or Condition.new do |c2|
+        c2.and :event_date, "<", edate.to_s
+        c2.and :event_close_date, ">=", sdate.to_s
+      end
+      c.or Condition.new do |c2|
+        c2.and :event_close_date, "IS", nil
+        c2.and :event_date, ">=", sdate.to_s
+        c2.and :event_date, "<", edate.to_s
+      end
+    end
+    self
+  end
+
   def event_date_is(options = {})
     self.and :language_id, 1
     self.and :event_state, 'visible'
@@ -205,7 +266,18 @@ class Article::Doc < ActiveRecord::Base
     
     self
   end
-
+  
+  def tag_is(tag)
+    if tag.to_s.blank?
+      self.and 0, 1
+    else
+      qw = self.connection.quote_string(tag).gsub(/([_%])/, '\\\\\1')
+      self.and "sql", "EXISTS (SELECT * FROM article_tags WHERE article_docs.unid = article_tags.unid AND word LIKE '#{qw}%') "
+    end
+    
+    self
+  end
+  
   def group_is(group)
     conditions = []
     
@@ -317,7 +389,7 @@ class Article::Doc < ActiveRecord::Base
         self.unit_is(sec)
       when 's_category_id'
         return self.and(0, 1) unless cate = Article::Category.find_by_id(v)
-        return self.category_in(cate.public_children) if cate.level_no == 1
+        #return self.category_in(cate.public_children) if cate.level_no == 1
         self.category_is(cate)
       when 's_attribute_id'
         self.attribute_is(v)

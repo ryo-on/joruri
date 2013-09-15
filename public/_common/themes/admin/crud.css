@@ -120,7 +120,7 @@ table.show input.email {
   ime-mode: disabled;
 }
 table.show input.url {
-  width: 400px;
+  width: 600px;
   ime-mode: disabled;
 }
 table.show input.date {

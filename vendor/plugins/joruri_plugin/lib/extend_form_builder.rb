@@ -95,6 +95,7 @@ class ActionView::Helpers::FormBuilder
       options.delete(:selected)
     end
     options.delete(:conditions)
+    options.delete(:label)
     
     return @template.select_tag(method, choices, options)
   end
@@ -106,7 +107,7 @@ class ActionView::Helpers::FormBuilder
     html = @template.hidden_field(@object_name, method, :value => '')
     choices.each do |label, value|
       html += radio_button(method, value, options)
-      html += %Q(<label for="#{@object_name}_#{method}_#{value}">#{label}</label>)
+      html += %Q(<label for="#{@object_name}_#{method}_#{value}">#{label}</label>\n)
     end
     html
   end
@@ -121,7 +122,7 @@ class ActionView::Helpers::FormBuilder
       name = "#{@object_name}[#{method}][#{c[1]}]"
       id   = method.gsub(/\]/, '').gsub(/\[/, '_') + "_#{c[1]}"
       h += @template.radio_button_tag(method, c[1], (value.to_s == c[1]))
-      h += %Q(\n<label for="#{id}">#{c[0]}</label>\n)
+      h += %Q(<label for="#{id}">#{c[0]}</label>\n)
     end
     h
   end

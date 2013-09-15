@@ -4,7 +4,7 @@ class Sys::Lib::Debugger::Dump
     log = "#{Rails.root}/log/dump.log"
     f = ::File.open(log, 'a')
     #f.flock(File::LOCK_EX)
-    f.puts to_str(data)
+    f.puts to_str(data).force_encoding('utf-8')
     #f.flock(File::LOCK_UN)
     f.close
   end

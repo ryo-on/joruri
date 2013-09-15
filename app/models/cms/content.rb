@@ -65,7 +65,11 @@ class Cms::Content < ActiveRecord::Base
     st = settings.find(:first, :conditions => {:name => name.to_s})
     st ? st.value : nil
   end
-
+  
+  def rewrite_configs
+    []
+  end
+  
 protected
   def save_settings
     in_settings.each do |name, value|

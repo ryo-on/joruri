@@ -71,6 +71,13 @@ class Sys::Admin::Inline::FilesController < Cms::Controller::Admin::Base
     end
     return http_error(404) unless @file = item.find(:first)
     
-    send_file @file.upload_path, :type => @file.mime_type, :filename => @file.name, :disposition => 'inline'
+    file_path = @file.upload_path
+    
+    if params[:type]
+      file_path = @file.upload_path(:type => params[:type])
+      file_path = @file.upload_path unless ::File.exists?(file_path)
+    end
+    
+    send_file file_path, :type => @file.mime_type, :filename => @file.name, :disposition => 'inline'
   end
 end

@@ -64,9 +64,7 @@ module Cms::Model::Base::Node
     crumbs = []
     node ||= self
     node.routes.each do |r|
-      c = []
-      r.each {|i| c << [i.title, i.public_uri] }
-      crumbs << c
+      crumbs << r.collect {|i| [i.title, i.public_uri] }
     end
     Cms::Lib::BreadCrumbs.new(crumbs)
   end

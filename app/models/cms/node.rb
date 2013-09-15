@@ -9,6 +9,7 @@ class Cms::Node < ActiveRecord::Base
   include Sys::Model::Rel::Unid
   include Sys::Model::Rel::UnidRelation
   include Sys::Model::Rel::Creator
+  include Cms::Model::Rel::NodeSetting
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
   include Cms::Model::Rel::Content
@@ -20,7 +21,7 @@ class Cms::Node < ActiveRecord::Base
   
   has_many   :children, :foreign_key => :parent_id,  :class_name => 'Cms::Node',
     :order => :name, :dependent => :destroy
-  
+
   validates_presence_of :parent_id, :state, :model, :name, :title
   validates_uniqueness_of :name, :scope => [:site_id, :parent_id],
     :if => %Q(!replace_page?)
@@ -302,6 +303,15 @@ protected
       end
       
       return false unless item.save(false)
+      
+      # node_settings
+      settings.each do |setting|
+        dupe_setting = Cms::NodeSetting.new(setting.attributes)
+        dupe_setting.node_id   = item.id
+        dupe_setting.created_at = nil
+        dupe_setting.updated_at = nil
+        dupe_setting.save(false)
+      end
       
       if rel_type == :replace
         rel = Sys::UnidRelation.new

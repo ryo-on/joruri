@@ -5,21 +5,20 @@ class Cms::Admin::Node::BaseController < Cms::Controller::Admin::Base
   
   before_filter :pre_dispatch_node
   
-  @@_models = {}
-  
-  def self.set_model(model)
-    @@_models[self] = model
+  def pre_dispatch_node
+    return error_auth unless Core.user.has_auth?(:designer)
+    id      = params[:parent] == '0' ? Core.site.node_id : params[:parent]
+    @parent = Cms::Node.new.find(id)
   end
   
   def model
-    @@_models[self.class] ? @@_models[self.class] : Cms::Node
-  end
-  
-  def pre_dispatch_node
-    return error_auth unless Core.user.has_auth?(:designer)
-    
-    id      = params[:parent] == '0' ? Core.site.node_id : params[:parent]
-    @parent = Cms::Node.new.find(id)
+    #@@_models[self.class] ? @@_models[self.class] : Cms::Node
+    return @model_class if @model_class
+    mclass = '::' + self.class.to_s.gsub(/^(\w+)::Admin/, '\1').gsub(/Controller$/, '').singularize
+    eval(mclass)
+    @model_class = eval(mclass)
+  rescue
+    @model_class = Cms::Node
   end
   
   def index

@@ -19,7 +19,13 @@ ActionController::Routing::Routes.draw do |map|
     ns.tests_link_check "tests_link_check",
       :controller  => "admin/tests/link_check",
       :path_prefix => "/_admin/#{mod}"
-    
+    ns.resource :my_account,
+      :controller  => "admin/my_account",
+      :path_prefix => "/_admin/#{mod}",
+      :collection => [:edit_password, :update_password]
+    ns.resources :settings,
+      :controller  => "admin/settings",
+      :path_prefix => "/_admin/#{mod}"
     ns.resources :maintenances,
       :controller  => "admin/maintenances",
       :path_prefix => "/_admin/#{mod}"
@@ -83,6 +89,9 @@ ActionController::Routing::Routes.draw do |map|
   end
     
   map.connect "_admin/#{mod}/:parent/inline_files/files/:name.:format",
+    :controller => 'sys/admin/inline/files',
+    :action     => 'download'
+  map.connect "_admin/#{mod}/:parent/inline_files/files/:type/:name.:format",
     :controller => 'sys/admin/inline/files',
     :action     => 'download'
 end

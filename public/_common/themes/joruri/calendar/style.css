@@ -61,11 +61,44 @@ h2 {
   padding-bottom: 5px;
 }
 .pagination {
+  clear: both;
   line-height: 23px;
   padding-right: 5px;
   text-align: right;
 }
-
+.typeEventList {
+  float: none;
+  padding-top: 0;
+}
+.typeEventList li:after {
+  content: ".";
+  display: block;
+  clear: both;
+  height: 0;
+  visibility: hidden;
+}
+* html .typeEventList li {
+  height: 1%;
+}
+.typeEventList li {
+  display: block;
+  clear: both;
+  min-height: 90px;
+}
+.typeEventList .event {
+  padding-bottom: 10px;
+}
+.typeEventList .date {
+  margin-bottom: 5px;
+  padding-top: 10px;
+}
+.typeEventList .title {
+  margin-bottom: 5px;
+}
+.info .thumb {
+  float: left;
+  margin-right: 10px;
+}
 /* sidemenu
 ----------------------------------------------- */
 #menu .pieceHeader {

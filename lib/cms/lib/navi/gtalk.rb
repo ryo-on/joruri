@@ -147,6 +147,11 @@ private
     text.gsub!(/、+/, "、")
     text.gsub!(/^(、|。)+/, "")
     text.gsub!(/(、|。)+$/, "")
+    
+    # text.gsub!(/([０-９]{4}－[０-９]{1,2}－[０-９]{1,2})/) do |m|
+      # '<CONTEXT TYPE="DATE">' + NKF::nkf('-Wwxm0Z0', m) + '</CONTEXT>'
+    # end
+    
     return text
   end
 end

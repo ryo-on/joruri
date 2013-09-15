@@ -26,6 +26,8 @@ class Faq::Doc < ActiveRecord::Base
   belongs_to :recent_status,  :foreign_key => :recent_state,      :class_name => 'Sys::Base::Status'
   belongs_to :language,       :foreign_key => :language_id,       :class_name => 'Sys::Language'
 
+  attr_accessor :concept_id, :layout_id
+  
   validates_presence_of :title
   validates_uniqueness_of :name, :scope => :content_id,
     :if => %Q(!replace_page?)
@@ -51,6 +53,14 @@ class Faq::Doc < ActiveRecord::Base
   
   before_save :check_digit
   before_save :modify_attributes
+  
+  def concept
+    concept_id ? Cms::Concept.find_by_id(concept_id) : nil
+  end
+  
+  def layout
+    layout_id ? Cms::Layout.find_by_id(layout_id) : nil
+  end
   
   def validate_word_dictionary
     dic = content.setting_value(:word_dictionary)
@@ -230,7 +240,6 @@ class Faq::Doc < ActiveRecord::Base
         self.and "#{Faq::Doc.table_name}.id", v
       when 's_category_id'
         return self.and(0, 1) unless cate = Faq::Category.find_by_id(v)
-        return self.category_in(cate.public_children) if cate.level_no == 1
         self.category_is(cate)
       when 's_title'
         self.and_keywords v, :title

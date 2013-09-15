@@ -10,12 +10,90 @@ module Sys::Model::Base::File
     mod.after_destroy :remove_internal_file
   end
   
+  def self.sizes(options = {})
+    sizes = []
+    sizes << ["#{options[:include_blank]}", ""] if options.has_key?(:include_blank)
+    sizes << ["640x480 (VGA)"   , "640x480"]
+    sizes << ["480x640 (VGA)"   , "480x640"]
+    sizes << ["800x600 (SVGA)"  , "800x600"]
+    sizes << ["600x800 (SVGA)"  , "600x800"]
+    sizes << ["1600x1200 (UXGA)", "1600x1200"]
+    sizes << ["1200x1600 (UXGA)", "1200x1600"]
+    sizes << ["1280x720 (HD)"   , "1280x720"]
+    sizes << ["720x1280 (HD)"   , "720x1280"]
+    sizes << ["1600x900 (HD+)"  , "1600x900"]
+    sizes << ["900x1600 (HD+)"  , "900x1600"]
+    sizes << ["1920x1080 (FHD)" , "1920x1080"]
+    sizes << ["1080x1920 (FHD)" , "1080x1920"]
+    sizes
+  end
+  
   @@_maxsize = 50# MegaBytes
+  @@_resize_size = { :width => 640, :height => 480 }
+  @@_thumbnail_size = { :width => 120, :height => 90 }
   
   attr_accessor :file, :allowed_type
   
   def skip_upload(bool = true)
     @_skip_upload = bool
+  end
+  
+  def resize_size
+    return nil if @resize_size == false
+    @resize_size ? @resize_size : @@_resize_size
+  end
+  
+  def use_resize(width_or_size, height = nil)
+    if width_or_size == false
+      return @resize_size = false
+    elsif width_or_size.blank?
+      return @resize_size = false
+    end
+    
+    if height
+      width  = width_or_size.to_i
+      height = height.to_i
+    elsif width_or_size.to_s.index('x')
+      size   = width_or_size.to_s.split('x')
+      width  = size[0].to_i
+      height = size[1].to_i
+    else
+      width  = width_or_size.to_i
+      height = width
+    end
+    
+    @resize_size = { :width => width, :height => height }
+  end
+  
+  def has_thumbnail?
+    thumb_width.nil? ? false : true
+  end
+  
+  def thumbnail_size
+    return nil if @thumbnail_size == false
+    @thumbnail_size ? @thumbnail_size : @@_thumbnail_size
+  end
+  
+  def use_thumbnail(width_or_size, height = nil)
+    if width_or_size == false
+      return @thumbnail_size = false
+    elsif width_or_size.blank?
+      return @thumbnail_size = nil
+    end
+    
+    if height
+      width  = width_or_size.to_i
+      height = height.to_i
+    elsif width_or_size.to_s.index('x')
+      size   = width_or_size.to_s.split('x')
+      width  = size[0].to_i
+      height = size[1].to_i
+    else
+      width  = width_or_size.to_i
+      height = width
+    end
+    
+    @thumbnail_size = { :width => width, :height => height }
   end
   
   def validate_file_name
@@ -72,6 +150,8 @@ module Sys::Model::Base::File
     self.image_is     = 2
     self.image_width  = nil
     self.image_height = nil
+    self.thumb_width  = nil
+    self.thumb_height = nil
     
     @_file_data = file.read
     
@@ -83,6 +163,24 @@ module Sys::Model::Base::File
           self.image_is = 1
           self.image_width  = image.columns
           self.image_height = image.rows
+          
+          if size = resize_size
+            if image_width > size[:width] || image_height > size[:height]
+              #size = reduced_size(size)
+              @resized_image  = image.resize_to_fit(size[:width], size[:height])
+              self.image_width  = @resized_image.columns
+              self.image_height = @resized_image.rows
+              self.size         = @resized_image.to_blob.size
+            end
+          end
+          
+          if size = thumbnail_size
+            size = @@_thumbnail_size if size[:width] > 640 || size[:height] > 480
+            @thumbnail_image  = image.resize_to_fill(size[:width], size[:height], ::Magick::CenterGravity)
+            self.thumb_width  = size[:width]
+            self.thumb_height = size[:height]
+            self.thumb_size   = @thumbnail_image.to_blob.size
+          end
         end
       rescue LoadError
       rescue Magick::ImageMagickError
@@ -91,10 +189,15 @@ module Sys::Model::Base::File
     end
   end
   
-  def upload_path
+  def upload_path(options = {})
     md_dir  = "#{self.class.to_s.underscore.pluralize}"
     id_dir  = format('%08d', id).gsub(/(.*)(..)(..)(..)$/, '\1/\2/\3/\4/\1\2\3\4')
     id_file = format('%07d', id) + '.dat'
+    
+    if options[:type]
+      id_file = "#{options[:type]}.dat"
+    end
+    
     "#{Rails.root}/upload/#{md_dir}/#{id_dir}/#{id_file}"
   end
   
@@ -154,6 +257,7 @@ module Sys::Model::Base::File
   def css_class
     if ext = File::extname(name).downcase[1..5]
       conv = {
+        'docx' => 'doc',
         'xlsx' => 'xls',
       }
       ext = conv[ext] if conv[ext]
@@ -201,13 +305,18 @@ module Sys::Model::Base::File
     src_h  = image_height.to_f
     dst_w  = options[:width].to_f
     dst_h  = options[:height].to_f
-    src_r    = (src_w / src_h)
-    dst_r    = (dst_w / dst_h)
-    if dst_r > src_r
-      dst_w = (dst_h * src_r);
-    else
-      dst_h = (dst_w / src_r);
-    end
+    src_r  = (src_w / src_h)
+    dst_r  = (dst_w / dst_h)
+    
+    # if options[:trim]
+      # wide  = dst_r > src_r
+      # dst_h = (dst_w / src_r) if wide
+      # dst_w = (dst_h * src_r) if !wide
+    # end
+    
+    wide  = dst_r > src_r
+    dst_w = (dst_h * src_r) if wide
+    dst_h = (dst_w / src_r) if !wide
     
     if options[:css]
       css  = "width: #{dst_w.ceil}px;"
@@ -247,16 +356,37 @@ module Sys::Model::Base::File
 private
   ## filter/aftar_save
   def upload_internal_file
-    if @_file_data != nil
+    return true if @_file_data == nil
+    
+    org_path   = ::File.dirname(upload_path) + "/original.dat"
+    thumb_path = ::File.dirname(upload_path) + "/thumb.dat"
+    
+    if @resized_image
+      Util::File.put(upload_path, :data => @resized_image.to_blob, :mkdir => true)
+      Util::File.put(org_path, :data => @_file_data, :mkdir => true)
+    else
       Util::File.put(upload_path, :data => @_file_data, :mkdir => true)
+      FileUtils.remove_entry_secure(org_path, true) if FileTest.exist?(org_path)
     end
+    
+    if @thumbnail_image
+      @thumbnail_image.write(thumb_path)
+    else
+      FileUtils.remove_entry_secure(thumb_path, true) if FileTest.exist?(thumb_path)
+    end
+    
     return true
   end
   
   ## filter/aftar_destroy
   def remove_internal_file
-    return true unless FileTest.exist?(upload_path)
-    FileUtils.remove_entry_secure(upload_path, true)
+    FileUtils.remove_entry_secure(upload_path, true) if FileTest.exist?(upload_path)
+    
+    path = ::File.dirname(upload_path) + "/original.dat"
+    FileUtils.remove_entry_secure(path, true) if FileTest.exist?(path)
+    
+    path = ::File.dirname(upload_path) + "/thumb.dat"
+    FileUtils.remove_entry_secure(path, true) if FileTest.exist?(path)
     return true
   end
 end

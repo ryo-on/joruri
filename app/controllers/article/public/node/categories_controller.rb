@@ -1,9 +1,11 @@
 # encoding: utf-8
 class Article::Public::Node::CategoriesController < Cms::Controller::Public::Base
   include Article::Controller::Feed
+  helper Article::DocHelper
 
   def pre_dispatch
-    return http_error(404) unless @content = Page.current_node.content
+    @node = Page.current_node
+    return http_error(404) unless @content = @node.content
     @docs_uri = @content.public_uri('Article::Doc')
     
     @limit = 50
@@ -29,7 +31,7 @@ class Article::Public::Node::CategoriesController < Cms::Controller::Public::Bas
     return http_error(404) unless params[:file] =~ /^(index|more)$/
     @more  = (params[:file] == 'more')
     @page  = 1  if !@more && !request.mobile?
-    @limit = 10 if !@more
+    @limit = @node.setting_value(:list_count, 10) if !@more
     
     doc = Article::Doc.new.public
     request.mobile? ? doc.visible_in_list : doc.visible_in_recent

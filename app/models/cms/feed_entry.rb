@@ -31,6 +31,21 @@ class Cms::FeedEntry < ActiveRecord::Base
     return self
   end
 
+  def event_date_in(sdate, edate)
+    self.and Condition.new do |c|
+      c.or Condition.new do |c2|
+        c2.and :event_date, "<", edate.to_s
+        c2.and :event_close_date, ">=", sdate.to_s
+      end
+      c.or Condition.new do |c2|
+        c2.and :event_close_date, "IS", nil
+        c2.and :event_date, ">=", sdate.to_s
+        c2.and :event_date, "<", edate.to_s
+      end
+    end
+    self
+  end
+
   def event_date_is(options = {})
     if options[:year] && options[:month]
       sd = Date.new(options[:year], options[:month], 1)

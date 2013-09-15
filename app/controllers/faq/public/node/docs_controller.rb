@@ -3,7 +3,8 @@ class Faq::Public::Node::DocsController < Cms::Controller::Public::Base
   include Faq::Controller::Feed
   
   def pre_dispatch
-    return http_error(404) unless @content = Page.current_node.content
+    @node = Page.current_node
+    return http_error(404) unless @content = @node.content
     #@docs_uri = @content.public_uri('Faq::Doc')
   end
   
@@ -46,6 +47,9 @@ class Faq::Public::Node::DocsController < Cms::Controller::Public::Base
     
     Page.current_item = @item
     Page.title        = @item.title
+    
+    @item.concept_id = @node.setting_value(:show_concept_id) if @node.setting_value(:show_concept_id)
+    @item.layout_id  = @node.setting_value(:show_layout_id) if @node.setting_value(:show_layout_id)
     
     @body = @item.body
     
