@@ -25,7 +25,7 @@ module Cms::Lib::Layout
   
   def self.find_design_pieces(html, concepts)
     names = []
-    html.scan(/\[\[piece\/([0-9a-zA-Z\._-]+)\]\]/) {|name| names << name}
+    html.scan(/\[\[piece\/([0-9a-zA-Z\._-]+)\]\]/) {|name| names << name[0]}
     
     items = {}
     names.uniq.each do |name|

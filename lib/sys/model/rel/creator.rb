@@ -64,7 +64,9 @@ module Sys::Model::Rel::Creator
 ## conditions
   
   def readable
-    editable
+    join_creator
+    self.and "sys_creators.group_id", Core.user_group.id
+    return self
   end
 
   def editable
@@ -74,17 +76,21 @@ module Sys::Model::Rel::Creator
   end
 
   def deletable
-    editable
+    join_creator
+    self.and "sys_creators.group_id", Core.user_group.id
+    return self
   end
   
 ## verify
   
-  def readable?
-    editable?
+  def creatable?
+    return true
   end
 
-  def creatable?
-    editable?
+  def readable?
+    return true if Core.user.has_auth?(:manager)
+    return false unless creator
+    return creator.group_id == Core.user_group.id
   end
 
   def editable?
@@ -94,6 +100,8 @@ module Sys::Model::Rel::Creator
   end
 
   def deletable?
-    editable?
+    return true if Core.user.has_auth?(:manager)
+    return false unless creator
+    return creator.group_id == Core.user_group.id
   end
 end

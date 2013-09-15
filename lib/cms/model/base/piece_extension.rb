@@ -1,6 +1,4 @@
 class Cms::Model::Base::PieceExtension < Sys::Model::XmlRecord::Base
-  set_column_name :xml_properties
-  
   def piece
     @_record
   end

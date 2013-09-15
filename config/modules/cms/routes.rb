@@ -5,7 +5,8 @@ ActionController::Routing::Routes.draw do |map|
   map.namespace(mod, :namespace => '') do |ns|
     ns.resources :concepts,
       :controller  => "admin/concepts",
-      :path_prefix => "/_admin/#{mod}/:parent"
+      :path_prefix => "/_admin/#{mod}/:parent",
+      :collection  => [:layouts]
     ns.resources :sites,
       :controller  => "admin/sites",
       :path_prefix => "/_admin/#{mod}"
@@ -55,6 +56,9 @@ ActionController::Routing::Routes.draw do |map|
     ns.resources :node_pages,
       :controller  => "admin/node/pages",
       :path_prefix => "/_admin/#{mod}/:parent"
+    ns.resources :node_sitemaps,
+      :controller  => "admin/node/sitemaps",
+      :path_prefix => "/_admin/#{mod}/:parent"
     
     ## piece
     ns.resources :piece_frees,
@@ -78,6 +82,9 @@ ActionController::Routing::Routes.draw do |map|
   map.namespace(mod, :namespace => '', :path_prefix => '/_public') do |ns|
     ns.connect "node_pages/",
       :controller => "public/node/pages",
+      :action     => :index
+    ns.connect "node_sitemaps/",
+      :controller => "public/node/sitemaps",
       :action     => :index
   end
 end

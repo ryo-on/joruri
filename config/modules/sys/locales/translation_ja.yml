@@ -31,7 +31,7 @@ ja:
         ldap_version: "LDAP同期バージョン"
         web_state: "Web公開"
         tel: "電話番号"
-        outline_uri: "業務概要URI"
+        outline_uri: "業務概要URL"
       
       sys/group_user: 
         created_at: "作成日時"

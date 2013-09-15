@@ -22,7 +22,7 @@ chFile += "$(item_title).value = $(item_file).value.replace(/\\\\/g, '/').replac
   <tr>
     <th><%= @item.locale(:node_id) %></th>
     <td><%= f.select(:node_id, Cms::DataFileNode.find(:all, 
-        :conditions => {:concept_id => Core.concept_id}, :order => :name).collect{|i| [i.label, i.id]},
+        :conditions => {:concept_id => Core.concept(:id)}, :order => :name).collect{|i| [i.label, i.id]},
         :include_blank => '　') %></td>
   </tr>
   <tr>

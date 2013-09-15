@@ -17,19 +17,19 @@ class Sys::User < ActiveRecord::Base
   end
   
   def creatable?
-    Core.user.has_priv?(:manager)
+    Core.user.has_auth?(:manager)
   end
   
   def readable?
-    Core.user.has_priv?(:manager)
+    Core.user.has_auth?(:manager)
   end
   
   def editable?
-    Core.user.has_priv?(:manager)
+    Core.user.has_auth?(:manager)
   end
   
   def deletable?
-    Core.user.has_priv?(:manager)
+    Core.user.has_auth?(:manager)
   end
   
   def authes
@@ -92,7 +92,7 @@ class Sys::User < ActiveRecord::Base
       item = item.unid
     end
     
-    cond = {:action => action, :item_unid => item}
+    cond = {:action => action.to_s, :item_unid => item}
     roles = Sys::ObjectPrivilege.find(:all, :conditions => cond)
     return false if roles.size == 0
     

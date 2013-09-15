@@ -7,7 +7,7 @@ class Cms::Admin::Data::FileNodesController < Cms::Controller::Admin::Base
   end
 
   def index
-    item = Cms::DataFileNode.new#.readable
+    item = Cms::DataFileNode.new.readable
     item.conditions_to_navi
     item.page  params[:page], params[:limit]
     item.order params[:sort], 'name, id'
@@ -26,7 +26,7 @@ class Cms::Admin::Data::FileNodesController < Cms::Controller::Admin::Base
 
   def new
     @item = Cms::DataFileNode.new({
-      :concept_id => Core.concept_id
+      :concept_id => Core.concept(:id)
     })
   end
 

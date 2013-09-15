@@ -201,8 +201,8 @@ function Navigation_showNotice(container) {
   }
   var notice = document.createElement('div'); 
   notice.id = 'navigationNotice'; 
-  notice.innerHTML = 'ふりがなと読み上げ音声は、システムにより自動的に生成しています。' +
-    '人名、地名、用語などが、正確に発音されない場合がありますので、ご了承ください。';
+  notice.innerHTML = 'ふりがなと読み上げ音声は，' +
+    '人名，地名，用語等が正確に発音されない場合があります。';
   container.insertBefore(notice, container.firstChild);
 }
 Navigation.showNotice = Navigation_showNotice;

@@ -146,8 +146,9 @@ class Core
     return "/_public/#{node.model.underscore.pluralize.gsub(/^(.*?\/)/, "\\1node_")}/#{rest}"
   end
   
-  def self.concept_id
-    @@concept ? @@concept.id : nil
+  def self.concept(key = nil)
+    return nil unless @@concept
+    key.nil? ? @@concept : @@concept.send(key)
   end
   
   def self.set_concept(session, concept_id = nil)

@@ -1,10 +1,14 @@
 class Cms::Admin::SitesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   
+  def pre_dispatch
+    return error_auth unless Core.user.has_auth?(:manager)
+  end
+  
   def index
     item = Cms::Site.new#.readable
     item.page  params[:page], params[:limit]
-    item.order params[:sort], :name
+    item.order params[:sort], :id
     @items = item.find(:all)
     _index @items
   end

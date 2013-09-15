@@ -8,6 +8,7 @@ Cms::Lib::Modules::ModuleSet.draw :cms, '標準機能' do |mod|
   
   ## pages
   mod.page :pages, '自由形式'
+  mod.page :sitemaps, 'サイトマップ'
   
   ## pieces
   mod.piece :frees, '自由形式'

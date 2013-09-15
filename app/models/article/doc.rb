@@ -1,6 +1,7 @@
 # encoding: utf-8
 class Article::Doc < ActiveRecord::Base
   include Sys::Model::Base
+  include Cms::Model::Base::Page
   include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
   include Cms::Model::Rel::Inquiry
@@ -8,11 +9,10 @@ class Article::Doc < ActiveRecord::Base
   include Sys::Model::Rel::Publication
   include Sys::Model::Rel::Task
   include Cms::Model::Rel::Map
-  include Article::Model::Rel::Doc::Tag
   include Sys::Model::Rel::File
-  include Cms::Model::Base::Page
-  include Article::Model::Rel::Doc::Rel
   include Sys::Model::Rel::EditableGroup
+  include Article::Model::Rel::Doc::Tag
+  include Article::Model::Rel::Doc::Rel
   include Article::Model::Rel::Doc::Unit
   include Article::Model::Rel::Doc::Category
   include Article::Model::Rel::Doc::Attribute
@@ -37,6 +37,8 @@ class Article::Doc < ActiveRecord::Base
   validates_length_of :mobile_body,  :maximum => 10000,
     :if => %Q(state == "recognize")
   validate :validate_platform_dependent_characters,
+    :if => %Q(state == "recognize")
+  validate :validate_inquiry,
     :if => %Q(state == "recognize")
   
   before_save :check_digit
@@ -122,6 +124,7 @@ class Article::Doc < ActiveRecord::Base
     conditions = []
     
     if group.unit.size > 0
+      join :creator
       doc = self.class.new
       doc.unit_is(group.unit_items)
       conditions << doc.condition

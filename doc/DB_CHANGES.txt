@@ -1,0 +1,3 @@
+1.0.3
+  * ALTER TABLE `cms_nodes` ADD `mobile_body` LONGTEXT NULL AFTER `body`;
+  * ALTER TABLE `cms_nodes` ADD `mobile_title` TEXT NULL AFTER `body`;

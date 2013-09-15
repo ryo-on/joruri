@@ -90,10 +90,12 @@ function onChangeEventCalendar(value) {
 
 <%= article_rel_doc_form f %>
 
+<br /><p class="form">携帯向け</p>
+
 <table class="show">
   <tr>
-    <th>携帯本文</th>
-    <td><%= f.text_area :mobile_body, :style => 'width: 200px; height: 240px;' %></td>
+    <th><%= @item.locale(:mobile_body) %></th>
+    <td><%= f.text_area :mobile_body, :style => 'width: 600px; height: 240px;' %></td>
   </tr>
 </table>
 

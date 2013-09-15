@@ -60,4 +60,28 @@ class Cms::Admin::ConceptsController < Cms::Controller::Admin::Base
       end
     end
   end
+  
+  def layouts(rendering = true)
+    layouts = []
+    concept = nil
+    
+    if params[:concept_id].to_i > 0
+      concept = Cms::Concept.find_by_id(params[:concept_id])
+    elsif params[:parent].to_i > 0
+      if node = Cms::Node.find_by_id(params[:parent])
+        concept = node.inherited_concept
+      end
+    else
+      concept = Core.concept(:id)
+    end
+
+    concept.parents_tree.each{|c| layouts += c.layouts}
+    
+    layouts = layouts.reverse.collect{|i| ["#{i.concept.name} : #{i.title}", i.id]}
+    @layouts  = [["// 一覧を更新しました（#{layouts.size}件）",'']] + layouts
+    
+    respond_to do |format|
+      format.html { render :layout => false }
+    end
+  end
 end

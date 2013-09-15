@@ -44,7 +44,8 @@ private
   
   ## Production && local
   def rescue_action_in_public(exception)
-    http_error(500, exception)
+    #exception.each{}
+    http_error(500, nil)
   end
   
   def http_error(status, message = nil)
@@ -53,7 +54,7 @@ private
     ## errors.log
     f = File.open(RAILS_ROOT + '/log/errors.log', 'a')
     f.flock(File::LOCK_EX)
-    f.puts "#{Core.now} #{status} #{request.env['REQUEST_URI']}"
+    f.puts "#{Core.now} #{status} #{request.env['REQUEST_URI']}" +
       ', "' + message.to_s.gsub(/\n/, ' ').gsub(/"/, '""') + '"'
     f.flock(File::LOCK_UN)
     f.close

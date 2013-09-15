@@ -3,6 +3,10 @@ class Sys::Admin::LdapGroupsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   
   def pre_dispatch
+    return error_auth unless Core.user.has_auth?(:manager)
+  end
+  
+  def pre_dispatch
     if params[:parent] == '0'
       @parent  = nil
       @parents = []

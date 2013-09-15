@@ -61,7 +61,6 @@ module Cms::Controller::Layout
     
     ## render the piece
     Cms::Lib::Layout.find_design_pieces(body, concepts).each do |name, item|
-      name = name[0]
       Page.current_piece = item
       begin
         next if item.content_id && !item.content

@@ -1,5 +1,5 @@
 # encoding: utf-8
-#http://github.com/ambethia/passiverecord/blob/cdf0747243e9bbf067ab6fea8cc6cc8f860112b1/README
+require 'passive_record'
 class Sys::Base::Status < PassiveRecord::Base
 
   schema :id => String, :name => String

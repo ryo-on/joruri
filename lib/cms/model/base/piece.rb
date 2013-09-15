@@ -4,6 +4,10 @@ module Cms::Model::Base::Piece
     mod.belongs_to :status, :foreign_key => :state, :class_name => 'Sys::Base::Status'
   end
   
+  def states
+    [['公開','public'],['非公開','closed']]
+  end
+  
   def content_name
     return content.name if content
     Cms::Lib::Modules.module_name(:cms)

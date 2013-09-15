@@ -3,7 +3,7 @@ class Cms::Admin::PiecesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   
   def index
-    item = Cms::Piece.new#.readable
+    item = Cms::Piece.new.readable
     item.conditions_to_navi
     #item.site_is Site
     item.page  params[:page], params[:limit]
@@ -18,7 +18,7 @@ class Cms::Admin::PiecesController < Cms::Controller::Admin::Base
 
   def new
     @item = Cms::Piece.new({
-      :concept_id => Core.concept_id,
+      :concept_id => Core.concept(:id),
       :state      => 'public'
     })
     @models = models(false)
@@ -55,7 +55,7 @@ class Cms::Admin::PiecesController < Cms::Controller::Admin::Base
     models = Cms::Lib::Modules.pieces(model)
     return models unless rendering
     
-    @models = models
+    @models = [["// 一覧を更新しました（#{models.size}件）", '']] + models
     respond_to do |format|
       format.html { render :layout => false }
     end

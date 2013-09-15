@@ -4,6 +4,10 @@ module Cms::Model::Base::Content
     mod.belongs_to :status, :foreign_key => :state, :class_name => 'Sys::Base::Status'
   end
   
+  def states
+    [['公開','public'],['非公開','closed']]
+  end
+  
   def model_name(option = nil)
     name = Cms::Lib::Modules.model_name(:content, model)
     return name.to_s.gsub(/.*\//, '') if option == :short

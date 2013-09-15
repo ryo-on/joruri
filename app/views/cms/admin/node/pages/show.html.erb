@@ -16,4 +16,18 @@
   </tr>
 </table>
 
+<% if !@item.mobile_title.blank? || !@item.mobile_body.blank? %>
+<br /><p class="form">携帯向け</p>
+
+<table class="show">
+  <tr>
+    <th><%= @item.locale(:mobile_title) %></th>
+    <td><%= hbr @item.mobile_title %></td>
+  </tr><tr>
+    <th><%= @item.locale(:mobile_body) %></th>
+    <td><%= hbr @item.mobile_body %></td>
+  </tr>
+</table>
+<% end %>
+
 <%= creator_view @item %>

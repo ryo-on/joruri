@@ -34,7 +34,7 @@ class Cms::Admin::NodesController < Cms::Controller::Admin::Base
 
   def new
     @item = Cms::Node.new({
-      :concept_id => Core.concept_id,
+      :concept_id => @parent.inherited_concept(:id),
       :site_id    => Core.site.id,
       :state      => 'public',
       :parent_id  => @parent.id,
@@ -78,12 +78,12 @@ class Cms::Admin::NodesController < Cms::Controller::Admin::Base
     if content = Cms::Content.find_by_id(content_id)
       model = content.model
     end
-    models = Cms::Lib::Modules.directories(model)
+    models  = Cms::Lib::Modules.directories(model)
     models += Cms::Lib::Modules.pages(model)
     
     return models unless rendering
     
-    @models = models
+    @models = [["// 一覧を更新しました（#{models.size}件）", '']] + models
     respond_to do |format|
       format.html { render :layout => false }
     end

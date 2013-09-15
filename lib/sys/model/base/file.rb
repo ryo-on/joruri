@@ -70,12 +70,15 @@ module Sys::Model::Base::File
   end
   
   def readable
+    return self
   end
 
   def editable
+    return self
   end
 
   def deletable
+    return self
   end
   
   def readable?

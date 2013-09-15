@@ -3,6 +3,7 @@ class Sys::Admin::UsersController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   
   def pre_dispatch
+    return error_auth unless Core.user.has_auth?(:manager)
     return redirect_to(request.env['PATH_INFO']) if params[:reset]
     
     id      = params[:parent] == '0' ? 1 : params[:parent]

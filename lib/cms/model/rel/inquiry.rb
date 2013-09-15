@@ -6,7 +6,6 @@ module Cms::Model::Rel::Inquiry
     mod.belongs_to :inquiry, :foreign_key => 'unid', :class_name => 'Cms::Inquiry',
       :dependent => :destroy
 
-    mod.validate :validate_inquiry
     mod.after_save :save_inquiry
   end
   

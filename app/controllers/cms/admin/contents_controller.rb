@@ -3,7 +3,7 @@ class Cms::Admin::ContentsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   
   def index
-    item = Cms::Content.new#.readable
+    item = Cms::Content.new.readable
     item.conditions_to_navi
     item.page  params[:page], params[:limit]
     item.order params[:sort], 'name, id'
@@ -20,7 +20,7 @@ class Cms::Admin::ContentsController < Cms::Controller::Admin::Base
 
   def new
     @item = Cms::Content.new({
-      :concept_id => Core.concept_id,
+      :concept_id => Core.concept(:id),
       :state      => 'public',
     })
   end

@@ -54,7 +54,7 @@ class Cms::Admin::KanaDictionariesController < Cms::Controller::Admin::Base
   def make
     res = Cms::KanaDictionary.make_dic_file
     if res == true
-      flash[:notice] = '辞書を更新しました'
+      flash[:notice] = '辞書を更新しました。'
     else
       flash[:notice] = res
     end

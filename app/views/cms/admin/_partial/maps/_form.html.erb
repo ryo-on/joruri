@@ -1,6 +1,10 @@
 <%
 
-return if Core.map_key.blank?
+if Core.map_key.blank?
+  h  = %Q(<br /><p class="form">地図</p>)
+  h += %Q(<div style="margin: 10px;">地図を利用するには Google Maps API キー を設定してください。</div>)
+  return render :text => h
+end
 
 _map  = item.find_map_by_name('1')
 

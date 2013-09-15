@@ -12,6 +12,7 @@ class Cms::Lib::BreadCrumbs
   def to_links
     h = ''
     @crumbs.each do |r|
+      dump r
       links = []
       if r.first[1] == Page.site.uri
         r.first[0] = "TOP"

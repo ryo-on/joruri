@@ -49,6 +49,7 @@ ja:
         title: "タイトル"
         head: "ヘッダー"
         body: "内容"
+        mobile_title: "携帯タイトル"
         mobile_body: "携帯本文"
         attribute_id: "属性"
         inquiry_charge: "お問い合わせ担当"
@@ -63,11 +64,11 @@ ja:
       
       ## content
       article/content/doc:
-        unit_uri: "組織URI"
-        category_uri: "分野URI"
-        attribute_uri: "属性URI"
-        area_uri: "地域URI"
-        tag_uri: "タグ検索URI"
+        unit_uri: "組織URL"
+        category_uri: "分野URL"
+        attribute_uri: "属性URL"
+        area_uri: "地域URL"
+        tag_uri: "タグ検索URL"
       
       ## piece
       article/piece/doc_tab:

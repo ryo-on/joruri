@@ -1,11 +1,13 @@
 # encoding: utf-8
 class Cms::DataFileNode < ActiveRecord::Base
   include Sys::Model::Base
+  include Cms::Model::Base::Page
   include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
-  include Cms::Model::Navi
-  include Cms::Model::Base::Page
+  include Cms::Model::Rel::Site
+  include Cms::Model::Rel::Concept
   include Cms::Model::Auth::Concept
+  include Cms::Model::Navi
   
   has_many :files, :foreign_key => :node_id, :class_name => 'Cms::DataFile', :primary_key => :id
   

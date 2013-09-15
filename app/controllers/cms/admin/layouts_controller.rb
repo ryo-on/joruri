@@ -3,10 +3,8 @@ class Cms::Admin::LayoutsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Publication
   
   def index
-    item = Cms::Layout.new#.readable
-    item.node_is session[:cms_node] if session[:cms_node]
+    item = Cms::Layout.new.readable
     item.conditions_to_navi
-    #item.site_is Site
     item.page  params[:page], params[:limit]
     item.order params[:sort], 'name, id'
     @items = item.find(:all)
@@ -22,7 +20,7 @@ class Cms::Admin::LayoutsController < Cms::Controller::Admin::Base
 
   def new
     @item = Cms::Layout.new({
-      :concept_id => Core.concept_id,
+      :concept_id => Core.concept(:id),
       :state      => 'public',
     })
   end

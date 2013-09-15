@@ -1,20 +1,20 @@
 # encoding: utf-8
 class Cms::Piece < ActiveRecord::Base
   include Sys::Model::Base
-  include Cms::Model::Base::Piece
+  include ::Cms::Model::Base::Piece
   include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
   include Sys::Model::Rel::Recognition
   include Sys::Model::Rel::Publication
-  include Sys::Model::Base::Page
-  include Cms::Model::Rel::Concept
   include Cms::Model::Rel::Site
+  include Cms::Model::Rel::Concept
   include Cms::Model::Rel::Content
   include Cms::Model::Navi
   include Cms::Model::Auth::Concept
 
+
   belongs_to :status,   :foreign_key => :state,      :class_name => 'Sys::Base::Status'
-  
+
   validates_presence_of :state, :model, :name, :title
   
   def locale(name)

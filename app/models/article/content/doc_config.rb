@@ -1,6 +1,7 @@
 # encoding: utf-8
 class Article::Content::DocConfig < Cms::Model::Base::ContentExtension
   set_model_name  "article/content/doc"
+  set_column_name :xml_properties
   set_node_xpath  "config"
   
   attr_accessor :unit_uri

@@ -4,6 +4,19 @@ module Cms::Model::Base::Node
     mod.belongs_to :status, :foreign_key => :state, :class_name => 'Sys::Base::Status'
   end
   
+  def states
+    [['公開','public'],['非公開','closed']]
+  end
+  
+  def public
+    self.and "#{self.class.table_name}.state", 'public'
+    self
+  end
+  
+  def public?
+    return state == 'public' && published_at
+  end
+  
   def content_name
     return content.name if content
     Cms::Lib::Modules.module_name(:cms)

@@ -4,6 +4,13 @@ module Cms::FormHelper
     render :partial => 'cms/admin/_partial/nodes/navi'
   end
   
+  def concept_and_layout_form(form, options = {})
+    return form.hidden_field(:concept_id) unless Core.user.has_auth?(:manager)
+    item = @template.instance_variable_get("@#{form.object_name}")
+    locals = {:f => form, :item => item, :layout => true}.merge(options)
+    render :partial => 'cms/admin/_partial/concepts/form', :locals => locals
+  end
+  
   def concept_form(form, options = {})
     return form.hidden_field(:concept_id) unless Core.user.has_auth?(:manager)
     item = @template.instance_variable_get("@#{form.object_name}")

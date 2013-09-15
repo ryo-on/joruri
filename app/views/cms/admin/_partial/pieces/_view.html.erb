@@ -2,11 +2,11 @@
 <table class="show">
 <% end %>
   <tr>
-    <th><%= @item.locale(:concept_id) %></th>
-    <td><%= safe{@item.concept.name} %></td>
-  </tr><tr>
     <th><%= @item.locale(:state) %></th>
     <td><%= safe{@item.status.name} %></td>
+  </tr><tr>
+    <th><%= @item.locale(:concept_id) %></th>
+    <td><%= safe{@item.concept.name} %></td>
   </tr><tr>
     <th><%= @item.locale(:content_id) %></th>
     <td><%= safe{@item.content_name} %></td>

@@ -270,6 +270,8 @@ ActiveRecord::Schema.define(:version => 0) do
     t.string   "name"
     t.text     "title"
     t.text     "body",          :limit => 16777215
+    t.text     "mobile_title"
+    t.text     "mobile_body",   :limit => 16777215
   end
 
   add_index "cms_nodes", ["parent_id", "name"], :name => "parent_id"

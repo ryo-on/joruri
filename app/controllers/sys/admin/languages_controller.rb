@@ -2,6 +2,10 @@
 class Sys::Admin::LanguagesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   
+  def pre_dispatch
+    return error_auth unless Core.user.has_auth?(:manager)
+  end
+  
   def index
     item = Sys::Language.new#.readable
     item.page  params[:page], params[:limit]

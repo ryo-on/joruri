@@ -47,6 +47,8 @@ module Sys::Model::Rel::EditableGroup
   
   def editable?
     return true if Core.user.has_auth?(:manager)
+    return false unless creator
+    return true if creator.group_id == Core.user_group.id
     return false unless editable_group
     return editable_group.group_ids =~ /(^| )#{Core.user_group.id}( |$)/
   end

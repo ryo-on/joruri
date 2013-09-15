@@ -11,11 +11,11 @@ module Article::Model::Rel::Doc::Unit
   def categories_and_unit
     cate = []
     category_items.each {|c| cate << c.title }
-    
+    separator = %Q(<span class="separator">　</span>)
     values = []
-    values << cate.join('，') if cate.size > 0
-    values << creator.group.name if creator && creator.group
-    "（#{values.join('　')}）"
+    values << %Q(<span class="category">#{ERB::Util.html_escape(cate.join('，'))}</span>) if cate.size > 0
+    values << %Q(<span class="unit">#{ERB::Util.html_escape(creator.group.name)}</span>) if creator && creator.group
+    %Q(<span class="attributes">（#{values.join(separator)}）</span>)
   end
   
   def unit_is(unit)

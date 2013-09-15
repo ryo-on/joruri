@@ -10,11 +10,10 @@ ja:
       
       cms/site:
         state: "状態"
-        name: "サイト名称"
-        full_uri: "サイトURI"
         node_id: "ROOTディレクトリ"
-        mobile_is: "携帯サイトフラグ"
-        mobile_id: "携帯サイト"
+        name: "サイト名称"
+        full_uri: "サイトURL"
+        mobile_full_uri: "携帯URL"
         related_site: "関連サイト"
         map_key: "地図APIキー"
       
@@ -59,6 +58,8 @@ ja:
         name: "ファイル名"
         title: "タイトル"
         body: "本文"
+        mobile_title: "携帯タイトル"
+        mobile_body: "携帯本文"
       
       cms/kana_dictionary:
         name: "名称"

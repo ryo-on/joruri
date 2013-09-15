@@ -1,20 +1,19 @@
 # encoding: utf-8
 class Cms::Node < ActiveRecord::Base
   include Sys::Model::Base
+  include Cms::Model::Base::Node
   include Sys::Model::Tree
   include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
   include Sys::Model::Rel::Publication
-  include Sys::Model::Base::Page
   include Cms::Model::Rel::Inquiry
-  include Cms::Model::Rel::Concept
   include Cms::Model::Rel::Site
-  include Cms::Model::Navi
+  include Cms::Model::Rel::Concept
+  include Cms::Model::Rel::Content
   include Cms::Model::Auth::Concept
-  include Cms::Model::Base::Node
+  include Cms::Model::Navi
   
   belongs_to :status,   :foreign_key => :state,      :class_name => 'Sys::Base::Status'
-  belongs_to :content,  :foreign_key => :content_id, :class_name => 'Cms::Content'
   belongs_to :layout,   :foreign_key => :layout_id,  :class_name => 'Cms::Layout'
   
   has_many   :children, :foreign_key => :parent_id,  :class_name => 'Cms::Node',
@@ -24,11 +23,6 @@ class Cms::Node < ActiveRecord::Base
   
   def states
     [['公開','public'],['非公開','closed']]
-  end
-  
-  def module
-    return 'cms' unless content
-    content.model =~ /article/i ? 'article' : 'cms'
   end
   
   def self.find_by_uri(path, site_id)
@@ -50,20 +44,23 @@ class Cms::Node < ActiveRecord::Base
     return item
   end
   
+  def inherited_concept(key = nil)
+    return @_inherited_concept if @_inherited_concept
+    concept_id = concept_id
+    parents_tree.each do |r|
+      concept_id = r.concept_id if r.concept_id
+    end unless concept_id
+    return nil unless concept_id
+    return nil unless @_inherited_concept = Cms::Concept.find(:first, :conditions => {:id => concept_id})
+    key.nil? ? @_inherited_concept : @_inherited_concept.send(key)
+  end
+  
   def inherited_layout
     layout_id = layout_id
     parents_tree.each do |r|
       layout_id = r.layout_id if r.layout_id
     end unless layout_id
     Cms::Layout.find(:first, :conditions => {:id => layout_id})
-  end
-  
-  def inherited_concept
-    concept_id = concept_id
-    parents_tree.each do |r|
-      concept_id = r.concept_id if r.concept_id
-    end unless concept_id
-    Cms::Concept.find(:first, :conditions => {:id => concept_id})
   end
   
   def all_nodes_with_level

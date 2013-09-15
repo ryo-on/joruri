@@ -6,7 +6,8 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
   helper Article::FormHelper
 
   def pre_dispatch
-    error_auth unless @content = Cms::Content.find(params[:content])
+    return error_auth unless @content = Cms::Content.find(params[:content])
+    return error_auth unless Core.user.has_priv?(:read, :item => @content)
     default_url_options :content => @content
     
     return redirect_to(request.env['PATH_INFO']) if params[:reset]
@@ -14,7 +15,7 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
 
   def index
     item = Article::Doc.new#.public#.readable
-    item.public unless Core.user.has_auth?(:manager)
+    #item.public unless Core.user.has_auth?(:manager)
     item.and :content_id, @content.id
     item.search params
     item.page  params[:page], params[:limit]
@@ -25,7 +26,7 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
 
   def show
     @item = Article::Doc.new.find(params[:id])
-    return error_auth unless @item.readable?
+    #return error_auth unless @item.readable?
     _show @item
   end
 
@@ -46,6 +47,8 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
   end
 
   def create
+    return error_auth unless Core.user.has_priv?(:create, :item => @content)
+    
     @item = Article::Doc.new(params[:item])
     @item.content_id = @content.id
     @item.state      = params[:commit_recognize] ? 'recognize' : 'draft'

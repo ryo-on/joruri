@@ -18,11 +18,10 @@ class Cms::Admin::Data::FilesController < Cms::Controller::Admin::Base
       return redirect_to :action => 'index', :params => { :parent => params['s_node_id'] }
     end
     
-    @nodes = Cms::DataFileNode.find(:all, :conditions => {:concept_id => Core.concept_id}, :order => :name)
+    @nodes = Cms::DataFileNode.find(:all, :conditions => {:concept_id => Core.concept(:id)}, :order => :name)
     
-    item = Cms::DataFile.new#.readable
+    item = Cms::DataFile.new.readable
     item.conditions_to_navi
-
     item.and 'node_id', @parent.id if @parent.id != 0
     item.page  params[:page], params[:limit]
     item.order params[:sort], 'name, id'
@@ -41,7 +40,7 @@ class Cms::Admin::Data::FilesController < Cms::Controller::Admin::Base
 
   def new
     @item = Cms::DataFile.new({
-      :concept_id => Core.concept_id,
+      :concept_id => Core.concept(:id),
       :state      => 'public'
     })
   end

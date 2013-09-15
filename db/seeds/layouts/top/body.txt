@@ -16,7 +16,7 @@
 <div id="bannerBody">
 
 
-[[piece/common-banner-top]]
+[[piece/common-banner]]
 
 [[piece/global-navi]]
 

@@ -9,7 +9,7 @@ class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
   
   def pre_dispatch
     return error_auth unless @piece = Cms::Piece.find(params[:id])
-    return error_auth unless @piece.editable?
+    #return error_auth unless @piece.editable?
     default_url_options :piece => @piece
   end
   

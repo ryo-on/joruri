@@ -5,10 +5,10 @@ class Cms::Layout < ActiveRecord::Base
   include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
   include Sys::Model::Rel::Publication
-  include Cms::Model::Rel::Concept
   include Cms::Model::Rel::Site
-  include Cms::Model::Navi
+  include Cms::Model::Rel::Concept
   include Cms::Model::Auth::Concept
+  include Cms::Model::Navi
 
   belongs_to :status,  :foreign_key => :state,      :class_name => 'Sys::Base::Status'
   
@@ -127,9 +127,9 @@ class Cms::Layout < ActiveRecord::Base
       dir  = (path =~ /^\/_common\//) ? "#{Rails.root}/public" : site.public_path
       file = "#{dir}#{path}"
       if FileTest.exist?(file)
-        m = File.new(file).read.gsub(/(\r\n|\n|\r)/, "\n").gsub(/^@import ['"](.*?)['"];/) do |m2|
+        m = ::File.new(file).read.gsub(/(\r\n|\n|\r)/, "\n").gsub(/^@import ['"](.*?)['"];/) do |m2|
           p = m2.gsub(/.*?["'](.*?)["'].*/, '\1')
-          p = File.expand_path(p, File.dirname(path)) if p =~ /^\./
+          p = ::File.expand_path(p, ::File.dirname(path)) if p =~ /^\./
           %Q(@import "#{p}";)
         end
       else

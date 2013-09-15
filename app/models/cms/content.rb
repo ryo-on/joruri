@@ -4,11 +4,10 @@ class Cms::Content < ActiveRecord::Base
   include Cms::Model::Base::Content
   include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
-  include Cms::Model::Rel::Concept
-  include Cms::Model::Navi
   include Cms::Model::Rel::Site
-  include Sys::Model::Base::Page
+  include Cms::Model::Rel::Concept
   include Cms::Model::Auth::Concept
+  include Cms::Model::Navi
 
   validates_presence_of :state, :model, :name
 
@@ -21,9 +20,8 @@ class Cms::Content < ActiveRecord::Base
     self.and :id, node.content_id if node
   end
 
-  def admin_path_name
-    return '#' if self.controller =~ /^_/
-    return "#{self.module.gsub(/\//, '_')}_#{self.controller}_path(#{self.id})" if self.module =~ /\//
-    "#{self.module}_#{self.controller}_path(#{self.id})"
+  def creatable?
+    return false unless Core.user.has_auth?(:designer)
+    super
   end
 end

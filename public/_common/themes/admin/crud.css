@@ -97,6 +97,10 @@ div.submitters input {
   margin: 0px 10px;
   width: 120px;
 }
+table.show input.id {
+  width: 320px;
+  ime-mode: disabled;
+}
 table.show input.name {
   width: 320px;
 }

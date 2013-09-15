@@ -1,9 +1,9 @@
 # encoding: utf-8
 class Cms::KanaDictionary < ActiveRecord::Base
   include Sys::Model::Base
+  include Sys::Model::Base::Config
   include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
-  include Sys::Model::Base::Config
   
   validates_presence_of :name
   

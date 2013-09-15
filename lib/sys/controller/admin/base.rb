@@ -40,6 +40,6 @@ private
   end
   
   def error_auth
-    http_error 500, '不正なアクセスです'
+    http_error 500, '権限がありません。'
   end
 end
