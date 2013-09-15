@@ -1,0 +1,30 @@
+<%
+
+route_selector = f.select_with_tree(
+  :route_id,
+  [Core.site.root_node],
+  :label => :title, :order => :name,
+  :include_blank => true)
+
+%><% if defined?(container) && container != :tr %>
+<table class="show">
+<% end %>
+  <%= concept_form f %>
+  <tr>
+    <th><%= item.locale(:title) %></th>
+    <td><%= f.text_field :title, :class => 'title' %></td>
+  </tr><tr>
+    <th><%= item.locale(:content_id) %></th>
+    <td><%= item.content_name %></td>
+  </tr><tr>
+    <th><%= item.locale(:model) %></th>
+    <td><%= item.model_name(:short) %></td>
+  </tr>
+  <%= layout_form f, :container => :tr %>
+  <tr>
+    <th><%= item.locale(:route_id) %></th>
+    <td><%= route_selector %></td>
+  </tr>
+<% if defined?(container) && container != :tr %>
+</table>
+<% end %>

@@ -1,0 +1,8 @@
+<div id="categoryList" class="piece">
+<div class="pieceContainer">
+<div class="pieceHeader">[[emoji/memo]]分野別</div>
+<div class="pieceBody">
+<a href="#">くらし</a> / <a href="#">健康・福祉</a> / <a href="#">教育・文化</a> / <a href="#">観光・魅力</a> / <a href="#">産業・しごと</a> / <a href="#">行政・まちづくり</a> / <a href="#">防災</a>
+</div>
+</div>
+</div>

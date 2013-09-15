@@ -1,0 +1,105 @@
+<script type="text/javascript">
+//<![CDATA[
+
+// EnterキーによるSubmitを無効化
+function stopSubmitting(e) {
+  if (!e) var e = window.event;
+  if (e.keyCode == 13) return false;
+}
+window.onload = function() {
+  var list = document.getElementsByTagName('input');
+  for (var i=0; i<list.length; i++) {
+    if(list[i].type.match(/^(text|password|radio|checkbox)$/) != ""){
+      list[i].onkeypress = function (event) { return stopSubmitting(event); }
+    }
+  }
+}
+
+// イベントカレンダー
+function onChangeEventCalendar(value) {
+  if (value != "") {
+    $('<%= "#{f.object_name}_event_state_visible" %>').checked = true;
+  } else {
+    $('<%= "#{f.object_name}_event_state_hidden" %>').checked = true;
+  }
+}
+
+//]]>
+</script>
+
+<% inline_id = @item.unid || params[:_tmp] %>
+<%= init_tiny_mce :document_base_url => "/_admin/sys/#{inline_id}/inline_files/" %>
+
+<span class="note">※は必須項目です。</span>
+
+<table class="show">
+  <% if @item.id %>
+  <tr>
+    <th>記事番号</th>
+    <td colspan="3"><%=@item.id %></td>
+  </tr>
+  <% end %>
+  <tr>
+    <th>タイトル <span class="note">※</span></th>
+    <td><%= f.text_field :title, :class => 'title', :style => 'width: 500px;' %></td>
+    <th style="width: 60px;">言語 <span class="note">※</span></th>
+    <td style="width: 150px;"><%= f.select(:language_id, Sys::Language.find(:all).collect{|i| [i.title + "　", i.id]}) %></td>
+  </tr>
+  <tr>
+    <th colspan="4">内容</th></tr><tr>
+    <td colspan="4" class="mceEditor">
+      <%= f.text_area :body, :class => 'body mceEditor' %>
+    </td>
+  </tr>
+</table>
+
+<%= render :partial => 'sys/admin/_partial/files/form', :locals => {:f => f, :item => @item } %>
+
+<table class="show">
+  <tr>
+    <th>分野</th>
+    <td><%= article_category_form f %></td>
+  </tr><tr>
+    <th>属性</th>
+    <td><%= article_attribute_form f %></td>
+  </tr>
+</table>
+
+<%= article_area_form f %>
+
+<table class="show">
+  <tr>
+    <th>新着記事表示</th>
+    <td><%= f.radio_buttons :recent_state, @item.recent_states, :class => 'status' %></td>
+  </tr><tr>
+    <th>記事一覧表示</th>
+    <td><%= f.radio_buttons :list_state, @item.list_states, :class => 'status' %></td>
+  </tr><tr>
+    <th>イベントカレンダー表示</th>
+    <td><div class="fieldDatetime">
+      <%= f.radio_buttons :event_state, @item.event_states, :class => 'status' %>
+      &nbsp; イベント日付 ： <%= f.text_field :event_date, :class => 'date eventDate' %>
+      <button type="button" id="event_date_bt" class="show_cal_bt"
+        onclick="showCalendar('event_date_bt', '<%= f.object_name %>_event_date', onChangeEventCalendar)"
+      ></button></div>
+    </td>
+  </tr>
+</table>
+
+<%= article_tag_form f %>
+
+<%= article_rel_doc_form f %>
+
+<table class="show">
+  <tr>
+    <th>携帯本文</th>
+    <td><%= f.text_area :mobile_body, :style => 'width: 200px; height: 240px;' %></td>
+  </tr>
+</table>
+
+<%= google_map_form f %>
+<%= inquiry_form f %>
+<%= task_form f %>
+<%= recognizer_form f %>
+<%= editable_group_form f %>
+<%= creator_form f %>
