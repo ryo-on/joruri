@@ -5,7 +5,7 @@ module Cms::Model::Base::Page::Publisher
     mod.has_many :publishers, :foreign_key => 'unid', :primary_key => 'unid', :class_name => 'Sys::Publisher',
       :dependent => :destroy
     mod.has_many :rel_publishers, :foreign_key => 'rel_unid', :primary_key => 'unid', :class_name => 'Sys::Publisher',
-      :dependent => :destroy
+      :conditions=>"#{Sys::Publisher.table_name}.rel_unid is not null", :dependent => :destroy
     mod.after_save :close_page
   end
   
