@@ -27,7 +27,7 @@ module Article::Model::Rel::Doc::Unit
       end
     end
     unit = unit.uniq
-    
+
     join_creator
     self.and 'sys_creators.group_id', 'IN', unit
     self

@@ -67,15 +67,11 @@ class Cms::Admin::StylesheetsController < Cms::Controller::Admin::Base
   end
   
   def edit
-    return error_auth unless @item.editable?
-    
     @item.read_body
     render :action => :edit
   end
   
   def create
-    return error_auth unless @item.creatable?
-      
     if params[:create_directory]
       if @item.create_directory(params[:item][:new_directory])
         flash[:notice] = 'ディレクトリを作成しました。'
@@ -96,8 +92,6 @@ class Cms::Admin::StylesheetsController < Cms::Controller::Admin::Base
   end
   
   def update
-    return error_auth unless @item.editable?
-    
     old_path = @item.upload_path
     
     if @item.directory?
@@ -123,8 +117,6 @@ class Cms::Admin::StylesheetsController < Cms::Controller::Admin::Base
   end
   
   def move
-    return error_auth unless @item.editable?
-    
     if request.put?
       if @item.move(params[:item][:path])
         flash[:notice] = '移動処理が完了しました。'
@@ -137,8 +129,6 @@ class Cms::Admin::StylesheetsController < Cms::Controller::Admin::Base
   end
   
   def destroy
-    return error_auth unless @item.deletable?
-    
     if @item.destroy
       flash[:notice] = "削除処理が完了しました。"
     else

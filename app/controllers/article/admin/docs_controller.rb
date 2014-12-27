@@ -74,7 +74,8 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
       @item.fix_tmp_files(params[:_tmp])
       @item.body = @item.body.gsub(article_preview_doc_file_path(:parent => unid) + '/', @item.public_uri)
       @item.save(:validate => false) if @item.changed?
-      
+
+      @item = Article::Doc.find_by_id(@item.id)
       send_recognition_request_mail(@item) if @item.state == 'recognize'
       publish_by_update(@item) if @item.state == 'public'
     end
