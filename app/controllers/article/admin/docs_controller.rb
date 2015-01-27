@@ -21,6 +21,7 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
 
   def show
     @item = Article::Doc.new.find(params[:id])
+    @item.unset_inquiry_email_presence if @item.unset_inquiry_email_presence?
     #return error_auth unless @item.readable?
     
     @item.recognition.type = @recognition_type if @item.recognition
@@ -41,6 +42,7 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
     state = @content.setting_value(:inquiry_default_state)
     @item.in_inquiry = @item.default_inquiry(:state => (state.blank? ? "visible" : state))
     @item.in_recognizer_ids = @content.setting_value(:default_recognizers)
+    @item.unset_inquiry_email_presence if @item.unset_inquiry_email_presence?
     
     ## add tmp_id
     unless params[:_tmp]
@@ -54,6 +56,7 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
     @item.state      = "draft"
     @item.state      = "recognize" if params[:commit_recognize]
     @item.state      = "public"    if params[:commit_public]
+    @item.unset_inquiry_email_presence if @item.unset_inquiry_email_presence?
     
     ## convert sys urls
     unid = params[:_tmp] || @item.unid
@@ -87,6 +90,7 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
     @item.state      = "draft"
     @item.state      = "recognize" if params[:commit_recognize]
     @item.state      = "public"    if params[:commit_public]
+    @item.unset_inquiry_email_presence if @item.unset_inquiry_email_presence?
 
     ## convert sys urls
     unid = params[:_tmp] || @item.unid

@@ -18,6 +18,14 @@ module Article::Model::Rel::Doc::Unit
     %Q(<span class="attributes">（#{values.join(separator)}）</span>).html_safe
   end
   
+  def unit_title
+    attr = " "
+    if @u = unit
+      attr = %Q(<span class="unit">#{ERB::Util.html_escape(@u.title)}</span>)
+    end
+    %Q(<span class="attributes">（#{attr}）</span>).html_safe
+  end
+
   def unit_is(unit)
     return self if unit.blank?
     unit = [unit] unless unit.class == Array
